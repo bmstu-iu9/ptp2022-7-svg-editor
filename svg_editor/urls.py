@@ -1,3 +1,6 @@
+"""svg_editor URL Configuration
+The `urlpatterns` list routes URLs to views
+"""
 from django.urls import path
 from . import views
 
