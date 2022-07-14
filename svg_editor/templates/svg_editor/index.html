@@ -1,10 +1,68 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>SVG-Editor</title>
+    <!--    загружать статику нужно именно так-->
+    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207141345">
+    <script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
 </head>
 <body>
-
+    <div class="container mt-5 w-50">
+      <form id="contactForm" method="POST">
+          {% csrf_token %}
+        <p><input name="svg" required type="text" style="width: 99.5%; height: 200px"><br>
+        <input type="submit" name="contact-submit" style="margin-top: 15px"/>
+      </form>
+    </div>
+    <p id="ps"></p>
+    <button id="target">Обновить</button>
+    {% block javascript %}
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script>
+          $(document).ready(function () {
+              // отслеживаем событие отправки формы
+              $('#contactForm').submit(function () {
+                  // создаем AJAX-вызов
+                  $.ajax({
+                      data: $(this).serialize(), // получаем данные формы
+                      type: $(this).attr('method'), // GET или POST
+                      url: "{% url 'files_save' %}",
+                      // если успешно, то
+                      success: function (response) {
+                          alert("Спасибо");
+                      },
+                      // если ошибка, то
+                      error: function (response) {
+                          // предупредим об ошибке
+                          alert(response.responseJSON.errors);
+                          console.log(response.responseJSON.errors)
+                      }
+                  });
+                  return false;
+              });
+              $('#target').click (function () {
+                  // создаем AJAX-вызов
+                  $.ajax({// получаем данные формы
+                      // тут используется шаблонизатор
+                      url: "{% url 'files_view' %}",
+                      // если успешно, то
+                      success: function (response) {
+                          console.log(response.svgs)
+                          ps = document.getElementById('ps')
+                          ps.innerHTML = response.svgs
+                      },
+                      // если ошибка, то
+                      error: function (response) {
+                          // предупредим об ошибке
+                          console.log(response.responseJSON.errors)
+                      }
+                  });
+                  return false;
+              });
+          })
+      </script>
+    {% endblock javascript %}
 </body>
 </html>
