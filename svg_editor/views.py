@@ -10,12 +10,13 @@ def index(request):
 
 
 def files_view(request):
-    path = os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg')
-    svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
-    response = {
-        'svgs': svgs_lists
-    }
-    return JsonResponse(response)
+    if request.method == 'GET':
+        path = os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg')
+        svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
+        response = {
+            'svgs': svgs_lists
+        }
+        return JsonResponse(response)
 
 
 def files_save(request):
