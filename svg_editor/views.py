@@ -1,5 +1,4 @@
 import os
-from time import time
 from django.http import JsonResponse
 from django.shortcuts import render
 from illustrator.settings import BASE_DIR
@@ -23,10 +22,18 @@ def files_view(request):
 
 # Script for saving svg
 def files_save(request):
-    if request.method == "POST" and 'svg' in dict(request.POST).keys():
-        svg = dict(request.POST)['svg'][0]
-        path = os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg')
-        name = int(time())
-        with open(path+'/'+str(name)+'.svg', 'w') as file:
-            file.write(svg)
-    return JsonResponse({}, status=200)
+    request_dict = dict(request.POST)
+    if request.method == "POST" and 'svg' in request_dict:
+        svg = request_dict['svg'][0]
+        path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/svg/{request_dict["file_name"][0]}'
+        if os.path.exists(path_to_file + '.svg'):
+            path_to_file += '({}).svg'
+            i = 1
+            while os.path.exists(path_to_file.format(i)):
+                i += 1
+            path_to_file = path_to_file.format(i)
+        else:
+            path_to_file += '.svg'
+        open(path_to_file, 'w').write(svg)
+        return JsonResponse({'file_name': path_to_file[path_to_file.rfind('/') + 1:]}, status=200)
+    return JsonResponse({}, status=400)
