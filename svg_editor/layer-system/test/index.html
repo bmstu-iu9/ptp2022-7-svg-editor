@@ -1,0 +1,34 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+</head>
+
+<body>
+    <div style="height: 50em; width: 60em;">
+        <!-- <object type="image/svg+xml" data="circle1.svg" style="width: inherit; height: inherit;">
+            Your browser does not support SVG
+         </object>
+         <object type="image/svg+xml" data="circle2.svg" style="width: inherit; height: inherit;">
+            Your browser does not support SVG
+         </object> -->
+    </div>
+    <button onclick="createLayer()">new</button>
+    <button onclick="drawBall()">draw ball</button>
+    <button onclick="drawTower()">draw tower</button>
+    <button onclick="drawShrine()">draw shrine</button>
+    <button onclick="deleteLayer()">delete</button>
+    <g class="sliders">
+        <!-- <input onchange="changeFirst()" type="range" min="0" max="100" step="1" value="50"> 
+        <input onchange="changeSecond()" type="range" min="0" max="100" step="1" value="50">  -->
+        <input onchange="changeOpacity(this)" type="range" min="0" max="1" step="0.01" value="50">
+    </g>
+</body>
+<style type="text/css"></style>
+<script src="main.js"></script> 
+</html>
