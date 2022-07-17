@@ -1,8 +1,7 @@
 import itertools
 import os
 from pathlib import Path
-
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.shortcuts import render
 from illustrator.settings import BASE_DIR
 
@@ -63,7 +62,19 @@ def files_get(request):
 
 # Script for downloading svg
 def files_download(request):
-    pass
+    request_dict = dict(request.GET)
+    print(request_dict)
+    if request.method == 'GET' and 'file_name' in request_dict:
+        file_name = '{}.svg'.format(request_dict['file_name'][0])
+        path = Path(os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg'+'/'+file_name))
+        if path.exists():
+            file = open(path, 'rb')
+            response = FileResponse(file)
+            response['Content-Type'] = 'application/octet-stream'
+            response['Content-Disposition'] = 'attachment;filename="{}"'\
+                .format(file_name.encode('utf-8').decode('ISO-8859-1'))
+            return response
+    return JsonResponse({'errors': 'File not found'}, status=400)
 
 
 # Script for uploading svg
