@@ -25,6 +25,9 @@ button {
 	height: 50px;
 	font-size: 40px;
 }
+#file {
+	width: 700px;
+}
 </style>
 <body style="background: #ccc">
 
@@ -54,7 +57,7 @@ button {
 	<input type="text" id="file_name" value="untitled" style="width: 300px">
 	<label>.svg</label><p>
 	<button id="saveButton">Save it!</button>
-
+	<input type="file" id="file" />
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -77,17 +80,40 @@ button {
 		}
 		
 		$(document).ready(function () {
+			$.ajaxSetup({
+  			headers: { "X-CSRFToken": '{{csrf_token}}' }
+			});
             $('#saveButton').click(function () {
                 $.ajax({
                     data: {
 						svg: draw.svg(),
 						file_name: document.getElementById('file_name').value,
-						csrfmiddlewaretoken: '{{ csrf_token}}'
 					},
                     type: 'POST',
                     url: "{% url 'files_save' %}",
                     success: function (response) {
 						alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно создан!');
+                    },
+                    error: function (response) {
+                        alert(response.responseJSON.errors);
+                        console.log(response.responseJSON.errors)
+                    }
+                });
+                return false;
+            });
+			$('#file').change(function () {
+				let data = new FormData();
+				data.append('file', $("#file")[0].files[0]);
+				console.log(data)
+                $.ajax({
+                    data: data,
+                    type: 'POST',
+                    url: "{% url 'files_upload' %}",
+					processData: false,
+					cache: false,
+    				contentType: false,
+                    success: function (response) {
+						alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно загружен!');
                     },
                     error: function (response) {
                         alert(response.responseJSON.errors);
