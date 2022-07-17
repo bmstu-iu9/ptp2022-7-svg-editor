@@ -1,0 +1,24 @@
+/*svg {
+	border: 3px #bbb solid;
+	margin: auto
+}*/
+
+label {
+	font-size: 40px;
+}
+
+input {
+	width: 85px;
+	font-size: 40px;
+}
+
+button {
+	width: 170px;
+	height: 50px;
+	font-size: 40px;
+}
+
+.layer {
+	box-sizing: border-box;
+	position: absolute;
+}

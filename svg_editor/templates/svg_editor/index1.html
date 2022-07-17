@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>SVG-Editor</title>
+	<!--    загружать статику нужно именно так-->
+    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207141345">
+    <link rel="stylesheet" href="../../static/svg_editor/css/main.css"> <!-- временно -->
+    <script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
+</head>
+<body style="background: #ccc">
+	<h1>SVG Editor</h1>
+	<div id="svg-container" style="display: flex; width: 500; height: 500; margin: auto; overflow: hidden; border: 3px #bbb solid;">
+		<!-- <svg id="canvas" width="500" height="500"></svg> -->
+	</div><p>
+	<div>
+		<label>A: x=</label>
+		<input type="number" id="coord_a_x" min=0 max=500 value=50>
+		<label>, y=</label>
+		<input type="number" id="coord_a_y" min=0 max=500 value=50><p>
+		<label>B: x=</label>
+		<input type="number" id="coord_b_x" min=0 max=500 value=100>
+		<label>, y=</label>
+		<input type="number" id="coord_b_y" min=0 max=500 value=450><p>
+		<label>C: x=</label>
+		<input type="number" id="coord_c_x" min=0 max=500 value=400>
+		<label>, y=</label>
+		<input type="number" id="coord_c_y" min=0 max=500 value=250><p>
+		<label>color: </label>
+		<input type="color" id="color"><p>
+		<button type="button" onclick="drawPlease()">Draw it!</button>
+		<button type="button" onclick="clearPlease()">Clear it!</button>
+		<button onclick="createLayer()">new</button>
+		<button onclick="deleteLayer()">delete</button>
+		<input onchange="changeOpacity(this)" type="range" min="0" max="1" step="0.01" value="50">
+	</div>
+	<label>Name your file: </label>
+	<input type="text" id="file_name" value="untitled" style="width: 300px">
+	<label>.svg</label><p>
+	<button id="saveButton">Save it!</button>
+	{% block javascript %}
+	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="../../static/svg_editor/js/main.js"></script>
+	{% endblock javascript %}
+</body>
+</html>
