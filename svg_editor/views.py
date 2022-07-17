@@ -28,7 +28,6 @@ def files_save(request):
     if request.method == "POST" and 'svg' in request_dict and 'file_name' in request_dict:
         svg = request_dict['svg'][0]
         path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/svg/{request_dict["file_name"][0]}'
-        print(request_dict["file_name"])
         if len(request_dict["file_name"][0]) > 0:
             if os.path.exists(path_to_file + '.svg'):
                 path_to_file += '({}).svg'
@@ -43,6 +42,7 @@ def files_save(request):
     return JsonResponse({'errors': 'Bad file name'}, status=400)
 
 
+# Script for getting svg
 def files_get(request):
     request_dict = dict(request.GET)
     if request.method == 'GET' and 'file_name' in request_dict:
