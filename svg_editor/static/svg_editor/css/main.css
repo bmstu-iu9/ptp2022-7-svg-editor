@@ -22,3 +22,35 @@ button {
 	box-sizing: border-box;
 	position: absolute;
 }
+
+.layer_note {
+	color: gray; 
+	border: 1px #bbb solid; 
+	width: inherit; 
+	display: flex;
+}
+
+.layer_note button {
+	height: 12; 
+	width: 5;
+	margin: auto 0;
+}
+
+#workspace {
+	display: flex;
+	width: 500;
+	height: 500;
+	margin: auto;
+	overflow: hidden;
+	border: 3px #bbb solid;
+}
+
+#layer-control-panel {
+	display: block;
+	width: 200;
+	height: 400;
+	margin: auto;
+	border: 3px #bbb solid;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}

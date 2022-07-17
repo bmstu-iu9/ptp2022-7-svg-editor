@@ -1,26 +1,52 @@
 'use strict'
 
-const sliders = document.querySelector('.sliders')
-const div = document.querySelector('div');
-let currentLayer;
+const opacitySlider = document.querySelector('#opacity-slider');
+const workspace = document.querySelector('#workspace');
+const layerControlPanel = document.querySelector('#layer-control-panel');
+
+const layerNote = function() {
+    let note = document.createElement('div');
+    note.setAttribute('class','layer_note');
+    note.insertAdjacentHTML('beforeend',`
+    <button onclick="enableVisibility(this)"></button>
+    <label style="margin: auto"></label>`);
+    return note;
+}();
+
+let currentLayer = {
+    layer: null,
+    note: null,
+};
+
+let i = 0;
 
 function createLayer(){
-    let draw = SVG().addTo(div).size(div.clientWidth, div.clientHeight);
-    draw.node.setAttribute('class', 'layer')
-    currentLayer = draw.node;
+    let draw = SVG().addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);
+    draw.node.setAttribute('class', 'layer');
+    currentLayer.layer = draw.node;
+    
+    opacitySlider.value = 1;
+    
+    let newNote = layerNote.cloneNode(true); 
+    newNote.lastElementChild.textContent = 'Layer '+i++;
+    layerControlPanel.append(newNote);
+    currentLayer.note = newNote;
 }
 
-function changeOpacity(slider) {
-    currentLayer.setAttribute('opacity', slider.value)
+function changeOpacity() {
+    currentLayer.layer.setAttribute('opacity', opacitySlider.value);
 }
 
 function deleteLayer() {
-    currentLayer.remove();
-    currentLayer = div.firstElementChild;
+    if (currentLayer.layer == null) return;
+    currentLayer.layer.remove();
+    currentLayer.layer = null;
+    currentLayer.note.remove();
+    currentLayer.note = null;
 }
 
 function drawPlease() {
-    if (currentLayer == null || currentLayer == undefined) return;
+    if (currentLayer.layer == null) return;
     var a_x, a_y, b_x, b_y, c_x, c_y;
     a_x = document.getElementById('coord_a_x').value;
     a_y = document.getElementById('coord_a_y').value;
@@ -28,11 +54,12 @@ function drawPlease() {
     b_y = document.getElementById('coord_b_y').value;
     c_x = document.getElementById('coord_c_x').value;
     c_y = document.getElementById('coord_c_y').value;
-    SVG(currentLayer).polygon([[a_x, a_y], [b_x, b_y], [c_x, c_y]]).fill(document.getElementById("color").value).stroke({ width: 1 })
+    SVG(currentLayer.layer).polygon([[a_x, a_y], [b_x, b_y], [c_x, c_y]]).fill(document.getElementById("color").value).stroke({ width: 1 })
 }
 
 function clearPlease() {
-    SVG(currentLayer).clear();
+    if (currentLayer.layer == null) return;
+    SVG(currentLayer.layer).clear();
 }
 
 $(document).ready(function () {
