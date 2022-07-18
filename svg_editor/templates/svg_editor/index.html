@@ -33,12 +33,21 @@ button {
 
 	width: 240px;
 }
-#download_file_name{
-
+a {
+	text-decoration: none;
+	color: black;
 }
 </style>
 <body style="background: #ccc">
-
+	<p>
+		{% if user.is_authenticated %}
+		{{user.get_username}}
+		<a href="../account/logout">Logout!</a>
+		{% else %}
+		<a href="../account/login">Login!</a>
+		<a href="../account/signup">Signup!</a>
+		{% endif %}
+	</p>
 	<h1>SVG Editor</h1>
 	<div style="display: flex; width: 100%; margin: auto">
 		<svg id="canvas" width="500" height="500"/>

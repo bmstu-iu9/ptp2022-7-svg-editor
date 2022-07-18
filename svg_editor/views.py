@@ -26,22 +26,25 @@ def files_view(request):
 
 # Script for saving svg
 def files_save(request):
-    request_dict = dict(request.POST)
-    if request.method == "POST" and 'svg' in request_dict and 'file_name' in request_dict:
-        svg = request_dict['svg'][0]
-        path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/svg/{request_dict["file_name"][0]}'
-        if len(request_dict["file_name"][0]) > 0:
-            if os.path.exists(path_to_file + '.svg'):
-                path_to_file += '({}).svg'
-                num = 1
-                while os.path.exists(path_to_file.format(num)):
-                    num += 1
-                path_to_file = path_to_file.format(num)
-            else:
-                path_to_file += '.svg'
-            open(path_to_file, 'w').write(svg)
-            return JsonResponse({'file_name': path_to_file[path_to_file.rfind('/') + 1:]}, status=200)
-    return JsonResponse({'errors': 'Bad file name'}, status=400)
+    if request.user.is_authenticated:
+        request_dict = dict(request.POST)
+        if request.method == "POST" and 'svg' in request_dict and 'file_name' in request_dict:
+            svg = request_dict['svg'][0]
+            path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/svg/{str(request.user)}/{request_dict["file_name"][0]}'
+            print(path_to_file)
+            if len(request_dict["file_name"][0]) > 0:
+                if os.path.exists(path_to_file + '.svg'):
+                    path_to_file += '({}).svg'
+                    num = 1
+                    while os.path.exists(path_to_file.format(num)):
+                        num += 1
+                    path_to_file = path_to_file.format(num)
+                else:
+                    path_to_file += '.svg'
+                open(path_to_file, 'w').write(svg)
+                return JsonResponse({'file_name': path_to_file[path_to_file.rfind('/') + 1:]}, status=200)
+        return JsonResponse({'errors': 'Bad file name'}, status=400)
+    return JsonResponse({'errors': 'Permission denied'}, status=403)
 
 
 # Script for getting svg
