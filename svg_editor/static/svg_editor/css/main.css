@@ -1,7 +1,7 @@
 /*svg {
 	border: 3px #bbb solid;
 	margin: auto
-}*/
+}
 
 label {
 	font-size: 40px;
@@ -16,7 +16,8 @@ button {
 	width: 170px;
 	height: 50px;
 	font-size: 40px;
-}
+}*/
+
 
 .layer {
 	box-sizing: border-box;
@@ -24,16 +25,14 @@ button {
 }
 
 .layer_note {
-	color: gray; 
+	background-color: #bbb solid; 
 	border: 1px #bbb solid; 
 	width: inherit; 
 	display: flex;
 }
 
-.layer_note button {
-	height: 12; 
-	width: 5;
-	margin: auto 0;
+.layer_note[checked='true'] {
+	background-color: rgb(104, 100, 100); 
 }
 
 #workspace {
@@ -49,7 +48,7 @@ button {
 	display: block;
 	width: 200;
 	height: 400;
-	margin: auto;
+	/* margin: auto; */
 	border: 3px #bbb solid;
 	overflow-x: hidden;
 	overflow-y: scroll;
