@@ -4,10 +4,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>SVG-Editor</title>
-    <link rel="stylesheet" href="../../static/svg_editor/css/main.css"> <!-- временно -->
 	<!--    загружать статику нужно именно так-->
     <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207141345">
-    <script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
 </head>
 <body style="background: #ccc">
 	<h1>SVG Editor</h1>
@@ -43,7 +41,7 @@
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="../../static/svg_editor/js/main.js"></script> <!-- временно -->
+    <script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
 	{% endblock javascript %}
 </body>
 </html>

@@ -37,8 +37,8 @@ button {
 
 #workspace {
 	display: flex;
-	width: 500;
-	height: 500;
+	width: 500px;
+	height: 500px;
 	margin: auto;
 	overflow: hidden;
 	border: 3px #bbb solid;
@@ -46,8 +46,8 @@ button {
 
 #layer-control-panel {
 	display: block;
-	width: 200;
-	height: 400;
+	width: 200px;
+	height: 400px;
 	/* margin: auto; */
 	border: 3px #bbb solid;
 	overflow-x: hidden;

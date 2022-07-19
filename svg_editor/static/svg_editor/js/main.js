@@ -80,7 +80,7 @@ function clearPlease() {
     SVG(currentLayer).clear();
 }
 
-$(document).ready(function () {
+/*$(document).ready(function () {
     $('#saveButton').click(function () {
         $.ajax({
             data: {
@@ -100,4 +100,4 @@ $(document).ready(function () {
         });
         return false;
     });
-})
+})*/
