@@ -1,0 +1,20 @@
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h4>Signup</h4>
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form|crispy }}
+
+        <button type="submit" class="btn btn-primary btn-block">Sing up!</button>
+    </form>
+    <p style="font-size: 25px; font-weight: bold"><a href="{% url 'login' %}" style="text-decoration: none;color: black">Login!</a>
+        <a href="{% url 'index' %}" style="text-decoration: none;color: black">Exit!</a></p>
+</body>
+</html>
