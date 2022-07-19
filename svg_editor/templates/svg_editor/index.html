@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
 	<meta charset="UTF-8">
-	<title>SVG-Editor</title>
+	<title>SVG-Редактор</title>
 	<!--    загружать статику нужно именно так-->
     <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207141345">
     <script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
@@ -21,68 +21,144 @@ input {
 	font-size: 40px;
 }
 button {
-	width: 170px;
 	height: 50px;
 	font-size: 40px;
 }
 </style>
 <body style="background: #ccc">
 
-	<h1>SVG Editor</h1>
+	<h1>SVG Редактор</h1>
 	<div style="display: flex; width: 100%; margin: auto">
-		<svg id="canvas" width="500" height="500"/>
+		<svg id="canvas" width="500" height="500" onmousedown="return logMouse('down', event)" onmouseup="return logMouse('up', event)" onmousemove="return logMouse('move', event)" onmouseleave="return logMouse('up', event)"/>
 		<div>
-			<label>A: x=</label>
-			<input type="number" id="coord_a_x" min=0 max=500 value=50>
-			<label>, y=</label>
-			<input type="number" id="coord_a_y" min=0 max=500 value=50><p>
-			<label>B: x=</label>
-			<input type="number" id="coord_b_x" min=0 max=500 value=100>
-			<label>, y=</label>
-			<input type="number" id="coord_b_y" min=0 max=500 value=450><p>
-			<label>C: x=</label>
-			<input type="number" id="coord_c_x" min=0 max=500 value=400>
-			<label>, y=</label>
-			<input type="number" id="coord_c_y" min=0 max=500 value=250><p>
-			<label>color: </label>
-			<input type="color" id="color"><p>
-			<button type="button" onclick="drawPlease()">Draw it!</button>
-			<button type="button" onclick="clearPlease()">Clear it!</button>
+			<input id="panсilTool" type="radio" name="tool" checked>
+			<label>Карандаш</label><br>
+			
+			<input id="lineTool" type="radio" name="tool">
+			<label>Линия</label><br>
+			
+			<input id="polygonTool" type="radio" name="tool">
+			<label>Полигон</label><br>
+			
+			<input id="fillTool" type="radio" name="tool">
+			<label>Заливка(в разработке)</label><br>
+			
+			<label>Цвет: </label>
+			<input id="color" type="color"><br>
+			<label>Заполнение фигур: </label>
+			<input id="fillButton" type="checkbox"><br>
+			<label>Толщина линий: </label>
+			<input id="width" type="number" min=1 value=3><p>
+			<button id="clearButton">Отчистить холст</button>
 		</div>
 	</div><p>
-	<label>Name your file: </label>
+	<label>Назовите свой файл: </label>
 	<input type="text" id="file_name" value="untitled" style="width: 300px">
 	<label>.svg</label><p>
-	<button id="saveButton">Save it!</button>
+	<button id="saveButton">Сохранить файл</button>
 
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
-		var draw = SVG(document.getElementById('canvas')).size(500, 500)
-		
-		function drawPlease() {
-			var a_x, a_y, b_x, b_y, c_x, c_y;
-			a_x = document.getElementById('coord_a_x').value;
-			a_y = document.getElementById('coord_a_y').value;
-			b_x = document.getElementById('coord_b_x').value;
-			b_y = document.getElementById('coord_b_y').value;
-			c_x = document.getElementById('coord_c_x').value;
-			c_y = document.getElementById('coord_c_y').value;
-			draw.polygon([[a_x, a_y], [b_x, b_y], [c_x, c_y]]).fill(document.getElementById("color").value).stroke({ width: 1 })
+		const draw = SVG(document.getElementById('canvas')).size(500, 500)
+		const canvasRect = document.getElementById('canvas').getBoundingClientRect()
+		var object = null
+		const drawMethods = {
+			'pancil': {'up': pancilUp, 'move': pancilMove, 'down': pancilDown},
+			'line': {'up': lineUp, 'move': lineMove, 'down': lineDown},
+			'polygon': {'up': polygonUp, 'move': polygonMove, 'down': polygonDown},
+			'fill': {'up': 'fillUp', 'move': 'fillMove', 'down': 'fillDown'},
 		}
 		
-		function clearPlease() {
-			draw.clear();
+		function logMouse(type, event) {
+			if (document.getElementById('panсilTool').checked) {
+				tool = 'pancil'
+			} else if (document.getElementById('lineTool').checked) {
+				tool = 'line'
+			} else if (document.getElementById('polygonTool').checked) {
+				tool = 'polygon'
+			} else if (document.getElementById('fillTool').checked) {
+				tool = 'fill'
+			}
+			fill = document.getElementById('fillButton').checked
+			color = document.getElementById('color').value
+			width = document.getElementById('width').value
+			drawMethods[tool][type](event.x - canvasRect.left, event.y - canvasRect.top)
+		}
+		
+		function pancilDown(x, y) {
+			if (fill) {
+				object = draw.polyline([[x, y], [x + 1, y + 1]]).fill(color)
+			} else {
+				object = draw.polyline([[x, y], [x + 1, y + 1]]).fill('none').stroke({width: width, color: color})
+			}
+		}
+		
+		function pancilMove(x, y) {
+			if (object != null) {
+				object.plot(object.array().concat([[x, y]]))
+			}
+		}
+	
+		function pancilUp(x, y) {
+			object = null
+		}
+		
+		function lineDown(x, y) {
+			object = draw.line(x, y, x, y).stroke({width: width, color: color})
+		}
+		
+		function lineMove(x, y) {
+			if (object != null) {
+				object.plot([object.array()[0], [x, y]])
+			}
+		}
+		
+		function lineUp(x, y) {
+			object = null
+		}
+		
+		function polygonDown(x, y) {
+			if (object == null) {
+				if (fill) {
+					object = draw.polygon([[x, y], [x, y]]).fill(color)
+				} else {
+					object = draw.polygon([[x, y], [x, y]]).fill('none').stroke({ width: width, color: color})
+				}
+			} else {
+				object.plot(object.array().concat([[x, y]]))
+			}
+		}
+		
+		function polygonMove(x, y) {
+			if (object != null) {
+				object.plot(object.array().slice(0, -1).concat([[x, y]]))
+			}
+		}
+		
+		function polygonUp(x, y) {
+			if (object != null && object.array().length > 2) {
+				firstX = object.array()[0][0]
+				firstY = object.array()[0][1]
+				if ((firstX - x) ** 2 + (firstY - y) ** 2 <= 10 ** 2) {
+					object.plot(object.array().slice(0, -2))
+					object = null
+				}
+			}
 		}
 		
 		$(document).ready(function () {
+			$('#clearButton').click(function () {
+				draw.clear()
+				object = null
+			})
             $('#saveButton').click(function () {
                 $.ajax({
                     data: {
 						svg: draw.svg(),
 						file_name: document.getElementById('file_name').value,
-						csrfmiddlewaretoken: '{{ csrf_token}}'
+						csrfmiddlewaretoken: '{{ csrf_token }}'
 					},
                     type: 'POST',
                     url: "{% url 'files_save' %}",
