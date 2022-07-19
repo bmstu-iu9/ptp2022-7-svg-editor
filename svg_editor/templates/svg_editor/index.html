@@ -54,13 +54,18 @@ button {
 	<input type="text" id="file_name" value="untitled" style="width: 300px">
 	<label>.svg</label><p>
 	<button id="saveButton">Save it!</button>
+	<div class="panel">
+		<button id="target">Reload</button>
+		<p id="text">Click on the Reload button to get a list of saved files!<p>
+		<ul class="list_svg"></ul>
+	</div>
 
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 		var draw = SVG(document.getElementById('canvas')).size(500, 500)
-		
+
 		function drawPlease() {
 			var a_x, a_y, b_x, b_y, c_x, c_y;
 			a_x = document.getElementById('coord_a_x').value;
@@ -71,11 +76,11 @@ button {
 			c_y = document.getElementById('coord_c_y').value;
 			draw.polygon([[a_x, a_y], [b_x, b_y], [c_x, c_y]]).fill(document.getElementById("color").value).stroke({ width: 1 })
 		}
-		
+
 		function clearPlease() {
 			draw.clear();
 		}
-		
+
 		$(document).ready(function () {
             $('#saveButton').click(function () {
                 $.ajax({
@@ -96,6 +101,34 @@ button {
                 });
                 return false;
             });
+		})
+
+		$(document).ready(function () {
+				$('#target').click (function () {
+						// создаем AJAX-вызов
+						$.ajax({ // получаяем данные формы
+								// тут используется шаблонизатор
+								url: "{% url 'files_view' %}",
+								// если успешно, то
+								success: function (response) {
+										console.log(response.svgs)
+										document.getElementById('text').innerHTML = "List of the saved files:";
+										let list = document.querySelector('.list_svg');
+										list.innerHTML = "";
+										let key;
+										for (key in response.svgs) {
+											list.innerHTML += `<li class="inner_list_svg">${response.svgs[key]}</li>`
+										}
+								},
+								// если ошибка, то
+								error: function (response) {
+										// предупредим об ошибке
+										alert(response.responseJSON.errors);
+										console.log(response.responseJSON.errors)
+								}
+						});
+						return false;
+				});
 		})
 	</script>
 	{% endblock javascript %}
