@@ -13,15 +13,17 @@ def index(request):
 
 # Script for viewing the list of svg
 def files_view(request):
-    if request.method == 'GET':
-        path = os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg')
-        svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
-        if svgs_lists:
-            response = {
-                'svgs': svgs_lists
-            }
-            return JsonResponse(response, status=200)
-    return JsonResponse({'errors': 'No files exist'}, status=400)
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            path = os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg')
+            svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
+            if svgs_lists:
+                response = {
+                    'svgs': svgs_lists
+                }
+                return JsonResponse(response, status=200)
+        return JsonResponse({'errors': 'No files exist'}, status=400)
+    return JsonResponse({'errors': 'Permission denied'}, status=403)
 
 
 # Script for saving svg
@@ -30,7 +32,8 @@ def files_save(request):
         request_dict = dict(request.POST)
         if request.method == "POST" and 'svg' in request_dict and 'file_name' in request_dict:
             svg = request_dict['svg'][0]
-            path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/svg/{str(request.user)}/{request_dict["file_name"][0]}'
+            path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/' \
+                           f'{str(request.user)}/svg/{request_dict["file_name"][0]}'
             print(path_to_file)
             if len(request_dict["file_name"][0]) > 0:
                 if os.path.exists(path_to_file + '.svg'):
@@ -49,51 +52,56 @@ def files_save(request):
 
 # Script for getting svg
 def files_get(request):
-    request_dict = dict(request.GET)
-    if request.method == 'GET' and 'file_name' in request_dict:
-        path = os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg')
-        svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
-        file_name = request_dict['file_name'][0]+'.svg'
-        if file_name in svgs_lists:
-            with open(path+'/'+file_name) as file:
-                response = {
-                    'svg': file.readline()
-                }
-            return JsonResponse(response, status=200)
-    return JsonResponse({'errors': 'File not found'}, status=400)
+    if request.user.is_authenticated:
+        request_dict = dict(request.GET)
+        if request.method == 'GET' and 'file_name' in request_dict:
+            path = os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg')
+            svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
+            file_name = request_dict['file_name'][0]+'.svg'
+            if file_name in svgs_lists:
+                with open(path+'/'+file_name) as file:
+                    response = {
+                        'svg': file.readline()
+                    }
+                return JsonResponse(response, status=200)
+        return JsonResponse({'errors': 'File not found'}, status=400)
+    return JsonResponse({'errors': 'Permission denied'}, status=403)
 
 
 # Script for downloading svg
 def files_download(request):
-    request_dict = dict(request.GET)
-    print(request_dict)
-    if request.method == 'GET' and 'file_name' in request_dict:
-        file_name = '{}.svg'.format(request_dict['file_name'][0])
-        path = Path(os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg'+'/'+file_name))
-        if path.exists():
-            file = open(path, 'rb')
-            response = FileResponse(file)
-            response['Content-Type'] = 'application/octet-stream'
-            response['Content-Disposition'] = 'attachment;filename="{}"'\
-                .format(file_name.encode('utf-8').decode('ISO-8859-1'))
-            return response
-    return JsonResponse({'errors': 'File not found'}, status=400)
+    if request.user.is_authenticated:
+        request_dict = dict(request.GET)
+        if request.method == 'GET' and 'file_name' in request_dict:
+            file_name = '{}.svg'.format(request_dict['file_name'][0])
+            path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'+'/'+file_name))
+            if path.exists():
+                file = open(path, 'rb')
+                response = FileResponse(file)
+                response['Content-Type'] = 'application/octet-stream'
+                response['Content-Disposition'] = 'attachment;filename="{}"'\
+                    .format(file_name.encode('utf-8').decode('ISO-8859-1'))
+                return response
+        return JsonResponse({'errors': 'File not found'}, status=400)
+    return JsonResponse({'errors': 'Permission denied'}, status=403)
 
 
 # Script for uploading svg
 def files_upload(request):
-    if request.method == 'POST' and 'file' in request.FILES:
-        file = request.FILES['file']
-        path = Path(os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg'+'/'+str(file)))
-        if str(path.suffix) == '.svg':
-            if path.exists():
-                for num in itertools.count(1):
-                    new_path = path.parent / (path.stem + f'({num})' + path.suffix)
-                    if not new_path.exists():
-                        path = new_path
-                        break
-            with open(path, 'wb+') as destination:
-                for chunk in file.chunks():
-                    destination.write(chunk)
-            return JsonResponse({'file_name': path.name}, status=200)
-    return JsonResponse({'errors': 'Not svg'}, status=400)
+    if request.user.is_authenticated:
+        if request.method == 'POST' and 'file' in request.FILES:
+            file = request.FILES['file']
+            path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'+'/'+str(file)))
+            if str(path.suffix) == '.svg':
+                if path.exists():
+                    for num in itertools.count(1):
+                        new_path = path.parent / (path.stem + f'({num})' + path.suffix)
+                        if not new_path.exists():
+                            path = new_path
+                            break
+                with open(path, 'wb+') as destination:
+                    for chunk in file.chunks():
+                        destination.write(chunk)
+                return JsonResponse({'file_name': path.name}, status=200)
+        return JsonResponse({'errors': 'Not svg'}, status=400)
+    return JsonResponse({'errors': 'Permission denied'}, status=403)

@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 
+# Custom signup form
 class SignupForm(UserCreationForm):
     email = forms.EmailField(max_length=200, help_text='Обязательное поле. Введите свою почту.')
 

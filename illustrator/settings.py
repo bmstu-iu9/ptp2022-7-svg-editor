@@ -89,6 +89,9 @@ DATABASES = {
     }
 }
 
+
+# Registration basic urls
+
 LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/'

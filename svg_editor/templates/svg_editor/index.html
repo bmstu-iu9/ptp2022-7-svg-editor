@@ -39,13 +39,13 @@ a {
 }
 </style>
 <body style="background: #ccc">
-	<p>
+	<p style="font-size: 25px; font-weight: bold">
 		{% if user.is_authenticated %}
 		{{user.get_username}}
-		<a href="../account/logout">Logout!</a>
+		<a href="{% url 'logout' %}">Logout!</a>
 		{% else %}
-		<a href="../account/login">Login!</a>
-		<a href="../account/signup">Signup!</a>
+		<a href="{% url 'login' %}">Login!</a>
+		<a href="{% url 'signup' %}">Signup!</a>
 		{% endif %}
 	</p>
 	<h1>SVG Editor</h1>
