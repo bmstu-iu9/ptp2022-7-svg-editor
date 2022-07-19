@@ -5,8 +5,8 @@
 	<meta charset="UTF-8">
 	<title>SVG-Editor</title>
 	<!--    загружать статику нужно именно так-->
-    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207141345">
-    <script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
+    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 20223507141345">
+
 </head>
 <body style="background: #ccc">
 	<p style="font-size: 25px; font-weight: bold">
@@ -44,9 +44,11 @@
 		<button onclick="deleteLayer()">delete layer</button>
 		<input id="opacity-slider" onchange="changeOpacity()" type="range" min="0" max="1" step="0.01" value="1">
 	</div>
-	<label>Name your file: </label>
+
+	<div style="padding-top: 50px"><label>Name your file: </label>
 	<input type="text" id="file_name" value="untitled" style="width: 300px">
-	<label>.svg</label><p>
+	<label>.svg</label>
+		</div><p>
 	<button id="saveButton">Save it!</button>
 	<div class="panel">
 		<button id="target">Reload</button>
@@ -66,32 +68,26 @@
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
 	<script>
-		var draw = SVG(document.getElementById('canvas')).size(500, 500)
 
-		function drawPlease() {
-			var a_x, a_y, b_x, b_y, c_x, c_y;
-			a_x = document.getElementById('coord_a_x').value;
-			a_y = document.getElementById('coord_a_y').value;
-			b_x = document.getElementById('coord_b_x').value;
-			b_y = document.getElementById('coord_b_y').value;
-			c_x = document.getElementById('coord_c_x').value;
-			c_y = document.getElementById('coord_c_y').value;
-			draw.polygon([[a_x, a_y], [b_x, b_y], [c_x, c_y]]).fill(document.getElementById("color").value).stroke({ width: 1 })
-		}
-
-		function clearPlease() {
-			draw.clear();
-		}
 
 		$(document).ready(function () {
 			$.ajaxSetup({
   			headers: { "X-CSRFToken": '{{csrf_token}}' }
 			});
             $('#saveButton').click(function () {
+				let svg_data = "<svg xmlns=\"http://www.w3.org/2000/svg\"" +
+				" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" " +
+				"xmlns:svgjs=\"http://svgjs.com/svgjs\" width=\"" + workspace.clientWidth + "\" height=\"" + workspace.clientHeight + "\" class=\"layer\">"
+				for (i = 0; i < document.getElementsByClassName('layer').length; i++){
+				svg_data += '<g>'+ document.getElementsByClassName('layer')[i].innerHTML+'</g>'
+				}
+        		svg_data += '</svg>'
+        console.log(svg_data)
                 $.ajax({
                     data: {
-						svg: draw.svg(),
+						svg: svg_data,
 						file_name: document.getElementById('file_name').value,
 					},
                     type: 'POST',
