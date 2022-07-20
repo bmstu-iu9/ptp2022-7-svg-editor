@@ -34,7 +34,6 @@ def files_save(request):
             svg = request_dict['svg'][0]
             path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/' \
                            f'{str(request.user)}/svg/{request_dict["file_name"][0]}'
-            print(path_to_file)
             if len(request_dict["file_name"][0]) > 0:
                 if os.path.exists(path_to_file + '.svg'):
                     path_to_file += '({}).svg'

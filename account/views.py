@@ -8,8 +8,6 @@ from .forms import SignupForm
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
-        print(request.POST)
-        print(form.is_valid())
         if form.is_valid():
             user = form.save()
             path = f'{BASE_DIR}/svg_editor/media/svg_editor/{str(user)}/svg'
