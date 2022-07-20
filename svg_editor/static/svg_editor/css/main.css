@@ -1,0 +1,228 @@
+html,
+body {
+    background: white;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+td {
+    text-align: center;
+}
+
+.drop-list {
+    width: 8%;
+    height: 5%;
+    display: inline-block;
+}
+
+.drop-button {
+    width: 100%;
+    height: 30%;
+    border: 5px;
+    background: rgb(193, 193, 193);
+    text-align: center;
+    display: inline-block;
+    font-size: 18px;
+}
+
+.drop-moving-button {
+    width: 100%;
+    height: 200%;
+}
+
+.drop-content {
+    display: none;
+    position: absolute;
+    background: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+button.selected {
+    background: rgb(121, 121, 121);
+    color: white;
+}
+
+.file-menu-panel {
+    width: 25%;
+    height: 25%;
+    position: fixed;
+    display: none;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    border: 1px solid black;
+    z-index: 0;
+}
+
+.file-menu-form {
+    margin-top: 5%;
+    margin-left: 5%;
+    position: relative;
+}
+
+.moveable-part-file-menu {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+
+.close-menu-button {
+    margin-left: 94%;
+    width: 5%;
+    height: 90%;
+}
+
+.ok-button {
+    margin-left: 70%;
+    margin-top: 2%;
+    width: 20%;
+    height: 12%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#control-panel {
+    color: red;
+    width: 100%;
+    height: 30px;
+    border: 1px solid black;
+}
+
+#container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.tool-button {
+    position: relative;
+    width: 30px;
+    height: 30px;
+}
+
+#tools-panel {
+    background: rgb(170, 170, 170);
+    width: 10%;
+    height: 100%;
+    align-content: center;
+    float: left;
+    position: relative;
+    overflow: hidden;
+}
+
+#tools-choosing {
+    width: 90%;
+    height: 30%;
+    margin: 0 auto;
+    margin-top: 10%;
+    position: relative;
+    background-color: rgb(102, 102, 102);
+}
+
+#color-choosing {
+    position: relative;
+    margin-top: 30%;
+    width: 100%;
+    height: 30%;
+}
+
+.box {
+    width: 80px;
+    height: 80px;
+}
+
+#color-choosing-box-sub {
+    position: absolute;
+    left: 35%;
+    top: 45%;
+    z-index: 1;
+}
+
+#color-choosing-box-main {
+    position: absolute;
+    left: 10%;
+    top: 30%;
+    z-index: 2;
+}
+
+#filling-type {
+    height: 50%;
+    width: 100%;
+    position: relative;
+    margin-top: 10%;
+    margin-left: 10%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#workspace {
+    width: 69.8%;
+    height: 85%;
+    float: left;
+    border: 1px solid black;
+    position: relative;
+}
+
+#layers-panel {
+    background: white;
+    width: 90%;
+    height: 30%;
+    margin: 5%;
+    border: solid 2px black;
+}
+
+#layers-panel-control {
+    background: rgb(142, 142, 142);
+    width: 100%;
+    height: 7%;
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    border-bottom: 1px solid black;
+}
+
+#layers-panel-control-button {
+    width: 5%;
+    height: 90%;
+}
+
+#layers-panel-control-button.new {
+    margin-left: 85%;
+}
+
+#layers-panel-control-button.delete {
+    margin-left: 1%;
+}
+
+.layer {
+    width: 100%;
+    height: 20%;
+    align-items: center;
+    display: flex;
+    border-bottom: 1px solid black;
+}
+
+.layer-button {
+    width: 100%;
+    height: 100%;
+    margin-left: 10%;
+    border: 0;
+}
+
+#addition-panel {
+    background: rgb(170, 170, 170);
+    width: 20%;
+    height: 100%;
+    align-content: center;
+    float: left;
+    position: relative;
+    overflow: hidden;
+}
