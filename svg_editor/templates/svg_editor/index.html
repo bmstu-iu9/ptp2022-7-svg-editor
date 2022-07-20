@@ -1,175 +1,141 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" />
 	<title>SVG-Editor</title>
-	<!--    загружать статику нужно именно так-->
-    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 20223507141345">
-
-</head>
-<body style="background: #ccc">
-	<p style="font-size: 25px; font-weight: bold">
-		{% if user.is_authenticated %}
-		{{user.get_username}}
-		<a href="{% url 'logout' %}">Logout!</a>
-		{% else %}
-		<a href="{% url 'login' %}">Login!</a>
-		<a href="{% url 'signup' %}">Signup!</a>
-		{% endif %}
-	</p>
-	<h1>SVG Editor</h1>
-	<div style="display: flex">
-		<div id="workspace"></div>
-		<div id="layer-control-panel"></div>
-	</div>
-	<div>
-		<label>A: x=</label>
-		<input type="number" id="coord_a_x" min=0 max=500 value=50>
-		<label>, y=</label>
-		<input type="number" id="coord_a_y" min=0 max=500 value=50><p>
-		<label>B: x=</label>
-		<input type="number" id="coord_b_x" min=0 max=500 value=100>
-		<label>, y=</label>
-		<input type="number" id="coord_b_y" min=0 max=500 value=450><p>
-		<label>C: x=</label>
-		<input type="number" id="coord_c_x" min=0 max=500 value=400>
-		<label>, y=</label>
-		<input type="number" id="coord_c_y" min=0 max=500 value=250><p>
-		<label>color: </label>
-		<input type="color" id="color"><p>
-		<button type="button" onclick="drawPlease()">Draw it!</button>
-		<button type="button" onclick="clearPlease()">Clear it!</button>
-		<button onclick="createLayer()">new layer</button>
-		<button onclick="deleteLayer()">delete layer</button>
-		<input id="opacity-slider" onchange="changeOpacity()" type="range" min="0" max="1" step="0.01" value="1">
-	</div>
-
-	<div style="padding-top: 50px"><label>Name your file: </label>
-	<input type="text" id="file_name" value="untitled" style="width: 300px">
-	<label>.svg</label>
-		</div><p>
-	<button id="saveButton">Save it!</button>
-	<div class="panel">
-		<button id="target">Reload</button>
-		<p id="text">Click on the Reload button to get a list of saved files!<p>
-		<ul class="list_svg"></ul>
-	</div>
-
-	<br>
-	<input type="file" id="file" />
-	<br>
-	<p>
-		<label>Download file name: </label>
-		<input type="text" id="download_file_name" value="untitled" style="width: 300px">
-		<label>.svg</label>
-	</p>
-	<button id="downloadButton">Download it!</button>
-	{% block javascript %}
+	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207141345">
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
-	<script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
+</head>
 
+<body>
+	<header style="margin: 10px">
+		<div class="drop-list">
+			<button class="drop-button">File</button>
+			<div class="drop-content">
+				<p><button name="new-file" class="drop-moving-button">New</button></p>
+				<p><button name="save-file" class="drop-moving-button">Save</button></p>
+				<p><button name="download-file" class="drop-moving-button">Download</button></p>
+				<p><button name="open-file" class="drop-moving-button">Open</button></p>
+			</div>
+		</div>
+		<div class="drop-list">
+			<button class="drop-button">Edit</button>
+			<div class="drop-content">
+				<p><button name="undo" class="drop-moving-button">Undo</button></p>
+				<p><button name="redo" class="drop-moving-button">Redo</button></p>
+			</div>
+		</div>
+	</header>
+	<div id="control-panel">CONTROL PANEL</div>
+	<!--Добавить возможность закрыть окно без изменений-->
+	<div id="new-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<label for="file_name">Name:</label>
+			<input name="file_name" type="text" value="untitled">
+		</div>
+		<div class="file-menu-form">
+			<label for="width">Width:</label>
+			<input name="width" type="number" value="0">
+		</div>
+		<div class="file-menu-form">
+			<label for="height">Height:</label>
+			<input name="height" type="number" value="0">
+		</div>
+		<button class="ok-button">OK</button>
+	</div>
+	<div id="save-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<label>Name your file:</label>
+			<input id="file_name" type="text" value="untitled">
+			<label>.svg</label>
+		</div>
+		<button id="save-button">Save it!</button>
+	</div>
+	<div id="download-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<label>Download file name:</label>
+			<input type="text" id="download_file_name" value="untitled">
+			<label>.svg</label>
+		</div>
+		<button id="download-button">Download it!</button>
+	</div>
+	<div id="open-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<input type="file" id="file" />
+		</div>
+	</div>
+	<!--Окна загрузки и экспорта??-->
+	<div id="container">
+		<div id="tools-panel">
+			<table id="tools-choosing">
+				<tr>
+					<td>
+						<button class="tool-button"></button>
+					</td>
+					<td>
+						<button class="tool-button"></button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button class="tool-button"></button>
+					</td>
+					<td>
+						<button class="tool-button"></button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button class="tool-button"></button>
+					</td>
+					<td>
+						<button class="tool-button"></button>
+					</td>
+				</tr>
+			</table>
+			<div id="color-choosing">
+				<div id="color-choosing-box-main">
+					<input class="box" type="color">
+				</div>
+				<div id="color-choosing-box-sub">
+					<input class="box" type="color">
+				</div>
+			</div>
+			<div id="filling-type">
+				<input name="fill" type="checkbox">
+				<label for="fill">No fill</label>
+			</div>
+		</div>
 
-		$(document).ready(function () {
-			$.ajaxSetup({
-  			headers: { "X-CSRFToken": '{{csrf_token}}' }
-			});
-            $('#saveButton').click(function () {
-				let svg_data = "<svg xmlns=\"http://www.w3.org/2000/svg\"" +
-				" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" " +
-				"xmlns:svgjs=\"http://svgjs.com/svgjs\" width=\"" + workspace.clientWidth + "\" height=\"" + workspace.clientHeight + "\" class=\"layer\">"
-				for (i = 0; i < document.getElementsByClassName('layer').length; i++){
-				svg_data += '<g>'+ document.getElementsByClassName('layer')[i].innerHTML+'</g>'
-				}
-        		svg_data += '</svg>'
-        console.log(svg_data)
-                $.ajax({
-                    data: {
-						svg: svg_data,
-						file_name: document.getElementById('file_name').value,
-					},
-                    type: 'POST',
-                    url: "{% url 'files_save' %}",
-                    success: function (response) {
-						alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно создан!');
-                    },
-                    error: function (response) {
-                        alert(response.responseJSON.errors);
-                        console.log(response.responseJSON.errors);
-                    }
-                });
-                return false;
-            });
-			$('#file').change(function () {
-				let data = new FormData();
-				data.append('file', $("#file")[0].files[0]);
-                $.ajax({
-                    data: data,
-                    type: 'POST',
-                    url: "{% url 'files_upload' %}",
-					processData: false,
-					cache: false,
-    				contentType: false,
-                    success: function (response) {
-						alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно загружен!');
-                    },
-                    error: function (response) {
-                        alert(response.responseJSON.errors);
-                        console.log(response.responseJSON.errors);
-                    }
-                });
-                return false;
-            });
-			$('#downloadButton').click(function () {
-				$.ajax({
-         			url: "{% url 'files_download' %}",
-         			type: 'GET',
-					data: {
-						 file_name: document.getElementById('download_file_name').value
-					},
-         			success: function(response) {
-             			let a = document.createElement("a");
-             			a.href = "/files_download?file_name=" + document.getElementById('download_file_name').value;
-						a.click();
-         			},
-         			error: function(response){
-             			alert(response.responseJSON.errors);
-                        console.log(response.responseJSON.errors);
-         			},
-     			})
-            });
-		})
-
-		$(document).ready(function () {
-				$('#target').click (function () {
-						// создаем AJAX-вызов
-						$.ajax({ // получаяем данные формы
-								// тут используется шаблонизатор
-								url: "{% url 'files_view' %}",
-								// если успешно, то
-								success: function (response) {
-										console.log(response.svgs)
-										document.getElementById('text').innerHTML = "List of the saved files:";
-										let list = document.querySelector('.list_svg');
-										list.innerHTML = "";
-										let key;
-										for (key in response.svgs) {
-											list.innerHTML += `<li class="inner_list_svg">${response.svgs[key]}</li>`
-										}
-								},
-								// если ошибка, то
-								error: function (response) {
-										// предупредим об ошибке
-										alert(response.responseJSON.errors);
-										console.log(response.responseJSON.errors)
-								}
-						});
-						return false;
-				});
-		})
-	</script>
-	{% endblock javascript %}
+		<svg id="workspace"></svg>
+		<div id="addition-panel">
+			<div id="layers-panel">
+				<div id="layers-panel-control">
+					<button id="layers-panel-control-button" class="new"></button>
+					<button id="layers-panel-control-button" class="delete"></button>
+				</div>
+				<div class="layer">
+					<button class="layer-button">Layer 0</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
+
 </html>
