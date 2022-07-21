@@ -99,6 +99,19 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/account/login'
 
 
+# Email settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_HOST_USER = 'andryushka.kaban.z@mail.ru'
+EMAIL_HOST_PASSWORD = 'nrRdUc734Af0wBZnvWk6'
+EMAIL_PORT = 2525
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
