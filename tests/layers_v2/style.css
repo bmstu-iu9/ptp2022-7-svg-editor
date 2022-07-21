@@ -33,6 +33,11 @@
 	overflow-y: scroll;
 }
 
+.layer_note label {
+	margin: auto; 
+	user-select: none;
+}
+
 body {
   margin: 0;
   font-family: sans-serif;

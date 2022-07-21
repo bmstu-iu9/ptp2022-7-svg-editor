@@ -1,25 +1,12 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 	<meta charset="UTF-8">
 	<title>SVG-Editor</title>
-	<!--    загружать статику нужно именно так-->
-    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 20223507141345">
-    <link rel="stylesheet" href="../../static/svg_editor/css/main.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css">
 </head>
 <body style="background: #ccc">
-	<p style="font-size: 25px; font-weight: bold">
-		{% if user.is_authenticated %}
-		{{user.get_username}}
-		<a href="{% url 'logout' %}">Logout!</a>
-		{% else %}
-		<a href="{% url 'login' %}">Login!</a>
-		<a href="{% url 'signup' %}">Signup!</a>
-		{% endif %}
-	</p>
 	<h1>SVG Editor</h1>
-
 	<div style="display: flex">
 		<svg id="workspace" 
 		onmousedown="return logMouse('down', event)" 
@@ -52,39 +39,16 @@
 		<input id="width" type="number" min=1 value=3><p>
 		<button id="clearButton">Очистить холст</button>
 
+		<button type="button" onclick="drawBush()">Draw bush</button>
+		<button type="button" onclick="drawTower()">Draw tower</button>
+		<button type="button" onclick="drawShrine()">Draw shrine</button>
 		<button onclick="createLayer()">new layer</button>
 		<button onclick="deleteLayer()">delete layer</button>
 		<input id="opacity-slider" onchange="changeOpacity()" type="range" min="0" max="1" step="0.01" value="1">
 	</div>
-
-
-	<div style="padding-top: 50px"><label>Name your file: </label>
-	<input type="text" id="file_name" value="untitled" style="width: 300px">
-	<label>.svg</label>
-		</div><p>
-	<button id="saveButton">Save it!</button>
-	<div class="panel">
-		<button id="target">Reload</button>
-		<p id="text">Click on the Reload button to get a list of saved files!<p>
-		<ul class="list_svg"></ul>
-	</div>
-
-	<br>
-	<input type="file" id="file" />
-	<br>
-	<p>
-		<label>Download file name: </label>
-		<input type="text" id="download_file_name" value="untitled" style="width: 300px">
-		<label>.svg</label>
-	</p>
-	<button id="downloadButton">Download it!</button>
-
-	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
-	<script src="{% static 'svg_editor/js/layers.js' %}? 20220714154345"></script>
-	<script src="{% static 'svg_editor/js/draw.js' %}? 20220714154345"></script>
-	{% endblock javascript %}
+	<script src="main.js"></script>
+	<script src="draw.js"></script> 
 </body>
 </html>
