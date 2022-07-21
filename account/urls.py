@@ -11,5 +11,11 @@ urlpatterns = [
     path('signup/', signup, name='signup'),
     path('activate/<uidb64>/<token>/',
          activate, name='activate'),
+    path('password-reset/', views.PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/confirm/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(),
+         name='password_reset_confirm'),
+    path('reset/complete/', views.PasswordResetCompleteView.as_view(),
+         name='password_reset_complete'),
 
 ]

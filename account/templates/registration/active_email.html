@@ -1,7 +1,5 @@
 {% autoescape off %} 
 Hello {{ user.username }},
-The robot has checked your registration form, no errors found,
-all autotests have been passed.
 To confirm your email, follow the link:
 http://{{ domain }}{% url 'activate' uidb64=uid token=token %} 
 {% endautoescape %}

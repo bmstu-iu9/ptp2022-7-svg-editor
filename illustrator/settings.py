@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['127.0.0.1', '185.105.224.63']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -40,6 +39,7 @@ INSTALLED_APPS = [
     'account',
     'crispy_forms',
     'django.contrib.admin',
+    'django.contrib.auth',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -103,8 +103,8 @@ LOGIN_URL = '/account/login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_HOST_USER = 'andryushka.kaban.z@mail.ru'
-EMAIL_HOST_PASSWORD = 'nrRdUc734Af0wBZnvWk6'
+EMAIL_HOST_USER = 'illustratoriu9@mail.ru'
+EMAIL_HOST_PASSWORD = 'ugecY5GypdKtYLDiGLmV'
 EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
