@@ -11,7 +11,8 @@
 <style>
 svg {
 	border: 3px #bbb solid;
-	margin: auto
+	margin: auto;
+	background: #cfcfcf
 }
 label {
 	font-size: 40px;
@@ -25,73 +26,97 @@ button {
 	font-size: 40px;
 }
 </style>
-<body style="background: #ccc">
+<body style="background: #ccc;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none"
+onmousedown="logMouseEvent(event)" onmouseup="logMouseEvent(event)" onmousemove="logMouseEvent(event)"
+onmouseleave="breakDrawing()" onresize="resizeWindowEvent()">
 
 	<h1>SVG Редактор</h1>
 	<div style="display: flex; width: 100%; margin: auto">
-		<svg id="canvas" width="500" height="500" onmousedown="return logMouse('down', event)" onmouseup="return logMouse('up', event)" onmousemove="return logMouse('move', event)" onmouseleave="return logMouse('up', event)"/>
-		<div>
-			<input id="panсilTool" type="radio" name="tool" checked>
-			<label>Карандаш</label><br>
-			
-			<input id="lineTool" type="radio" name="tool">
-			<label>Линия</label><br>
-			
-			<input id="polygonTool" type="radio" name="tool">
+		<svg id="canvas"/>
+		<div onchange="changeToolEvent()">
+			<input type="radio" name="toolChoice" value="pancil">
+			<label>Карандаш</label><br>		
+			<input type="radio" name="toolChoice" value="line">
+			<label>Линия</label><br>	
+			<input type="radio" name="toolChoice" value="polygon">
 			<label>Полигон</label><br>
 			
-			<input id="fillTool" type="radio" name="tool">
-			<label>Заливка(в разработке)</label><br>
-			
 			<label>Цвет: </label>
-			<input id="color" type="color"><br>
+			<input id="colorChoice" type="color"><br>
 			<label>Заполнение фигур: </label>
-			<input id="fillButton" type="checkbox"><br>
+			<input id="fillChoice" type="checkbox"><br>
 			<label>Толщина линий: </label>
-			<input id="width" type="number" min=1 value=3><p>
-			<button id="clearButton">Отчистить холст</button>
+			<input id="widthChoice" type="number" min=1 value=3><p>
+			<button id="clearCanvasButton">Отчистить холст</button>
 		</div>
 	</div><p>
 	<label>Назовите свой файл: </label>
-	<input type="text" id="file_name" value="untitled" style="width: 300px">
+	<input id="fileNameInput" type="text" value="untitled" style="width: 300px"/>
 	<label>.svg</label><p>
-	<button id="saveButton">Сохранить файл</button>
+	<button id="saveFileButton">Сохранить файл</button>
 
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script>
-		const draw = SVG(document.getElementById('canvas')).size(500, 500)
-		const canvasRect = document.getElementById('canvas').getBoundingClientRect()
-		var object = null
-		const drawMethods = {
-			'pancil': {'up': pancilUp, 'move': pancilMove, 'down': pancilDown},
-			'line': {'up': lineUp, 'move': lineMove, 'down': lineDown},
-			'polygon': {'up': polygonUp, 'move': polygonMove, 'down': polygonDown},
-			'fill': {'up': 'fillUp', 'move': 'fillMove', 'down': 'fillDown'},
-		}
-		
-		function logMouse(type, event) {
-			if (document.getElementById('panсilTool').checked) {
-				tool = 'pancil'
-			} else if (document.getElementById('lineTool').checked) {
-				tool = 'line'
-			} else if (document.getElementById('polygonTool').checked) {
-				tool = 'polygon'
-			} else if (document.getElementById('fillTool').checked) {
-				tool = 'fill'
+	<script>// скрипт инициализации
+		const draw = SVG(document.getElementById('canvas')).size(500, 500),
+			toolMethods = {
+				'pancil': {'down': pancilDown, 'move': pancilMove, 'up': pancilUp},
+				'line': {'down': lineDown, 'move': lineMove, 'up': lineUp},
+				'polygon': {'down': polygonDown, 'move': polygonMove, 'up': polygonUp},
 			}
-			fill = document.getElementById('fillButton').checked
-			color = document.getElementById('color').value
-			width = document.getElementById('width').value
-			drawMethods[tool][type](event.x - canvasRect.left, event.y - canvasRect.top)
+		var object, tool
+		changeToolEvent()
+		resizeWindowEvent()
+		
+		function breakDrawing() {
+			if (object != null) {
+				object.remove()
+				object = null
+			}
 		}
 		
+		function resizeWindowEvent() {
+			canvasRect = document.getElementById('canvas').getBoundingClientRect()
+		}
+		
+		function changeToolEvent() {
+			breakDrawing()
+			for (const element of document.getElementsByName('toolChoice').values()) {
+				if (element.checked) {
+					tool = element.value
+					break
+				}
+			}
+			fillValue = document.getElementById('fillChoice').checked
+			colorValue = document.getElementById('colorChoice').value
+			widthValue = Math.max(1, document.getElementById('widthChoice').value)
+		}
+		
+		function logMouseEvent(event) {
+			if (event.which == 1 && tool in toolMethods && event.type.slice(5) in toolMethods[tool]) {
+				x = event.x - canvasRect.x
+				y = event.y - canvasRect.y
+				if (event.type == 'mousedown') {
+					if (0 <= x && x <= canvasRect.width &&
+						0 <= y && y <= canvasRect.height) {
+							toolMethods[tool][event.type.slice(5)](x, y)
+						}
+				} else {
+					toolMethods[tool][event.type.slice(5)](x, y)
+				}
+			}
+		}
+		
+		// <=><=><=><=><=>	скрипт инструмента карандаш <=><=><=><=><=>
 		function pancilDown(x, y) {
-			if (fill) {
-				object = draw.polyline([[x, y], [x + 1, y + 1]]).fill(color)
+			if (fillValue) {
+				object = draw.polyline([[x, y]]).fill(colorValue)
 			} else {
-				object = draw.polyline([[x, y], [x + 1, y + 1]]).fill('none').stroke({width: width, color: color})
+				object = draw.polyline([[x, y]]).fill('none').stroke({width: widthValue, color: colorValue})
 			}
 		}
 		
@@ -105,8 +130,9 @@ button {
 			object = null
 		}
 		
+		// <=><=><=><=><=>	скрипт инструмента линия <=><=><=><=><=>
 		function lineDown(x, y) {
-			object = draw.line(x, y, x, y).stroke({width: width, color: color})
+			object = draw.line(x, y, x, y).stroke({width: widthValue, color: colorValue})
 		}
 		
 		function lineMove(x, y) {
@@ -119,12 +145,13 @@ button {
 			object = null
 		}
 		
+		// <=><=><=><=><=>	скрипт инструмента полигон <=><=><=><=><=>
 		function polygonDown(x, y) {
 			if (object == null) {
-				if (fill) {
-					object = draw.polygon([[x, y], [x, y]]).fill(color)
+				if (fillValue) {
+					object = draw.polygon([[x, y], [x, y]]).fill(colorValue)
 				} else {
-					object = draw.polygon([[x, y], [x, y]]).fill('none').stroke({ width: width, color: color})
+					object = draw.polygon([[x, y], [x, y]]).fill('none').stroke({ width: widthValue, color: colorValue})
 				}
 			} else {
 				object.plot(object.array().concat([[x, y]]))
@@ -148,22 +175,24 @@ button {
 			}
 		}
 		
+		// <=><=><=><=><=>	скрипт чистки холста и сохранения файла <=><=><=><=><=>
 		$(document).ready(function () {
-			$('#clearButton').click(function () {
+			$('#clearCanvasButton').click(function () {
 				draw.clear()
 				object = null
 			})
-            $('#saveButton').click(function () {
+            $('#saveFileButton').click(function () {
+				breakDrawing();
                 $.ajax({
                     data: {
 						svg: draw.svg(),
-						file_name: document.getElementById('file_name').value,
+						file_name: document.getElementById('fileNameInput').value,
 						csrfmiddlewaretoken: '{{ csrf_token }}'
 					},
                     type: 'POST',
                     url: "{% url 'files_save' %}",
                     success: function (response) {
-						alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно создан!');
+						alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно создан!')
                     },
                     error: function (response) {
                         alert(response.responseJSON.errors);
