@@ -1,22 +1,15 @@
 let currentFileName = null;  
 
 $(document).ready(function () {
+
 	$.ajaxSetup({
 		headers: { "X-CSRFToken": token }
 	});
+
 	$('#saveButton').click(function () {
-		let svg_data = `<svg xmlns="http://www.w3.org/2000/svg"
-			version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
-			width="${workspace.clientHeight}" height="${workspace.clientWidth}">\n`
-		for (let layer of document.getElementById('workspace').childNodes) {
-			// svg_data += `	<svg class="layer" height="${layer.getAttribute('height')}" width="${layer.getAttribute('width')}" viewBox="${layer.getAttribute('viewBox')}">` + e.innerHTML + '</svg>\n'
-			svg_data += `	<svg height="${layer.getAttribute('height')}" width="${layer.getAttribute('width')}" opacity="${layer.getAttribute('opacity')}" viewBox="${layer.getAttribute('viewBox')}">\n`;
-			for (let elem of layer.childNodes) {
-				svg_data += `		${elem.outerHTML}\n`
-			}
-			svg_data += '	</svg>\n'
-		}
-		svg_data += '</svg>\n'
+
+		let svg_data = getPictureAsSvg();
+		
 		console.log(svg_data)
 		$.ajax({
 			data: {
@@ -36,6 +29,7 @@ $(document).ready(function () {
 		});
 		return false;
 	});
+
 	$('#file').change(function () {
 		let data = new FormData();
 		data.append('file', $("#file")[0].files[0]);
@@ -56,6 +50,7 @@ $(document).ready(function () {
 		});
 		return false;
 	});
+
 	$('#downloadButton').click(function () {
 		$.ajax({
 			url: downloadURL,
@@ -79,7 +74,7 @@ $(document).ready(function () {
 		// создаем AJAX-вызов
 		$.ajax({ // получаяем данные формы
 			// тут используется шаблонизатор
-			url: reloadURL,
+			url: viewURL,
 			// если успешно, то
 			success: function (response) {
 				console.log(response.svgs)
@@ -110,16 +105,7 @@ $(document).ready(function () {
 			},
 			success: function (response) {
 				console.log(response);
-				let oParser = new DOMParser();
-				let oDOM = oParser.parseFromString(response,"application/xml");
-				workspace.innerHTML="";
-				layerControlPanel.innerHTML="";
-				currentLayer = null;
-    			draw = null;
-    			canvasRect = null;
-    			object = null;
-    			i = 0;
-				createLayer(oDOM.documentElement);
+				openAsSvg(response);
 			},
 			error: function (response) {
 				alert(response.responseJSON.errors);

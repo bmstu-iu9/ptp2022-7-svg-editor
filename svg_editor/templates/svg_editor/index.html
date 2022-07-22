@@ -22,14 +22,15 @@
 
 	<div style="display: flex">
 		<svg id="workspace" 
-		onmousedown="return logMouse('down', event)" 
-		onmouseup="return logMouse('up', event)" 
-		onmousemove="return logMouse('move', event)" 
-		onmouseleave="return logMouse('up', event)"
-		version="1.1"
-     	xmlns="http://www.w3.org/2000/svg" 
-		xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
-		<div id="layer-control-panel"></div>
+			 onmousedown="return logMouse('down', event)" 
+			 onmouseup="return logMouse('up', event)" 
+			 onmousemove="return logMouse('move', event)" 
+			 onmouseleave="return logMouse('up', event)"
+			 version="1.1"
+     		 xmlns="http://www.w3.org/2000/svg" 
+			 xmlns:xlink="http://www.w3.org/1999/xlink">
+		</svg>
+		<div id="layer_panel"></div>
 	</div>
 	<div id="controls">
 		<input id="panсilTool" type="radio" name="tool" checked>
@@ -54,7 +55,8 @@
 
 		<button onclick="createLayer()">new layer</button>
 		<button onclick="deleteLayer()">delete layer</button>
-		<input id="opacity-slider" onchange="changeOpacity()" type="range" min="0" max="1" step="0.01" value="1">
+		<button onclick="deleteAllLayers()">new file</button>
+		<input id="opacity_slider" onchange="changeOpacity()" type="range" min="0" max="1" step="0.01" value="1">
 	</div>
 
 	<div style="padding-top: 50px"><label>Name your file: </label>
@@ -87,7 +89,7 @@
 		      saveURL = "{% url 'files_save' %}",
 		      uploadURL = "{% url 'files_upload' %}",
 			  downloadURL = "{% url 'files_download' %}",
-			  reloadURL = "{% url 'files_view' %}";
+			  viewURL = "{% url 'files_view' %}";  
 	</script>
 	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
 	<script src="{% static 'svg_editor/js/layers.js' %}? 20220714154345"></script>
