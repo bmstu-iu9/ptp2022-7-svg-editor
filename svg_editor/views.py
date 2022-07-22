@@ -17,12 +17,11 @@ def files_view(request):
         if request.method == 'GET':
             path = os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg')
             svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
-            if svgs_lists:
-                response = {
-                    'svgs': svgs_lists
-                }
-                return JsonResponse(response, status=200)
-        return JsonResponse({'errors': 'No files exist'}, status=400)
+            response = {
+                'svgs': svgs_lists
+            }
+            return JsonResponse(response, status=200)
+        return JsonResponse({'errors': 'Bad request'}, status=400)
     return JsonResponse({'errors': 'Permission denied'}, status=403)
 
 
