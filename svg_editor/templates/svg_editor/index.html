@@ -1,23 +1,22 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
 	<meta charset="UTF-8" />
 	<title>SVG-Editor</title>
-	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207141345">
+	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}">
+	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
 </head>
-
 <body>
 	<header style="margin: 10px">
 		<div class="drop-list">
 			<button class="drop-button">File</button>
 			<div class="drop-content">
 				<p><button name="new-file" class="drop-moving-button">New</button></p>
-				<p><button name="load-file" class="drop-moving-button">Load</button></p>
-				<p><button name="export-file" class="drop-moving-button">Export</button></p>
+				<p><button name="save-file" class="drop-moving-button">Save</button></p>
+				<p><button name="download-file" class="drop-moving-button">Download</button></p>
+				<p><button name="open-file" class="drop-moving-button">Open</button></p>
 			</div>
 		</div>
 		<div class="drop-list">
@@ -35,8 +34,8 @@
 			<button class="close-menu-button"></button>
 		</div>
 		<div class="file-menu-form">
-			<label for="filename">Name:</label>
-			<input name="filename" type="text" value="untitled">
+			<label for="file_name">Name:</label>
+			<input name="file_name" type="text" value="untitled">
 		</div>
 		<div class="file-menu-form">
 			<label for="width">Width:</label>
@@ -48,7 +47,36 @@
 		</div>
 		<button class="ok-button">OK</button>
 	</div>
-	<!--Окна загрузки и экспорта??-->
+	<div id="save-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<label>Name your file:</label>
+			<input id="file_name" type="text" value="untitled">
+			<label>.svg</label>
+		</div>
+		<button id="save-button">Save it!</button>
+	</div>
+	<div id="download-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<label>Download file name:</label>
+			<input type="text" id="download_file_name" value="untitled">
+			<label>.svg</label>
+		</div>
+		<button id="download-button">Download it!</button>
+	</div>
+	<div id="open-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<input type="file" id="file" />
+		</div>
+	</div>
 	<div id="container">
 		<div id="tools-panel">
 			<table id="tools-choosing">
@@ -91,7 +119,9 @@
 			</div>
 		</div>
 
-		<svg id="workspace"></svg>
+		<div id="workspace">
+			<svg id="canvas" width="500" height="500"></svg>
+		</div>
 		<div id="addition-panel">
 			<div id="layers-panel">
 				<div id="layers-panel-control">
@@ -102,8 +132,54 @@
 					<button class="layer-button">Layer 0</button>
 				</div>
 			</div>
+			<div id="coord-choosing">
+				<label>A: x=</label>
+				<input type="number" id="coord_a_x" min=0 max=500 value=50>
+				<label>, y=</label>
+				<input type="number" id="coord_a_y" min=0 max=500 value=50><p>
+				<label>B: x=</label>
+				<input type="number" id="coord_b_x" min=0 max=500 value=100>
+				<label>, y=</label>
+				<input type="number" id="coord_b_y" min=0 max=500 value=450><p>
+				<label>C: x=</label>
+				<input type="number" id="coord_c_x" min=0 max=500 value=400>
+				<label>, y=</label>
+				<input type="number" id="coord_c_y" min=0 max=500 value=250><p>
+				<label>color: </label>
+				<input type="color" id="color"><p>
+				<button type="button" onclick="drawPlease()">Draw it!</button>
+				<button type="button" onclick="clearPlease()">Clear it!</button>
+			</div>
 		</div>
 	</div>
-</body>
 
+	<input type="hidden" id="url-save" data-url="{% url 'files_save' %}" />
+
+	{% block javascript %}
+	<script src="{% static 'svg_editor/js/main.js' %}"></script>
+	<script>
+		$(document).ready(function () {
+        $('#save-button').click(function () {
+            $.ajax({
+                data: {
+                    svg: draw.svg(),
+                    file_name: document.getElementById('file_name').value,
+                    csrfmiddlewaretoken: '{{csrf_token}}'
+                },
+                type: 'POST',
+                url: "{% url 'files_save' %}",
+                success: function (response) {
+                    alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно создан!');
+                },
+                error: function (response) {
+                    alert(response.responseJSON.errors);
+                    console.log(response.responseJSON.errors)
+                }
+            });
+            return false;
+        });
+    })
+	</script>
+	{% endblock javascript %}
+</body>
 </html>
