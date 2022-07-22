@@ -65,6 +65,7 @@
 	<button id="saveButton">Save it!</button>
 	<div class="panel">
 		<button id="target">Reload</button>
+		<button id="editButton">Edit</button>
 		<p id="text">Click on the Reload button to get a list of saved files!<p>
 		<ul class="list_svg"></ul>
 	</div>
@@ -82,6 +83,13 @@
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		const token = '{{csrf_token}}',
+		      saveURL = "{% url 'files_save' %}",
+		      uploadURL = "{% url 'files_upload' %}",
+			  downloadURL = "{% url 'files_download' %}",
+			  reloadURL = "{% url 'files_view' %}";
+	</script>
 	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
 	<script src="{% static 'svg_editor/js/layers.js' %}? 20220714154345"></script>
 	<script src="{% static 'svg_editor/js/draw.js' %}? 20220714154345"></script>

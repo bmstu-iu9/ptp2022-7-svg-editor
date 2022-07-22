@@ -19,8 +19,9 @@ let currentLayer = null,
     object = null,
     i = 0;
 
-function createLayer(){
-    let draw = SVG().addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);
+function createLayer(baseElement){
+    let draw = (baseElement === undefined) ? SVG() : SVG(baseElement);
+    draw.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);
     let newLayer = draw.node;
 
     newLayer.setAttribute('class', 'layer');
