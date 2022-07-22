@@ -40,6 +40,7 @@ def signup(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 
+# Email activation
 def activate(request, uidb64, token):
     user_model = get_user_model()
     try:
