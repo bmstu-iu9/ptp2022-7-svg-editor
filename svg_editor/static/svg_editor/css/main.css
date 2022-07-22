@@ -100,7 +100,7 @@ body {
   background-color: #4b4b4b;
 }
 
-.list_svg {
+#list_svg {
   list-style: none;
   font: 16px;
   padding: 0;

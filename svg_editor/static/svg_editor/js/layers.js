@@ -62,7 +62,7 @@ function selectLayer(note) {
     object = null
 }
 
-function deleteLayer() {
+function deleteLayer(layer) {
     if (currentLayer === null) return;
     currentLayer.remove();
     currentLayer.note.remove();

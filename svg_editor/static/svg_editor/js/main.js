@@ -1,3 +1,5 @@
+let currentFileName = null;  
+
 $(document).ready(function () {
 	$.ajaxSetup({
 		headers: { "X-CSRFToken": token }
@@ -82,11 +84,11 @@ $(document).ready(function () {
 			success: function (response) {
 				console.log(response.svgs)
 				document.getElementById('text').innerHTML = "List of the saved files:";
-				let list = document.querySelector('.list_svg');
+				let list = document.querySelector('#list_svg');
 				list.innerHTML = "";
 				let key;
 				for (key in response.svgs) {
-					list.innerHTML += `<input class="inner_list_svg" type='radio' name='selected_file'>${response.svgs[key]}</input>`
+					list.innerHTML += `<input class="inner_list_svg" type='radio' name='selected_file'>${response.svgs[key]}`
 				}
 			},
 			// если ошибка, то
@@ -104,12 +106,19 @@ $(document).ready(function () {
 			url: downloadURL,
 			type: 'GET',
 			data: {
-				file_name: document.getElementById('download_file_name').value,
+				file_name: currentFileName,
 			},
 			success: function (response) {
 				console.log(response);
 				let oParser = new DOMParser();
 				let oDOM = oParser.parseFromString(response,"application/xml");
+				workspace.innerHTML="";
+				layerControlPanel.innerHTML="";
+				currentLayer = null;
+    			draw = null;
+    			canvasRect = null;
+    			object = null;
+    			i = 0;
 				createLayer(oDOM.documentElement);
 			},
 			error: function (response) {
@@ -117,5 +126,9 @@ $(document).ready(function () {
 				console.log(response.responseJSON.errors);
 			},
 		})
+	})
+
+	$('#list_svg').on("click",".inner_list_svg",function () {
+		currentFileName = this.nextSibling.textContent.slice(0,-4);
 	})
 })
