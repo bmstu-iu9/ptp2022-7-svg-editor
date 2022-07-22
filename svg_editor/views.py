@@ -16,12 +16,11 @@ def files_view(request):
     if request.method == 'GET':
         path = os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg')
         svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
-        if svgs_lists:
-            response = {
-                'svgs': svgs_lists
-            }
-            return JsonResponse(response, status=200)
-    return JsonResponse({'errors': 'No files exist'}, status=400)
+        response = {
+            'svgs': svgs_lists
+        }
+        return JsonResponse(response, status=200)
+    return JsonResponse({'errors': 'Bad request'}, status=400)
 
 
 # Script for saving svg
@@ -63,7 +62,6 @@ def files_get(request):
 # Script for downloading svg
 def files_download(request):
     request_dict = dict(request.GET)
-    print(request_dict)
     if request.method == 'GET' and 'file_name' in request_dict:
         file_name = '{}.svg'.format(request_dict['file_name'][0])
         path = Path(os.path.join(BASE_DIR, 'svg_editor/media/svg_editor/svg'+'/'+file_name))
