@@ -67,19 +67,26 @@ def files_save(request):
     return JsonResponse({'errors': 'Permission denied'}, status=403)
 
 
-# Script for getting svg
+# Script for getting svg and project files
 def files_get(request):
     if request.user.is_authenticated:
         request_dict = dict(request.GET)
         if request.method == 'GET' and 'file_name' in request_dict:
             path = os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg')
             svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
-            file_name = request_dict['file_name'][0]+'.svg'
+            file_name = request_dict['file_name'][0]
             if file_name in svgs_lists:
                 with open(path+'/'+file_name) as file:
-                    response = {
-                        'svg': file.readline()
-                    }
+                    if Path(request_dict['file_name'][0]).suffix == '.svg':
+                        response = {
+                            'svg': ''.join(file.readlines())
+                        }
+                    else:
+                        response = {
+                            'yml': yaml.load(file, Loader=yaml.Loader)
+                        }
+                        del response['yml']['type']
+                response['file_name'] = file_name
                 return JsonResponse(response, status=200)
         return JsonResponse({'errors': 'File not found'}, status=400)
     return JsonResponse({'errors': 'Permission denied'}, status=403)

@@ -79,7 +79,6 @@ $(document).ready(function () {
 			url: viewURL,
 			// если успешно, то
 			success: function (response) {
-				console.log(response.svgs)
 				document.getElementById('text').innerHTML = "List of the saved files:";
 				let list = document.querySelector('#list_svg');
 				list.innerHTML = "";
@@ -106,8 +105,12 @@ $(document).ready(function () {
 				file_name: currentFileName,
 			},
 			success: function (response) {
-				console.log(response);
-				openAsSvg(response);
+				if (response.file_name.split('.').pop().toLowerCase() === 'svg') {
+					openAsSvg(response.svg);
+				} else {
+					console.log(response.yml);
+				}
+
 			},
 			error: function (response) {
 				alert(response.responseJSON.errors);
@@ -117,6 +120,6 @@ $(document).ready(function () {
 	})
 
 	$('#list_svg').on("click",".inner_list_svg",function () {
-		currentFileName = this.nextSibling.textContent.slice(0,-4);
+		currentFileName = this.nextSibling.textContent;
 	})
 })
