@@ -7,6 +7,7 @@ const workspace = document.querySelector('#workspace');
 const layerNote = function () {
     let note = document.createElement('div');
     note.setAttribute('class', 'layer_note');
+    note.setAttribute('draggable', 'true');
     note.insertAdjacentHTML('beforeend', `
     <input type="checkbox" checked/>
     <label></label>`);
@@ -28,9 +29,10 @@ function createLayer(baseElement) {
 
     opacitySlider.value = 1;
 
+    let layerName = prompt('Enter layer name', 'Layer ' + i++);
     let newNote = layerNote.cloneNode(true);
     newNote.setAttribute('checked', false);
-    newNote.lastElementChild.textContent = 'Layer ' + i++;
+    newNote.lastElementChild.textContent = layerName;
     layerControlPanel.prepend(newNote);
 
     newLayer.note = newNote;
@@ -116,6 +118,26 @@ $(document).ready(function () {
     createLayer();
     $('#layer_panel').on("click", ".layer_note", function () {
         selectLayer(this);
+    })
+    $('#layer_panel').on("dragstart", ".layer_note", function () {
+        selectLayer(this);
+    })
+    $('#layer_panel').on("dragenter", ".layer_note", function () {
+        this.querySelector('input').classList.add('unactive');
+        this.classList.add('hovered');
+    })
+    $('#layer_panel').on("dragleave", ".layer_note", function () {
+        this.querySelector('input').classList.remove('unactive');
+        this.classList.remove('hovered');
+    })
+    $('#layer_panel').on("dragover", ".layer_note", function (e) {
+        e.preventDefault();
+    })
+    $('#layer_panel').on("drop", ".layer_note", function () {
+        console.log('drop');
+        $(this).trigger("dragleave");
+        this.layer.before(currentLayer);
+        this.after(currentLayer.note);
     })
     $('#layer_panel').on("click", ".layer_note input", function () {
         checkActivity(this);
