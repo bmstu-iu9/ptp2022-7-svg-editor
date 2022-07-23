@@ -93,17 +93,39 @@ function getPictureAsSvg() {
                          `height="${workspace.clientWidth}">\n`
 
     for (let layer of document.getElementById('workspace').childNodes) {
-        svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
+        svgString += `\t<g height="${layer.getAttribute('height')}" ` +
                             `width="${layer.getAttribute('width')}" ` +
                             `opacity="${layer.getAttribute('opacity')}" ` +
                             `viewBox="${layer.getAttribute('viewBox')}">\n`;
         for (let elem of layer.children) {
             svgString += `\t\t${elem.outerHTML}\n`
         }
-        svgString += '\t</svg>\n'
+        svgString += '\t</g>\n'
     }
     svgString += '</svg>\n'
     return svgString;
+}
+
+function getPictureAsProject() {
+    let projectData = {attributes: [ `xmlns="http://www.w3.org/2000/svg"`,
+                         `xmlns:xlink="http://www.w3.org/1999/xlink"`,
+                         `version="1.1"`,
+                         `width="${workspace.clientHeight}"`,
+                         `height="${workspace.clientWidth}"`]};
+    projectData.layers = [];
+
+    for (let layer of document.getElementById('workspace').childNodes) {
+        let layerData = {attributes: [`height="${layer.getAttribute('height')}"`,
+                            `width="${layer.getAttribute('width')}"`,
+                            `opacity="${layer.getAttribute('opacity')}"`,
+                            `viewBox="${layer.getAttribute('viewBox')}"`]};
+        layerData.outer = '';
+        for (let elem of layer.children) {
+            layerData.outer += `${elem.outerHTML}`;
+        }
+        projectData.layers.push(layerData);
+    }
+    return projectData;
 }
 
 function openAsSvg(svgString) {

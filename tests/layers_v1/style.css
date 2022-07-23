@@ -1,9 +1,0 @@
-div {
-	border: 1em double black;
-	overflow: hidden;
-}
-
-.layer {
-	box-sizing: border-box;
-	position: absolute;
-}

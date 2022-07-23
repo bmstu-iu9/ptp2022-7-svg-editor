@@ -8,21 +8,23 @@ $(document).ready(function () {
 
 	$('#saveButton').click(function () {
 
-		let svg_data = getPictureAsSvg();
-		
-		console.log(svg_data)
+		let dataToSave = {
+			file_name: document.getElementById('file_name').value,
+		}
+		if (document.getElementById('save_file_type').value === 'svg'){
+			dataToSave.svg = getPictureAsSvg();
+		} else {
+			dataToSave.yml = JSON.stringify(getPictureAsProject());
+		}
+		console.log(dataToSave)
 		$.ajax({
-			data: {
-				svg: svg_data,
-				file_name: document.getElementById('file_name').value,
-			},
+			data: dataToSave,
 			type: 'POST',
 			url: saveURL,
 			success: function (response) {
 				alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно создан!');
 			},
 			error: function (response) {
-				console.log(response);
 				alert(response.responseJSON.errors);
 				console.log(response.responseJSON.errors);
 			}
@@ -98,7 +100,7 @@ $(document).ready(function () {
 
 	$("#editButton").click(function () {
 		$.ajax({
-			url: downloadURL,
+			url: loadURL,
 			type: 'GET',
 			data: {
 				file_name: currentFileName,

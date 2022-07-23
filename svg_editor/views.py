@@ -1,9 +1,11 @@
 import itertools
+import json
 import os
 from pathlib import Path
 from django.http import JsonResponse, FileResponse
 from django.shortcuts import render
 from illustrator.settings import BASE_DIR
+import yaml
 
 
 # Rendering the editor's page
@@ -25,7 +27,7 @@ def files_view(request):
     return JsonResponse({'errors': 'Permission denied'}, status=403)
 
 
-# Script for saving svg
+# Script for saving svg and project files
 def files_save(request):
     if request.user.is_authenticated:
         request_dict = dict(request.POST)
@@ -43,6 +45,23 @@ def files_save(request):
                 else:
                     path_to_file += '.svg'
                 open(path_to_file, 'w').write(svg)
+                return JsonResponse({'file_name': path_to_file[path_to_file.rfind('/') + 1:]}, status=200)
+        elif request.method == "POST" and 'yml' in request_dict and 'file_name' in request_dict:
+            path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/' \
+                           f'{str(request.user)}/svg/{request_dict["file_name"][0]}'
+            if len(request_dict["file_name"][0]) > 0:
+                if os.path.exists(path_to_file + '.yml'):
+                    path_to_file += '({}).yml'
+                    num = 1
+                    while os.path.exists(path_to_file.format(num)):
+                        num += 1
+                    path_to_file = path_to_file.format(num)
+                else:
+                    path_to_file += '.yml'
+                stream = open(path_to_file, 'w')
+                yaml.dump({'type': 'illustration'}, stream)
+                yaml.dump(json.loads(request_dict['yml'][0]),
+                          stream)
                 return JsonResponse({'file_name': path_to_file[path_to_file.rfind('/') + 1:]}, status=200)
         return JsonResponse({'errors': 'Bad file name'}, status=400)
     return JsonResponse({'errors': 'Permission denied'}, status=403)

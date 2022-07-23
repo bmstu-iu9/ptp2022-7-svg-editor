@@ -15,6 +15,7 @@ from .tokens import account_activation_token
 def account(request):
     return render(request, 'registration/account.html')
 
+
 # Registration of a new user
 def signup(request):
     if request.method == 'POST':
