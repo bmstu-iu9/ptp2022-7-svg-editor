@@ -11,23 +11,21 @@
 <body style="background: #ccc">
 	<p style="font-size: 25px; font-weight: bold">
 		{% if user.is_authenticated %}
-		{{user.get_username}}
-		<a href="{% url 'logout' %}">Logout!</a>
+		<a href="{% url 'account' %}">{{user.get_username}}</a>
 		{% else %}
 		<a href="{% url 'login' %}">Login!</a>
-		<a href="{% url 'signup' %}">Signup!</a>
 		{% endif %}
 	</p>
 	<h1>SVG Editor</h1>
 
 	<div style="display: flex">
-		<svg id="workspace" 
-			 onmousedown="return logMouse('down', event)" 
-			 onmouseup="return logMouse('up', event)" 
-			 onmousemove="return logMouse('move', event)" 
+		<svg id="workspace"
+			 onmousedown="return logMouse('down', event)"
+			 onmouseup="return logMouse('up', event)"
+			 onmousemove="return logMouse('move', event)"
 			 onmouseleave="return logMouse('up', event)"
 			 version="1.1"
-     		 xmlns="http://www.w3.org/2000/svg" 
+     		 xmlns="http://www.w3.org/2000/svg"
 			 xmlns:xlink="http://www.w3.org/1999/xlink">
 		</svg>
 		<div id="layer_panel"></div>
@@ -35,16 +33,16 @@
 	<div id="controls">
 		<input id="panсilTool" type="radio" name="tool" checked>
 		<label>Карандаш</label><br>
-		
+
 		<input id="lineTool" type="radio" name="tool">
 		<label>Линия</label><br>
-		
+
 		<input id="polygonTool" type="radio" name="tool">
 		<label>Полигон</label><br>
-		
+
 		<input id="fillTool" type="radio" name="tool">
 		<label>Заливка(в разработке)</label><br>
-		
+
 		<label>Цвет: </label>
 		<input id="color" type="color"><br>
 		<label>Заполнение фигур: </label>
@@ -89,7 +87,7 @@
 		      saveURL = "{% url 'files_save' %}",
 		      uploadURL = "{% url 'files_upload' %}",
 			  downloadURL = "{% url 'files_download' %}",
-			  viewURL = "{% url 'files_view' %}";  
+			  viewURL = "{% url 'files_view' %}";
 	</script>
 	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
 	<script src="{% static 'svg_editor/js/layers.js' %}? 20220714154345"></script>

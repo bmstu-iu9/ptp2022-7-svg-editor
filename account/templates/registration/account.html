@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Account</title>
+</head>
+<style>
+    a {
+	    text-decoration: none;
+	    color: black;
+    }
+</style>
+<body>
+<p style="font-size: 25px; font-weight: bold">
+    Hi, {{user.get_short_name}}!
+
+<p style="font-size: 25px; font-weight: bold">
+<a href="{% url 'password_change' %}">Change your password!</a>
+<a href="{% url 'logout' %}">Logout!</a>
+</p>
+<p style="font-size: 25px; font-weight: bold">
+<a href="{% url 'index' %}">To editor!</a>
+</p>
+</body>
+</html>
