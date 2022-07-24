@@ -6,10 +6,10 @@ $(document).ready(function () {
 		headers: { "X-CSRFToken": token }
 	});
 
-	$('#saveButton').click(function () {
+	$('#saveFileButton').click(function () {
 
 		let dataToSave = {
-			file_name: document.getElementById('file_name').value,
+			file_name: document.getElementById('fileNameInput').value,
 		}
 		if (document.getElementById('save_file_type').value === 'svg'){
 			dataToSave.svg = getPictureAsSvg();
