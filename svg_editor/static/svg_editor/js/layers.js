@@ -1,8 +1,16 @@
 'use strict'
 
+/**
+ * @author wizardOfOz21
+ **/
+
 const opacitySlider = document.querySelector('#opacity_slider');
 const layerControlPanel = document.querySelector('#layer_panel');
 const workspace = document.querySelector('#workspace');
+const fillInput = document.getElementById('fillChoice');
+const colorInput = document.getElementById('colorChoice');
+const widthInput = document.getElementById('widthChoice');
+const toolsInput = document.getElementsByName('toolChoice');
 
 const layerNote = function () {
     let note = document.createElement('div');
@@ -18,6 +26,8 @@ let currentLayer,
     draw,
     canvasRect,
     object,
+	tool,
+	mouseup = true,
     i;
 
 function createLayer(baseElement) {
@@ -48,10 +58,8 @@ function selectLayer(note) {
     note.setAttribute('checked', !(note.getAttribute('checked') === 'true'));
     currentLayer = note.layer;
 
-
     draw = SVG(currentLayer);
-    canvasRect = currentLayer.getBoundingClientRect();
-    object = null
+	object = null;
 }
 
 function deleteLayer(layer) {
@@ -138,6 +146,8 @@ function openAsSvg(svgString) {
 $(document).ready(function () {
     deleteAllLayers();
     createLayer();
+	changeToolEvent();
+	resizeWindowEvent();
     $('#layer_panel').on("click", ".layer_note", function () {
         selectLayer(this);
     })
