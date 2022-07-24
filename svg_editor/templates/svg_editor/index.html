@@ -3,312 +3,99 @@
 <html lang="ru">
 <head>
 	<meta charset="UTF-8">
-	<title>SVG-Редактор</title>
+	<title>СВГ-Редактор</title>
 	<!--    загружать статику нужно именно так-->
-    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207141345">
-    <script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
+    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 20223507141345">
+    <link rel="stylesheet" href="../../static/svg_editor/css/main.css">
 </head>
-<style>
-svg {
-	border: 3px #bbb solid;
-	margin: auto;
-	background: #cfcfcf
-}
-label {
-	font-size: 40px;
-}
-input {
-	width: 85px;
-	font-size: 40px;
-}
-button {
-	height: 50px;
-	font-size: 40px;
-}
-</style>
-<body style="background: #ccc;
--webkit-touch-callout: none; -webkit-user-select: none;
--khtml-user-select: none; -moz-user-select: none;
--ms-user-select: none; user-select: none"
-onmousedown="logMouseEvent(event)" onmouseup="logMouseEvent(event)" onmousemove="logMouseEvent(event)"
-onmouseleave="breakDrawing()" onresize="resizeWindowEvent()">
+<body onmousedown="logMouseEvent(event);" onmouseup="logMouseEvent(event);" onmousemove="logMouseEvent(event);"
+onmouseleave="breakDrawing();" onresize="resizeWindowEvent();">
+	<p style="font-size: 25px; font-weight: bold">
+		{% if user.is_authenticated %}
+		<a href="{% url 'account' %}">{{user.get_username}}</a>
+		{% else %}
+		<a href="{% url 'login' %}">Login!</a>
+		{% endif %}
+	</p>
+	<h1>СВГ Редактор</h1>
 
-	<h1>SVG Редактор</h1>
 	<div style="display: flex; width: 100%; margin: auto">
-		<svg id="canvas"/>
-		<div onchange="changeToolEvent()">
-			<input type="radio" name="toolChoice" value="pancil">
-			<label>Карандаш</label><br>		
-			<input type="radio" name="toolChoice" value="line">
-			<label>Линия</label><br>
-			<input type="radio" name="toolChoice" value="polygon">
-			<label>Полигон</label><br>
-			<input type="radio" name="toolChoice" value="path">
-			<label>Контур</label><br>
-			<input type="radio" name="toolChoice" value="text" checked>
-			<label>Текст</label><br>
-			
-			<label>Цвет: </label>
-			<input id="colorChoice" type="color"><br>
-			<label>Заполнение фигур: </label>
-			<input id="fillChoice" type="checkbox"><br>
-			<label>Толщина линий: </label>
-			<input id="widthChoice" type="number" min=1 value=3><p>
-			<button id="clearCanvasButton">Отчистить холст</button>
-		</div>
-	</div><p>
-	<label>Назовите свой файл: </label>
-	<input id="fileNameInput" type="text" value="untitled" style="width: 300px"/>
-	<label>.svg</label><p>
-	<button id="saveFileButton">Сохранить файл</button>
+		<svg id="workspace"
+			 version="1.1"
+     		 xmlns="http://www.w3.org/2000/svg"
+			 xmlns:xlink="http://www.w3.org/1999/xlink"/>
+		<div id="layer_panel"></div>
+	</div>
+	<div id="controls" onchange="changeToolEvent()">
+		<input type="radio" name="toolChoice" value="pancil" checked>
+		<label>Карандаш</label><br>		
+
+		<input type="radio" name="toolChoice" value="line">
+		<label>Линия</label><br>
+
+		<input type="radio" name="toolChoice" value="polygon">
+		<label>Полигон</label><br>
+
+		<input type="radio" name="toolChoice" value="path">
+		<label>Контур</label><br>
+
+		<input type="radio" name="toolChoice" value="text">
+		<label>Текст</label><br>
+
+		<label>Цвет: </label>
+		<input id="colorChoice" type="color"><br>
+		<label>Заполнение фигур: </label>
+		<input id="fillChoice" type="checkbox"><br>
+		<label>Толщина линий: </label>
+		<input id="widthChoice" type="number" min=1 value=3><p>
+		<button id="clearWorkspaceButton">Очистить холст</button>
+
+		<button onclick="createLayer()">new layer</button>
+		<button onclick="deleteLayer()">delete layer</button>
+		<button onclick="deleteAllLayers()">new file</button>
+		<input id="opacity_slider" onchange="changeOpacity()" type="range" min="0" max="1" step="0.01" value="1">
+	</div>
+
+	<div style="padding-top: 50px"><label>Name your file: </label>
+	<input type="text" id="fileNameInput" value="untitled" style="width: 300px">
+	<select id="save_file_type" size=1>
+		<option value="svg">.svg</option>
+		<option value="yml">.yml</option>
+	</select>
+		</div><p>
+	<button id="saveFileButton">Save it!</button>
+
+	<div class="panel">
+		<button id="target">Reload</button>
+		<button id="editButton">Edit</button>
+		<p id="text">Click on the Reload button to get a list of saved files!<p>
+		<ul id="list_svg"></ul>
+	</div>
+
+	<br>
+	<input type="file" id="file" />
+	<br>
+	<p>
+		<label>Download file name: </label>
+		<input type="text" id="download_file_name" value="untitled" style="width: 300px">
+		<label>.svg</label>
+	</p>
+	<button id="downloadButton">Download it!</button>
 
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script>// скрипт инициализации
-		const draw = SVG(document.getElementById('canvas')).size(500, 500),
-			toolMethods = {
-				'pancil': {'down': pancilDown, 'move': pancilMove, 'up': pancilUp},
-				'line': {'down': lineDown, 'move': lineMove, 'up': lineUp},
-				'polygon': {'down': polygonDown, 'move': polygonMove, 'up': polygonUp},
-				'path': {'down': pathDown, 'move': pathMove, 'up': pathUp},
-				'text': {'down': textDown, 'move': textMove, 'up': textUp},
-			}
-		var object, tool, mouseup = true
-		changeToolEvent()
-		resizeWindowEvent()
-		
-		function breakDrawing() {
-			if (object != null) {
-				object.remove()
-				object = null
-			}
-		}
-		
-		function resizeWindowEvent() {
-			canvasRect = document.getElementById('canvas').getBoundingClientRect()
-		}
-		
-		function changeToolEvent() {
-			breakDrawing()
-			for (const element of document.getElementsByName('toolChoice').values()) {
-				if (element.checked) {
-					tool = element.value
-					break
-				}
-			}
-			fillValue = document.getElementById('fillChoice').checked
-			colorValue = document.getElementById('colorChoice').value
-			widthValue = Math.max(1, document.getElementById('widthChoice').value)
-		}
-		
-		function logMouseEvent(event) {
-			if ((event.which == 1 || mouseup && event.which == 0) && 
-				tool in toolMethods && event.type.slice(5) in toolMethods[tool]) {
-				mouseup = event.type == 'mouseup' || mouseup && event.type == 'mousemove'
-				x = event.x - canvasRect.x
-				y = event.y - canvasRect.y
-				if (event.type == 'mousedown') {
-					if (0 <= x && x <= canvasRect.width &&
-						0 <= y && y <= canvasRect.height) {
-							toolMethods[tool][event.type.slice(5)](x, y)
-						}
-				} else {
-					toolMethods[tool][event.type.slice(5)](x, y)
-				}
-			}
-		}
-		
-		function distanceTo(x1, y1, x2, y2) {
-			return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** .5
-		}
-		
-		// <=><=><=><=><=>	скрипт инструмента карандаш <=><=><=><=><=>
-		function pancilDown(x, y) {
-			object = draw.polyline([[x, y]])
-			if (fillValue) {
-				object.fill(colorValue)
-			} else {
-				object.fill('none').stroke({width: widthValue, color: colorValue})
-			}
-		}
-		
-		function pancilMove(x, y) {
-			if (object != null) {
-				object.plot(object.array().concat([[x, y]]))
-			}
-		}
-	
-		function pancilUp(x, y) {
-			object = null
-		}
-		
-		// <=><=><=><=><=>	скрипт инструмента линия <=><=><=><=><=>
-		function lineDown(x, y) {
-			object = draw.line(x, y, x, y).stroke({width: widthValue, color: colorValue})
-		}
-		
-		function lineMove(x, y) {
-			if (object != null) {
-				object.plot([object.array()[0], [x, y]])
-			}
-		}
-		
-		function lineUp(x, y) {
-			object = null
-		}
-		
-		// <=><=><=><=><=>	скрипт инструмента полигон <=><=><=><=><=>
-		function polygonDown(x, y) {
-			if (object == null) {
-				object = draw.polygon([[x, y], [x, y]])
-				if (fillValue) {
-					object.fill(colorValue)
-				} else {
-					object.fill('none').stroke({ width: widthValue, color: colorValue})
-				}
-			} else {
-				object.plot(object.array().concat([[x, y]]))
-			}
-		}
-		
-		function polygonMove(x, y) {
-			if (object != null) {
-				if (mouseup) {
-					last_point = object.array().slice(-1)[0]
-					if (distanceTo(last_point[0], last_point[1], x, y) > 10) {
-						object = null
-					}
-				} else {
-					object.plot(object.array().slice(0, -1).concat([[x, y]]))
-				}
-			}
-		}
-		
-		function polygonUp(x, y) {
-			null
-		}
-		
-		// <=><=><=><=><=>	скрипт инструмента контур <=><=><=><=><=>
-		function pathDown(x, y) {
-			if (object == null) {
-				object = draw.path([['M', x, y], ['C', x, y, x, y, x, y]])
-				if (fillValue) {
-					object.fill(colorValue)
-				} else {
-					object.fill('none').stroke({ width: widthValue, color: colorValue})
-				}
-			} else {
-				first_line = object.array().slice(0, 2)
-				last_line = object.array().slice(-2)
-				if (distanceTo(first_line[0][1], first_line[0][2], x, y) <= 10) {
-					last_line[1][5] = first_line[0][1]
-					last_line[1][6] = first_line[0][2]
-					last_line[1][3] = first_line[0][1] * 2 - first_line[1][1]
-					last_line[1][4] = first_line[0][2] * 2 - first_line[1][2]
-					object.plot(object.array().slice(0, -2).concat(last_line, [['z']]))
-					object = null
-				} else if (last_line[0][5] == x && last_line[0][6] == y) {
-					object = null
-				} else {
-					object.plot(object.array().concat([['C', x, y, x, y, x, y]]))
-				}
-			}
-		}
-		
-		function pathMove(x, y) {
-			if (object != null) {
-				last_line = object.array().slice(-1)[0]
-				prelast_line = object.array().slice(-2)[0]
-				if (mouseup) {
-					last_line[3] = x
-					last_line[4] = y
-					last_line[5] = x
-					last_line[6] = y
-				} else {
-					last_line[1] = x
-					last_line[2] = y
-					if (object.array().length != 2) {
-						prelast_line[3] = prelast_line[5] * 2 - x
-						prelast_line[4] = prelast_line[6] * 2 - y
-					}
-				}
-				object.plot(object.array().slice(0, -2).concat([prelast_line, last_line]))
-			}
-		}
-		
-		function pathUp(x, y) {
-			null
-		}
-		
-		// <=><=><=><=><=>	скрипт инструмента текст <=><=><=><=><=>
-		
-		function textDown(x, y) {
-			object = draw.path([['M', x, y], ['L', x, y], ['L', x, y], ['L', x, y], ['z']]).fill('none').stroke({ width: widthValue, color: colorValue})
-		}
-		
-		function textMove(x, y) {
-			if (object != null) {
-				array_points = object.array()
-				array_points[1][1] = x
-				array_points[2] = ['L', x, y]
-				array_points[3][2] = y
-				object.plot(array_points)
-			}
-		}
-		
-		function textUp(x, y) {
-			if (object != null) {
-				array_points = object.array()
-				x1 = array_points[0][1]
-				y1 = array_points[0][2]
-				x2 = array_points[2][1]
-				y2 = array_points[2][2]
-				if (x1 > x2) {
-					x = x1
-					x1 = x2
-					x2 = x
-				}
-				if (x1 != x2 && y1 != y2) {
-					object.remove()
-					object = draw.text(prompt('Введите желаемый текст'))
-					object.path([['M', x1, (y1 + y2) / 2], ['L', x2, (y1 + y2) / 2]])
-					object.font({size: Math.abs(y2 - y1), fill: colorValue})
-					object = null
-				} else {
-					breakDrawing()
-				}
-			}
-		}
-		
-		// <=><=><=><=><=>	скрипт чистки холста и сохранения файла <=><=><=><=><=>
-		$(document).ready(function () {
-			$('#clearCanvasButton').click(function () {
-				draw.clear()
-				object = null
-			})
-            $('#saveFileButton').click(function () {
-				breakDrawing();
-                $.ajax({
-                    data: {
-						svg: draw.svg(),
-						file_name: document.getElementById('fileNameInput').value,
-						csrfmiddlewaretoken: '{{ csrf_token }}'
-					},
-                    type: 'POST',
-                    url: "{% url 'files_save' %}",
-                    success: function (response) {
-						alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно создан!')
-                    },
-                    error: function (response) {
-                        alert(response.responseJSON.errors);
-                        console.log(response.responseJSON.errors)
-                    }
-                });
-                return false;
-            });
-		})
+	<script>
+		const token = "{{csrf_token}}",
+				saveURL = "{% url 'files_save' %}",
+				uploadURL = "{% url 'files_upload' %}",
+				downloadURL = "{% url 'files_download' %}",
+				viewURL = "{% url 'files_view' %}",
+				loadURL = "{% url 'files_get' %}";
 	</script>
+	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
+	<script src="{% static 'svg_editor/js/layers.js' %}? 202207232241"></script>
+	<script src="{% static 'svg_editor/js/draw.js' %}? 20220714154345"></script>
 	{% endblock javascript %}
 </body>
 </html>

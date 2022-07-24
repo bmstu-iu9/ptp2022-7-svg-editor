@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('svg-editor/', include('svg_editor.urls')),
     path('', include('svg_editor.urls')),
+    path('account/', include('account.urls'))
 ]

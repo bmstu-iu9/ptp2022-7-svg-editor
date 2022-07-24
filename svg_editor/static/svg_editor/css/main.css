@@ -1,0 +1,123 @@
+/* label {
+	font-size: 40px;
+}
+
+input {
+	width: 85px;
+	font-size: 40px;
+}
+
+button {
+	width: 170px;
+	height: 50px;
+	font-size: 40px;
+} */
+
+#file {
+	width: 630px;
+	padding-top: 30px;
+}
+
+#downloadButton{
+
+	width: 240px;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+.layer {
+	box-sizing: border-box;
+	position: absolute;
+}
+
+.layer_note {
+	background-color: #bbb solid; 
+	border: 1px #bbb solid;
+	height: 20px;
+	width: inherit; 
+	display: flex;
+}
+
+.layer_note[checked='true'] {
+	background-color: rgb(104, 100, 100); 
+}
+
+.layer_note label {
+	margin: auto; 
+	user-select: none;
+	pointer-events: none;
+}
+
+.unactive {
+	pointer-events: none;
+}
+
+.hovered{
+	border-bottom-width: 5px;
+	border-bottom-color: black;
+}
+
+#workspace {
+	display: flex;
+	width: 500px;
+	height: 500px;
+	margin: auto;
+	overflow: hidden;
+	border: 3px #bbb solid;
+}
+
+#layer_panel {
+	display: block;
+	width: 200px;
+	height: 400px;
+	/* margin: auto; */
+	border: 3px #bbb solid;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  line-height: normal;
+}
+
+.panel {
+  height: 100px;
+  width: 450px;
+  place-items: center;
+  background: #ccc;
+  border-radius: 10px;
+  position: relative;
+  overflow: auto;
+  padding: 30px;
+}
+
+#target {
+  background-color: #555;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+#target:hover {
+  background-color: #4b4b4b;
+}
+
+#list_svg {
+  list-style: none;
+  font: 16px;
+  padding: 0;
+}
+
+.inner_list_svg {
+  list-style-type: circle;
+}
