@@ -74,16 +74,17 @@ function getPictureAsSvg() {
                          `height="${workspace.clientWidth}">\n`
 
     for (let layer of document.getElementById('workspace').childNodes) {
-        svgString += `\t<g height="${layer.getAttribute('height')}" ` +
-                            `width="${layer.getAttribute('width')}" ` +
-                            `opacity="${layer.getAttribute('opacity')}" ` +
-                            `viewBox="${layer.getAttribute('viewBox')}">\n`;
+        svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
+                            `width="${layer.getAttribute('width')}"` +
+                            `${getOpacity(layer)}` +
+                            `${getViewBox(layer)}>\n`;
         for (let elem of layer.children) {
             svgString += `\t\t${elem.outerHTML}\n`
         }
-        svgString += '\t</g>\n'
+        svgString += '\t</svg>\n'
     }
     svgString += '</svg>\n'
+    console.log(svgString);
     return svgString;
 }
 
@@ -94,12 +95,12 @@ function getPictureAsProject() {
                          `width="${workspace.clientHeight}"`,
                          `height="${workspace.clientWidth}"`]};
     projectData.layers = [];
-
+    
     for (let layer of document.getElementById('workspace').childNodes) {
         let layerData = {attributes: [`height="${layer.getAttribute('height')}"`,
                             `width="${layer.getAttribute('width')}"`,
-                            `opacity="${layer.getAttribute('opacity')}"`,
-                            `viewBox="${layer.getAttribute('viewBox')}"`]};
+                            `${getOpacity(layer)}`,
+                            `${getViewBox(layer)}>`]};
         layerData.outer = '';
         for (let elem of layer.children) {
             layerData.outer += `${elem.outerHTML}`;
@@ -107,6 +108,16 @@ function getPictureAsProject() {
         projectData.layers.push(layerData);
     }
     return projectData;
+}
+
+function getOpacity(svg) {
+    let opacity = svg.getAttribute('opacity');
+    return opacity === null || opacity == 1 ? '' : ` opacity="${opacity}"`;
+}
+
+function getViewBox(svg) {
+    let viewBox = svg.getAttribute('viewBox');
+    return viewBox === null? '' : ` viewBox="${viewBox}"`;
 }
 
 function openAsSvg(svgString) {
@@ -130,7 +141,7 @@ $(document).ready(function () {
     })
 
     $("#createNewFileButton").click();
-
+    
     $('#layer_panel').on("click", ".layer_note", function () {
         selectLayer(this);
     })
