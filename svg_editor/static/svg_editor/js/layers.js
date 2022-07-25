@@ -66,6 +66,10 @@ function changeOpacity() {
     currentLayerNote.layer.node.setAttribute('opacity', opacitySlider.value);
 }
 
+function isDrawAllowed() {
+    return !(currentLayerNote === null || currentLayerNote.layer.node.getAttribute('display') == 'none');
+}
+
 function getPictureAsSvg() {
     let svgString = `<svg xmlns="http://www.w3.org/2000/svg" ` +
                          `xmlns:xlink="http://www.w3.org/1999/xlink" ` + 
@@ -74,14 +78,18 @@ function getPictureAsSvg() {
                          `height="${workspace.clientWidth}">\n`;
 
     for (let layer of document.getElementById('workspace').childNodes) {
-        svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
-                            `width="${layer.getAttribute('width')}"` +
-                            `${getOpacity(layer)}` +
-                            `${getViewBox(layer)}>\n`;
-        for (let elem of layer.children) {
-            svgString += `\t\t${elem.outerHTML}\n`;
+        if (layer.nodeName == 'svg') {
+            svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
+                                `width="${layer.getAttribute('width')}"` +
+                                `${getOpacity(layer)}` +
+                                `${getViewBox(layer)}>\n`;
+            for (let elem of layer.children) {
+                svgString += `\t\t${elem.outerHTML}\n`;
+            }
+            svgString += '\t</svg>\n';
+        } else {
+            svgString += layer.outerHTML;
         }
-        svgString += '\t</svg>\n';
     }
     svgString += '</svg>\n';
     console.log(svgString);
@@ -162,15 +170,15 @@ $(document).ready(function () {
     $('#layer_panel').on("drop", ".layer_note", function () {
         console.log('drop');
         $(this).trigger("dragleave");
-        this.layer.before(currentLayer);
-        this.after(currentLayer.note);
+        this.layer.node.before(currentLayerNote.layer.node);
+        this.after(currentLayerNote);
     })
     $('#layer_panel').on("click", ".layer_note input", function () {
-        let layer = checkbox.parentElement.layer;
-        if (checkbox.checked) {
-            layer.node.setAttribute('display', '');
+        let clicked = this.parentElement.layer.node;
+        if (this.checked) {
+            clicked.setAttribute('display', '');
             return;
         }
-        layer.node.setAttribute('display', 'none');
+        clicked.setAttribute('display', 'none');
     })
 })
