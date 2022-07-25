@@ -23,8 +23,12 @@ def __todict(parsed):
         for attr in __no_navigable_string(parsed.attrs):
             tag['attributes'].append({attr: parsed.attrs[attr]})
         tag['outers'] = []
-        for child in __no_navigable_string(parsed.children):
-            tag['outers'].append(__todict(child))
+        for child in parsed.children:
+            if isinstance(child, bs4.element.NavigableString):
+                if not child.isspace():
+                    tag['outers'].append(str(child))
+            else:
+                tag['outers'].append(__todict(child))
         if parsed.name == 'g':
             return tag
         else:
@@ -32,7 +36,7 @@ def __todict(parsed):
 
 
 def dump(svg, stream=None):
-    parsed_svg = BeautifulSoup(svg)
+    parsed_svg = BeautifulSoup(svg.replace('\n', ''), 'html.parser')
     svg_dict = __todict(parsed_svg)
     if stream:
         yaml.dump(svg_dict, stream=stream)
