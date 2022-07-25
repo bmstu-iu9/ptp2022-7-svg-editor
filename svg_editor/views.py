@@ -1,5 +1,4 @@
 import itertools
-import json
 import os
 from pathlib import Path
 from django.http import JsonResponse, FileResponse
@@ -83,7 +82,7 @@ def files_get(request):
                         }
                     else:
                         response = {
-                            'yml': yaml.load(file, Loader=yaml.Loader)
+                            'yml': illustration.load(file)
                         }
                         del response['yml']['type']
                 response['file_name'] = file_name

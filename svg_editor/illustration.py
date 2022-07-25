@@ -43,3 +43,8 @@ def dump(svg, stream=None):
     else:
         return svg_dict
 
+
+def load(stream):
+    return yaml.load(stream, Loader=yaml.Loader)
+
+
