@@ -39,7 +39,7 @@ def dump(svg, stream=None):
     parsed_svg = BeautifulSoup(svg.replace('\n', ''), 'html.parser')
     svg_dict = __todict(parsed_svg)
     if stream:
-        yaml.dump(svg_dict, stream=stream)
+        yaml.dump(svg_dict, stream=stream,  encoding='UTF-8', allow_unicode=True)
     else:
         return svg_dict
 
