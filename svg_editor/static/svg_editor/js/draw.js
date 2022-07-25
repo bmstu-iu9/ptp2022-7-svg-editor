@@ -24,7 +24,7 @@ let	draw,
 ///////////выполняется при переключении на новый слой/////////////
 function layerUpdate(newDraw) {
 	draw = newDraw; 
-	object = null;
+	breakDrawing();
 }
 //////////////////////////////////////////
 
@@ -247,8 +247,8 @@ function textUp(x, y) {
 $(document).ready(function () {
 	changeToolEvent();
 	resizeWindowEvent();
-    $('#clearWorkspaceButton').click(function () {
-        draw.clear()
-        object = null
-    })
+	$('#clearWorkspaceButton').click(function () {
+		draw.clear();
+		object = null;	
+	})
 })

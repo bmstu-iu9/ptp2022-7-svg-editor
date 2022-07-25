@@ -71,7 +71,7 @@ function getPictureAsSvg() {
                          `xmlns:xlink="http://www.w3.org/1999/xlink" ` + 
                          `version="1.1" ` +
                          `width="${workspace.clientHeight}" ` + 
-                         `height="${workspace.clientWidth}">\n`
+                         `height="${workspace.clientWidth}">\n`;
 
     for (let layer of document.getElementById('workspace').childNodes) {
         svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
@@ -79,11 +79,11 @@ function getPictureAsSvg() {
                             `${getOpacity(layer)}` +
                             `${getViewBox(layer)}>\n`;
         for (let elem of layer.children) {
-            svgString += `\t\t${elem.outerHTML}\n`
+            svgString += `\t\t${elem.outerHTML}\n`;
         }
-        svgString += '\t</svg>\n'
+        svgString += '\t</svg>\n';
     }
-    svgString += '</svg>\n'
+    svgString += '</svg>\n';
     console.log(svgString);
     return svgString;
 }

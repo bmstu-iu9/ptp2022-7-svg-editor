@@ -90,12 +90,12 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 		const token = "{{csrf_token}}",
-			  saveURL = "{% url 'files_save' %}",
-			  uploadURL = "{% url 'files_upload' %}",
-		      downloadURL = "{% url 'files_download' %}",
-			  viewURL = "{% url 'files_view' %}",
-			  loadURL = "{% url 'files_get' %}";
-			  
+			 saveURL = "{% url 'files_save' %}",
+			 uploadURL = "{% url 'files_upload' %}",
+			 downloadURL = "{% url 'files_download' %}",
+			 viewURL = "{% url 'files_view' %}",
+			 loadURL = "{% url 'files_get' %}";
+			 
 		const workspace = document.querySelector('#workspace');
 	</script>
 	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
