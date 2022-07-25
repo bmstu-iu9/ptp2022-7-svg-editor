@@ -14,7 +14,7 @@ $(document).ready(function () {
 		if (document.getElementById('save_file_type').value === 'svg'){
 			dataToSave.svg = getPictureAsSvg();
 		} else {
-			dataToSave.yml = JSON.stringify(getPictureAsProject());
+			dataToSave.yml = getPictureAsSvg();
 		}
 		console.log(dataToSave)
 		$.ajax({

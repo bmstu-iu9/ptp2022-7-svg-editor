@@ -6,6 +6,7 @@ from django.http import JsonResponse, FileResponse
 from django.shortcuts import render
 from illustrator.settings import BASE_DIR
 import yaml
+from . import illustration
 
 
 # Rendering the editor's page
@@ -59,9 +60,8 @@ def files_save(request):
                 else:
                     path_to_file += '.yml'
                 stream = open(path_to_file, 'w')
-                yaml.dump({'type': 'illustration'}, stream)
-                yaml.dump(json.loads(request_dict['yml'][0]),
-                          stream)
+                yaml.dump({'type': 'illustration'}, stream=stream)
+                illustration.dump(request_dict['yml'][0], stream=stream)
                 return JsonResponse({'file_name': path_to_file[path_to_file.rfind('/') + 1:]}, status=200)
         return JsonResponse({'errors': 'Bad file name'}, status=400)
     return JsonResponse({'errors': 'Permission denied'}, status=403)
