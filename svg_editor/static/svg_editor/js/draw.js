@@ -2,6 +2,11 @@
  * @author AngelicHedgehog  
  **/
 
+const fillInput = document.getElementById('fillChoice');
+const colorInput = document.getElementById('colorChoice');
+const widthInput = document.getElementById('widthChoice');
+const toolsInput = document.getElementsByName('toolChoice');
+
 const toolMethods = {
 	'pancil': {'down': pancilDown, 'move': pancilMove, 'up': pancilUp},
 	'line': {'down': lineDown, 'move': lineMove, 'up': lineUp},
@@ -9,6 +14,19 @@ const toolMethods = {
 	'path': {'down': pathDown, 'move': pathMove, 'up': pathUp},
 	'text': {'down': textDown, 'move': textMove, 'up': textUp},
 };
+
+let	draw,
+	canvasRect,
+	object,
+	tool,
+	mouseup = true;
+
+///////////выполняется при переключении на новый слой/////////////
+function layerUpdate(newDraw) {
+	draw = newDraw; 
+	breakDrawing();
+}
+//////////////////////////////////////////
 
 function breakDrawing() {
 	if (object != null) {
@@ -40,7 +58,7 @@ function logMouseEvent(event) {
 	} else if (event.type == 'mousedown') {
 		mouseup = false;
 	}
-    if (currentLayer === null || currentLayer.getAttribute('display') === 'none') {
+    if (currentLayerNote === null || currentLayerNote.layer.node.getAttribute('display') === 'none') {
         return;
     }
 	if ((event.which == 1 || mouseup && event.which == 0) &&
@@ -227,8 +245,10 @@ function textUp(x, y) {
 }
 
 $(document).ready(function () {
-    $('#clearWorkspaceButton').click(function () {
-        draw.clear()
-        object = null
-    })
+	changeToolEvent();
+	resizeWindowEvent();
+	$('#clearWorkspaceButton').click(function () {
+		draw.clear();
+		object = null;	
+	})
 })

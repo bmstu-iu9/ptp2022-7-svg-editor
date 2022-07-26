@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207260805">
     <link rel="stylesheet" href="../../static/svg_editor/css/main.css">
 </head>
-<body onmousedown="logMouseEvent(event);" onmouseup="logMouseEvent(event);" onmousemove="logMouseEvent(event);"
-onmouseleave="breakDrawing();" onresize="resizeWindowEvent();">
+<body onmousedown="logMouseEvent(event);"
+	  onmouseup="logMouseEvent(event);"
+	  onmousemove="logMouseEvent(event);"
+	  onmouseleave="breakDrawing();"
+	  onresize="resizeWindowEvent();">
 	<p style="font-size: 25px; font-weight: bold">
 		{% if user.is_authenticated %}
 		<a href="{% url 'account' %}">{{user.get_username}}</a>
@@ -50,9 +53,9 @@ onmouseleave="breakDrawing();" onresize="resizeWindowEvent();">
 		<input id="widthChoice" type="number" min=1 value=3><p>
 		<button id="clearWorkspaceButton">Очистить холст</button>
 
-		<button onclick="createLayer()">new layer</button>
-		<button onclick="deleteLayer()">delete layer</button>
-		<button onclick="deleteAllLayers()">new file</button>
+		<button id="createLayerButton">new layer</button>
+		<button id="deleteLayerButton">delete layer</button>
+		<button id="createNewFileButton">new file</button>
 		<input id="opacity_slider" onchange="changeOpacity()" type="range" min="0" max="1" step="0.01" value="1">
 	</div>
 
@@ -84,12 +87,14 @@ onmouseleave="breakDrawing();" onresize="resizeWindowEvent();">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 		const token = "{{csrf_token}}",
-				saveURL = "{% url 'files_save' %}",
-				uploadURL = "{% url 'files_upload' %}",
-				downloadURL = "{% url 'files_download' %}",
-				viewURL = "{% url 'files_view' %}",
-				loadURL = "{% url 'files_get' %}",
-				deleteURL = "{% url 'files_delete' %}";
+			saveURL = "{% url 'files_save' %}",
+			uploadURL = "{% url 'files_upload' %}",
+			downloadURL = "{% url 'files_download' %}",
+			viewURL = "{% url 'files_view' %}",
+			loadURL = "{% url 'files_get' %}",
+			deleteURL = "{% url 'files_delete' %}";
+
+		const workspace = document.querySelector('#workspace');
 	</script>
 	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
 	<script src="{% static 'svg_editor/js/layers.js' %}? 202207232241"></script>

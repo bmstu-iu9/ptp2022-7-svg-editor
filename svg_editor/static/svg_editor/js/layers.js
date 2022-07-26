@@ -1,96 +1,69 @@
-'use strict'
-
 /**
  * @author wizardOfOz21
  **/
 
+'use strict'
+
 const opacitySlider = document.querySelector('#opacity_slider');
 const layerControlPanel = document.querySelector('#layer_panel');
-const workspace = document.querySelector('#workspace');
-const fillInput = document.getElementById('fillChoice');
-const colorInput = document.getElementById('colorChoice');
-const widthInput = document.getElementById('widthChoice');
-const toolsInput = document.getElementsByName('toolChoice');
 
-const layerNote = function () {
-    let note = document.createElement('div');
-    note.setAttribute('class', 'layer_note');
-    note.setAttribute('draggable', 'true');
-    note.insertAdjacentHTML('beforeend', `
-    <input type="checkbox" checked/>
-    <label></label>`);
-    return note;
-}();
-
-let currentLayer,
-    draw,
-    canvasRect,
-    object,
-	tool,
-	mouseup = true,
+let currentLayerNote,
     i;
 
-function createLayer(baseElement) {
-    let draw = (baseElement === undefined) ? SVG() : SVG(baseElement);
-    draw.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);
-    let newLayer = draw.node;
+function newLayerNote(relatedLayer, layerName) {
+    let note = document.createElement('div');
+    note.insertAdjacentHTML('beforeend', `
+    <input type="checkbox" checked/><label>${layerName}</label>`);
 
-    newLayer.classList.add('layer');
+    note.classList.add('layer_note');
+    note.setAttribute('draggable', 'true');
+
+    note.layer = relatedLayer;
+    return note;
+};
+
+function createLayer(baseElement) {
+    let newLayer = (baseElement === undefined) ? SVG() : SVG(baseElement);
+    newLayer.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);
+    newLayer.node.classList.add('layer');
 
     opacitySlider.value = 1;
 
     let layerName = prompt('Enter layer name', 'Layer ' + i++);
-    let newNote = layerNote.cloneNode(true);
-    newNote.setAttribute('checked', false);
-    newNote.lastElementChild.textContent = layerName;
+    let newNote = newLayerNote(newLayer, layerName);
     layerControlPanel.prepend(newNote);
-
-    newLayer.note = newNote;
-    newNote.layer = newLayer;
     selectLayer(newNote);
 }
 
-function selectLayer(note) {
-
-    if (currentLayer !== null) {
-        currentLayer.note.setAttribute('checked', '');
+function selectLayer(layerNote) {
+    if (currentLayerNote !== null) {
+        currentLayerNote.setAttribute('checked', '');
     }
-    note.setAttribute('checked', !(note.getAttribute('checked') === 'true'));
-    currentLayer = note.layer;
+    layerNote.setAttribute('checked', 'true');
 
-    draw = SVG(currentLayer);
-	object = null;
+    currentLayerNote = layerNote;
+
+    layerUpdate(layerNote.layer);
 }
 
-function deleteLayer(layer) {
-    if (currentLayer === null) return;
-    currentLayer.remove();
-    currentLayer.note.remove();
-    currentLayer = null;
+function deleteLayer() {
+    if (currentLayerNote === null) return;
+    currentLayerNote.layer.node.remove();
+    currentLayerNote.remove();
+    currentLayerNote = null;
     i--;
 }
 
 function deleteAllLayers() {
     workspace.innerHTML = "";
     layerControlPanel.innerHTML = "";
-    currentLayer = null;
-    draw = null;
-    canvasRect = null;
-    object = null;
+
+    currentLayerNote = null;
     i = 0;
 }
 
 function changeOpacity() {
-    currentLayer.setAttribute('opacity', opacitySlider.value);
-}
-
-function checkActivity(checkbox) {
-    let layer = checkbox.parentElement.layer;
-    if (checkbox.checked) {
-        layer.setAttribute('display', '');
-        return;
-    }
-    layer.setAttribute('display', 'none');
+    currentLayerNote.layer.node.setAttribute('opacity', opacitySlider.value);
 }
 
 function getPictureAsSvg() {
@@ -98,20 +71,53 @@ function getPictureAsSvg() {
                          `xmlns:xlink="http://www.w3.org/1999/xlink" ` + 
                          `version="1.1" ` +
                          `width="${workspace.clientHeight}" ` + 
-                         `height="${workspace.clientWidth}">\n`
+                         `height="${workspace.clientWidth}">\n`;
 
     for (let layer of document.getElementById('workspace').childNodes) {
-        svgString += `\t<g height="${layer.getAttribute('height')}" ` +
-                            `width="${layer.getAttribute('width')}" ` +
-                            `opacity="${layer.getAttribute('opacity')}" ` +
-                            `viewBox="${layer.getAttribute('viewBox')}">\n`;
+        svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
+                            `width="${layer.getAttribute('width')}"` +
+                            `${getOpacity(layer)}` +
+                            `${getViewBox(layer)}>\n`;
         for (let elem of layer.children) {
-            svgString += `\t\t${elem.outerHTML}\n`
+            svgString += `\t\t${elem.outerHTML}\n`;
         }
-        svgString += '\t</g>\n'
+        svgString += '\t</svg>\n';
     }
-    svgString += '</svg>\n'
+    svgString += '</svg>\n';
+    console.log(svgString);
     return svgString;
+}
+
+function getPictureAsProject() {
+    let projectData = {attributes: [ `xmlns="http://www.w3.org/2000/svg"`,
+                         `xmlns:xlink="http://www.w3.org/1999/xlink"`,
+                         `version="1.1"`,
+                         `width="${workspace.clientHeight}"`,
+                         `height="${workspace.clientWidth}"`]};
+    projectData.layers = [];
+
+    for (let layer of document.getElementById('workspace').childNodes) {
+        let layerData = {attributes: [`height="${layer.getAttribute('height')}"`,
+                            `width="${layer.getAttribute('width')}"`,
+                            `${getOpacity(layer)}`,
+                            `${getViewBox(layer)}>`]};
+        layerData.outer = '';
+        for (let elem of layer.children) {
+            layerData.outer += `${elem.outerHTML}`;
+        }
+        projectData.layers.push(layerData);
+    }
+    return projectData;
+}
+
+function getOpacity(svg) {
+    let opacity = svg.getAttribute('opacity');
+    return opacity === null || opacity == 1 ? '' : ` opacity="${opacity}"`;
+}
+
+function getViewBox(svg) {
+    let viewBox = svg.getAttribute('viewBox');
+    return viewBox === null? '' : ` viewBox="${viewBox}"`;
 }
 
 function openAsSvg(svgString) {
@@ -122,10 +128,20 @@ function openAsSvg(svgString) {
 }
 
 $(document).ready(function () {
-    deleteAllLayers();
-    createLayer();
-	changeToolEvent();
-	resizeWindowEvent();
+
+    $("#createLayerButton").click(function () {
+        createLayer();
+    })
+    $("#deleteLayerButton").click(function () {
+        deleteLayer();
+    })
+    $("#createNewFileButton").click(function () {
+        deleteAllLayers();
+        createLayer();
+    })
+
+    $("#createNewFileButton").click();
+
     $('#layer_panel').on("click", ".layer_note", function () {
         selectLayer(this);
     })
@@ -150,6 +166,11 @@ $(document).ready(function () {
         this.after(currentLayer.note);
     })
     $('#layer_panel').on("click", ".layer_note input", function () {
-        checkActivity(this);
+        let layer = checkbox.parentElement.layer;
+        if (checkbox.checked) {
+            layer.node.setAttribute('display', '');
+            return;
+        }
+        layer.node.setAttribute('display', 'none');
     })
 })
