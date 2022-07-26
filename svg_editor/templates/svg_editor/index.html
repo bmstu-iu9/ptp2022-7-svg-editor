@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<title>СВГ-Редактор</title>
 	<!--    загружать статику нужно именно так-->
-    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 20223507141345">
+    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207260805">
     <link rel="stylesheet" href="../../static/svg_editor/css/main.css">
 </head>
 <body onmousedown="logMouseEvent(event);" onmouseup="logMouseEvent(event);" onmousemove="logMouseEvent(event);"
@@ -68,7 +68,9 @@ onmouseleave="breakDrawing();" onresize="resizeWindowEvent();">
 	<div class="panel">
 		<button id="target">Reload</button>
 		<button id="editButton">Edit</button>
-		<button id="downloadButton">Download it!</button>
+		<button id="downloadButton">Download</button>
+		<button id="deleteButton">Delete</button>
+		<input id="deleteAll" type="checkbox">Delete all
 		<p id="text">Click on the Reload button to get a list of saved files!<p>
 		<ul id="list_svg"></ul>
 	</div>
@@ -76,13 +78,6 @@ onmouseleave="breakDrawing();" onresize="resizeWindowEvent();">
 	<br>
 	<input type="file" id="file" />
 	<br>
-<!--	<p>-->
-<!--		<label>Download file name: </label>-->
-<!--		<input type="text" id="download_file_name" value="untitled" style="width: 300px">-->
-<!--		<label>.svg</label>-->
-<!--	</p>-->
-<!--	<button id="downloadButton">Download it!</button>-->
-
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -92,7 +87,8 @@ onmouseleave="breakDrawing();" onresize="resizeWindowEvent();">
 				uploadURL = "{% url 'files_upload' %}",
 				downloadURL = "{% url 'files_download' %}",
 				viewURL = "{% url 'files_view' %}",
-				loadURL = "{% url 'files_get' %}";
+				loadURL = "{% url 'files_get' %}",
+				deleteURL = "{% url 'files_delete' %}";
 	</script>
 	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
 	<script src="{% static 'svg_editor/js/layers.js' %}? 202207232241"></script>

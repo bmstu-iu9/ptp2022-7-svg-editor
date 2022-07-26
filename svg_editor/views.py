@@ -13,7 +13,7 @@ def index(request):
     return render(request, 'svg_editor/index.html')
 
 
-# Script for viewing the list of svg
+# Script for viewing the list of svg and project files
 def files_view(request):
     if request.user.is_authenticated:
         if request.method == 'GET':
@@ -91,7 +91,7 @@ def files_get(request):
     return JsonResponse({'errors': 'Permission denied'}, status=403)
 
 
-# Script for downloading svg
+# Script for downloading svg and project files
 def files_download(request):
     if request.user.is_authenticated:
         request_dict = dict(request.GET)
@@ -127,4 +127,25 @@ def files_upload(request):
                         destination.write(chunk)
                 return JsonResponse({'file_name': path.name}, status=200)
         return JsonResponse({'errors': 'Not svg'}, status=400)
+    return JsonResponse({'errors': 'Permission denied'}, status=403)
+
+
+# Script for deleting svg and project files
+def files_delete(request):
+    if request.user.is_authenticated:
+        request_dict = dict(request.POST)
+        if request.method == 'POST' and 'file_name' in request.POST and 'all' in request.POST:
+            path = os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg')
+            count = 0
+            if eval(request_dict['all'][0].capitalize()):
+                svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
+                for file in svgs_lists:
+                    count += 1
+                    os.remove(path+'/'+file)
+                return JsonResponse({'num_of_del': count}, status=200)
+            elif os.path.exists(path+'/'+request_dict['file_name'][0]):
+                count += 1
+                os.remove(path+'/'+request_dict['file_name'][0])
+                return JsonResponse({'num_of_del': count}, status=200)
+        return JsonResponse({'errors': 'File not found'}, status=400)
     return JsonResponse({'errors': 'Permission denied'}, status=403)

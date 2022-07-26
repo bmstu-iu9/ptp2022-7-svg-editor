@@ -16,7 +16,6 @@ $(document).ready(function () {
 		} else {
 			dataToSave.yml = getPictureAsSvg();
 		}
-		console.log(dataToSave)
 		$.ajax({
 			data: dataToSave,
 			type: 'POST',
@@ -74,7 +73,7 @@ $(document).ready(function () {
 
 	$('#target').click(function () {
 		// создаем AJAX-вызов
-		$.ajax({ // получаяем данные формы
+		$.ajax({ // получаем данные формы
 			// тут используется шаблонизатор
 			url: viewURL,
 			// если успешно, то
@@ -96,7 +95,23 @@ $(document).ready(function () {
 		});
 		return false;
 	});
-
+	$("#deleteButton").click(function () {
+		$.ajax({
+			url: deleteURL,
+			type: 'POST',
+			data: {
+				file_name: currentFileName,
+				all: document.getElementById("deleteAll").checked,
+			},
+			success: function (response) {
+				alert('Поздравляем! ' + response.num_of_del + ' файл(ов) успешно удалено!');
+			},
+			error: function (response) {
+				alert(response.responseJSON.errors);
+				console.log(response.responseJSON.errors);
+			},
+		})
+	})
 	$("#editButton").click(function () {
 		$.ajax({
 			url: loadURL,
