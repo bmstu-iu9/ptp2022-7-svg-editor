@@ -10,7 +10,7 @@ const layerControlPanel = document.querySelector('#layer_panel');
 let currentLayerNote,
     i;
 
-let getNode = function() {
+function getNode() {
     return this.layer.node;
 }
 
@@ -84,7 +84,7 @@ function getPictureAsSvg() {
                          `width="${workspace.clientHeight}" ` + 
                          `height="${workspace.clientWidth}">\n`;
 
-    for (let layer of document.getElementById('workspace').childNodes) {
+    for (let layer of workspace.childNodes) {
         if (layer.nodeName == 'svg') {
             svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
                                 `width="${layer.getAttribute('width')}"` +
