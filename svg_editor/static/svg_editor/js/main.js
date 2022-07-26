@@ -58,11 +58,11 @@ $(document).ready(function () {
 			url: downloadURL,
 			type: 'GET',
 			data: {
-				file_name: document.getElementById('download_file_name').value
+				file_name: currentFileName
 			},
 			success: function (response) {
 				let a = document.createElement("a");
-				a.href = "/files_download?file_name=" + document.getElementById('download_file_name').value;
+				a.href = "/files_download?file_name=" + currentFileName;
 				a.click();
 			},
 			error: function (response) {

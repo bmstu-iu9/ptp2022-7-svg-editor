@@ -96,7 +96,7 @@ def files_download(request):
     if request.user.is_authenticated:
         request_dict = dict(request.GET)
         if request.method == 'GET' and 'file_name' in request_dict:
-            file_name = '{}.svg'.format(request_dict['file_name'][0])
+            file_name = request_dict['file_name'][0]
             path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'+'/'+file_name))
             if path.exists():
                 file = open(path, 'rb')
