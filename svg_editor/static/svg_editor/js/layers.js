@@ -20,7 +20,6 @@ function newLayerNote(relatedLayer, layerName) {
     <div class="top" style="width: 100%; height: 10px;"><input type="checkbox" checked/><label>${layerName}</label></div>
     <div class="bottom" style="width: 100%; height: 10px;"></div>
     `);
-    
     note.classList.add('layer_note');
     note.setAttribute('draggable', 'true');
 
@@ -31,7 +30,7 @@ function newLayerNote(relatedLayer, layerName) {
 function createLayer(baseElement) {
     let newLayer = (baseElement === undefined) ? SVG() : SVG(baseElement);
     newLayer.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);  
-    
+
     let layerName = prompt('Enter layer name', 'Layer ' + i++);
     let newNote = newLayerNote(newLayer, layerName);
     newNote.getNode = getNode;
@@ -46,7 +45,7 @@ function selectLayer(layerNote) {
         currentLayerNote.setAttribute('checked', '');
     }
     layerNote.setAttribute('checked', 'true');
-    
+
     currentLayerNote = layerNote;
 
     let opacity = layerNote.getNode().getAttribute('opacity');
@@ -111,7 +110,7 @@ function getPictureAsProject() {
                          `width="${workspace.clientHeight}"`,
                          `height="${workspace.clientWidth}"`]};
     projectData.layers = [];
-    
+
     for (let layer of document.getElementById('workspace').childNodes) {
         let layerData = {attributes: [`height="${layer.getAttribute('height')}"`,
                             `width="${layer.getAttribute('width')}"`,
@@ -144,7 +143,7 @@ function openAsSvg(svgString) {
 }
 
 $(document).ready(function () {
-    
+
     $("#createLayerButton").click(function () {
         createLayer();
     })
@@ -157,7 +156,7 @@ $(document).ready(function () {
     })
 
     $("#createNewFileButton").click();
-    
+
     $('#layer_panel').on("click", ".layer_note", function () {
         selectLayer(this);
     })

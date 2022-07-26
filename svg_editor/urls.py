@@ -11,4 +11,5 @@ urlpatterns = [
     path('files_get', views.files_get, name='files_get'),
     path('files_upload', views.files_upload, name='files_upload'),
     path('files_download', views.files_download, name='files_download'),
+    path('files_delete', views.files_delete, name='files_delete'),
 ]

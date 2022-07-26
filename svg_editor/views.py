@@ -1,11 +1,11 @@
 import itertools
-import json
 import os
 from pathlib import Path
 from django.http import JsonResponse, FileResponse
 from django.shortcuts import render
 from illustrator.settings import BASE_DIR
 import yaml
+from . import illustration
 
 
 # Rendering the editor's page
@@ -13,7 +13,7 @@ def index(request):
     return render(request, 'svg_editor/index.html')
 
 
-# Script for viewing the list of svg
+# Script for viewing the list of svg and project files
 def files_view(request):
     if request.user.is_authenticated:
         if request.method == 'GET':
@@ -31,37 +31,28 @@ def files_view(request):
 def files_save(request):
     if request.user.is_authenticated:
         request_dict = dict(request.POST)
-        if request.method == "POST" and 'svg' in request_dict and 'file_name' in request_dict:
+        if request.method == "POST" and 'svg' in request_dict and 'file_name' in request_dict and \
+                'save_as' in request_dict and 'type' in request_dict:
             svg = request_dict['svg'][0]
             path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/' \
                            f'{str(request.user)}/svg/{request_dict["file_name"][0]}'
             if len(request_dict["file_name"][0]) > 0:
-                if os.path.exists(path_to_file + '.svg'):
-                    path_to_file += '({}).svg'
+                file_type = f'.{request_dict["type"][0]}'
+                save_as = eval(request_dict['save_as'][0].capitalize())
+                if os.path.exists(path_to_file + file_type) and save_as:
+                    path_to_file += '({})' + file_type
                     num = 1
                     while os.path.exists(path_to_file.format(num)):
                         num += 1
                     path_to_file = path_to_file.format(num)
                 else:
-                    path_to_file += '.svg'
-                open(path_to_file, 'w').write(svg)
-                return JsonResponse({'file_name': path_to_file[path_to_file.rfind('/') + 1:]}, status=200)
-        elif request.method == "POST" and 'yml' in request_dict and 'file_name' in request_dict:
-            path_to_file = f'{BASE_DIR}/svg_editor/media/svg_editor/' \
-                           f'{str(request.user)}/svg/{request_dict["file_name"][0]}'
-            if len(request_dict["file_name"][0]) > 0:
-                if os.path.exists(path_to_file + '.yml'):
-                    path_to_file += '({}).yml'
-                    num = 1
-                    while os.path.exists(path_to_file.format(num)):
-                        num += 1
-                    path_to_file = path_to_file.format(num)
-                else:
-                    path_to_file += '.yml'
+                    path_to_file += file_type
                 stream = open(path_to_file, 'w')
-                yaml.dump({'type': 'illustration'}, stream)
-                yaml.dump(json.loads(request_dict['yml'][0]),
-                          stream)
+                if file_type == '.svg':
+                    stream.write(svg)
+                else:
+                    yaml.dump({'type': 'illustration'}, stream=stream)
+                    illustration.dump(svg, stream=stream)
                 return JsonResponse({'file_name': path_to_file[path_to_file.rfind('/') + 1:]}, status=200)
         return JsonResponse({'errors': 'Bad file name'}, status=400)
     return JsonResponse({'errors': 'Permission denied'}, status=403)
@@ -83,7 +74,7 @@ def files_get(request):
                         }
                     else:
                         response = {
-                            'yml': yaml.load(file, Loader=yaml.Loader)
+                            'yml': illustration.load(file)
                         }
                         del response['yml']['type']
                 response['file_name'] = file_name
@@ -92,12 +83,12 @@ def files_get(request):
     return JsonResponse({'errors': 'Permission denied'}, status=403)
 
 
-# Script for downloading svg
+# Script for downloading svg and project files
 def files_download(request):
     if request.user.is_authenticated:
         request_dict = dict(request.GET)
         if request.method == 'GET' and 'file_name' in request_dict:
-            file_name = '{}.svg'.format(request_dict['file_name'][0])
+            file_name = request_dict['file_name'][0]
             path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'+'/'+file_name))
             if path.exists():
                 file = open(path, 'rb')
@@ -116,7 +107,7 @@ def files_upload(request):
         if request.method == 'POST' and 'file' in request.FILES:
             file = request.FILES['file']
             path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'+'/'+str(file)))
-            if str(path.suffix) == '.svg':
+            if str(path.suffix) in ('.svg', '.yml'):
                 if path.exists():
                     for num in itertools.count(1):
                         new_path = path.parent / (path.stem + f'({num})' + path.suffix)
@@ -128,4 +119,25 @@ def files_upload(request):
                         destination.write(chunk)
                 return JsonResponse({'file_name': path.name}, status=200)
         return JsonResponse({'errors': 'Not svg'}, status=400)
+    return JsonResponse({'errors': 'Permission denied'}, status=403)
+
+
+# Script for deleting svg and project files
+def files_delete(request):
+    if request.user.is_authenticated:
+        request_dict = dict(request.POST)
+        if request.method == 'POST' and 'file_name' in request.POST and 'all' in request.POST:
+            path = os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg')
+            count = 0
+            if eval(request_dict['all'][0].capitalize()):
+                svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
+                for file in svgs_lists:
+                    count += 1
+                    os.remove(path+'/'+file)
+                return JsonResponse({'num_of_del': count}, status=200)
+            elif os.path.exists(path+'/'+request_dict['file_name'][0]):
+                count += 1
+                os.remove(path+'/'+request_dict['file_name'][0])
+                return JsonResponse({'num_of_del': count}, status=200)
+        return JsonResponse({'errors': 'File not found'}, status=400)
     return JsonResponse({'errors': 'Permission denied'}, status=403)
