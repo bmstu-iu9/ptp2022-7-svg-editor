@@ -17,7 +17,7 @@ const toolMethods = {
 
 let	draw,
 	canvasRect,
-	object,
+	object = null,
 	tool,
 	mouseup = true;
 
