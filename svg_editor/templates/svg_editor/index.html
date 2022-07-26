@@ -12,21 +12,21 @@
 </head>
 
 <body>
-	<header style="margin: 10px">
+	<header>
 		<div class="drop-list">
-			<button class="drop-button">File</button>
+			<div class="drop-button">File</div>
 			<div class="drop-content">
-				<p><button name="new-file" class="drop-moving-button">New</button></p>
-				<p><button name="save-file" class="drop-moving-button">Save</button></p>
-				<p><button name="download-file" class="drop-moving-button">Download</button></p>
-				<p><button name="open-file" class="drop-moving-button">Open</button></p>
+				<div name="new-file" class="drop-moving-button">New</div>
+				<div name="save-file" class="drop-moving-button">Save</div>
+				<div name="download-file" class="drop-moving-button">Download</div>
+				<div name="open-file" class="drop-moving-button">Open</div>
 			</div>
 		</div>
 		<div class="drop-list">
-			<button class="drop-button">Edit</button>
+			<div class="drop-button">Edit</div>
 			<div class="drop-content">
-				<p><button name="undo" class="drop-moving-button">Undo</button></p>
-				<p><button name="redo" class="drop-moving-button">Redo</button></p>
+				<div name="undo" class="drop-moving-button">Undo</div>
+				<div name="redo" class="drop-moving-button">Redo</div>
 			</div>
 		</div>
 	</header>
@@ -87,44 +87,25 @@
 	</div>
 	<div id="container">
 		<div id="tools-panel">
-			<table id="tools-choosing">
-				<tr>
-					<td>
-						<button id="pencilTool" class="tool-button" name="tool">P</button>
-					</td>
-					<td>
-						<button id="lineTool" class="tool-button">L</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<button id="polygonTool" class="tool-button">Pg</button>
-					</td>
-					<td>
-						<button id="fillTool" class="tool-button">F</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<button class="tool-button"></button>
-					</td>
-					<td>
-						<button class="tool-button"></button>
-					</td>
-				</tr>
-			</table>
-			<button id="clear-button">Clear</button>
-			<div id="color-choosing">
-				<div id="color-choosing-box-main">
-					<input id="color-main" class="box" type="color">
+			<div id="tools-choosing">
+				<div id="cursorTool" class="tool-button" name="cursor"></div>
+				<div id="pencilTool" class="tool-button" name="tool"></div>
+				<div id="lineTool" class="tool-button"></div>
+				<div id="polygonTool" class="tool-button"></div>
+				<div id="fillTool" class="tool-button"></div>
+				<div id="clear-button">Clear</div>
+				<div id="color-choosing">
+					<div id="color-choosing-box-main">
+						<input id="color-main" class="box" type="color">
+					</div>
+					<div id="color-choosing-box-sub">
+						<input id="color-sub" class="box" type="color">
+					</div>
 				</div>
-				<div id="color-choosing-box-sub">
-					<input id="color-sub" class="box" type="color">
+				<div id="filling-type">
+					<input id="fillbox" name="fill" type="checkbox" checked>
+					<label for="fill">No fill</label>
 				</div>
-			</div>
-			<div id="filling-type">
-				<input id="fillbox" name="fill" type="checkbox" checked>
-				<label for="fill">No fill</label>
 			</div>
 		</div>
 		<svg id="workspace" width="900" height="600"></svg>

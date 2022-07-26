@@ -1,6 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+Pro&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mukta:wght@500&display=swap");
+
+/* colors https://colorscheme.ru/#3r11TaqvKw0w0 */
 html,
 body {
-    background: white;
+    background: #d9d9d9;
     width: 100%;
     height: 100%;
     margin: 0px;
@@ -8,42 +12,87 @@ body {
     overflow: hidden;
 }
 
+header {
+    background: white;
+    width: 100%;
+    height: 40px;
+}
+
 td {
     text-align: center;
 }
 
 .drop-list {
-    width: 8%;
-    height: 5%;
-    display: inline-block;
+    width: 80px;
+    height: 100%;
+    display: flex;
+    float: left;
+    font-family: "Mukta", sans-serif;
 }
 
 .drop-button {
     width: 100%;
-    height: 30%;
-    border: 5px;
-    background: rgb(193, 193, 193);
-    text-align: center;
-    display: inline-block;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid black;
     font-size: 18px;
+    color: black;
+    transition: background 0.2s ease-out, color 0.2s ease-out;
+}
+
+.drop-button:hover {
+    background: #4c6976;
+    color: white;
 }
 
 .drop-moving-button {
-    width: 100%;
-    height: 200%;
+    width: 80px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    background: white;
+    border-bottom: 1px solid black;
+    font-size: 14px;
+    transition: background 0.2s ease-out, color 0.2s ease-out;
+}
+
+.drop-moving-button:hover {
+    background: #6e909f;
+    color: white;
 }
 
 .drop-content {
-    display: none;
+    display: block;
     position: absolute;
     background: #f1f1f1;
-    min-width: 160px;
+    text-align: center;
+    width: 78px;
+    max-height: 170px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
+    top: 40px;
+    border: 1px solid black;
+    border-bottom: 0px;
+    transform: scale(0.01);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease,
+        box-shadow 0.3s ease 0.15s;
+    transform-origin: center top;
+    overflow: hidden;
 }
 
-button.selected {
-    background: rgb(121, 121, 121);
+.drop-content.open {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 3px 3px 30px rgba(118, 96, 168, 0.15);
+}
+
+.selected {
+    background: #4c6976;
     color: white;
 }
 
@@ -165,25 +214,47 @@ button.selected {
     width: 30px;
     height: 30px;
     text-align: center;
+    margin: 5px auto;
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    transition: background-color 0.2s ease-out;
+    border-radius: 15%;
+}
+
+#cursorTool {
+    background-image: url("/static/svg_editor/icons/cursor.svg");   
+}
+
+#pencilTool {
+    background-image: url("/static/svg_editor/icons/pencil.svg");
+}
+
+#lineTool {
+    background-image: url("/static/svg_editor/icons/line.svg");
+    transform: scale(1, -1);
 }
 
 #tools-panel {
-    background: rgb(170, 170, 170);
-    width: 10%;
+    background-color: white;
+    width: 40px;
     height: 100%;
     align-content: center;
     float: left;
-    position: relative;
-    overflow: hidden;
 }
 
 #tools-choosing {
     width: 90%;
-    height: 30%;
+    height: 50%;
     margin: 0 auto;
     margin-top: 10%;
     position: relative;
-    background-color: rgb(102, 102, 102);
+}
+
+.tool-clicked {
+    background-color: #0c76da;
+    transition: background-color 0.2s ease-out;
 }
 
 #clear-button {
@@ -197,27 +268,27 @@ button.selected {
 
 #color-choosing {
     position: relative;
+    margin: 0 auto;
     margin-top: 30%;
-    width: 100%;
-    height: 30%;
+    width: 90px;
+    height: 90px;
 }
 
 .box {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
 }
 
 #color-choosing-box-sub {
     position: absolute;
-    left: 35%;
-    top: 45%;
+    left: 25%;
+    top: 30%;
     z-index: 1;
 }
 
 #color-choosing-box-main {
     position: absolute;
-    left: 10%;
-    top: 30%;
+    left: 5%;
     z-index: 2;
 }
 
@@ -234,9 +305,20 @@ button.selected {
 #workspace {
     width: 900px;
     height: 600px;
-    float: left;
+    margin: 10px 100px 0 100px;
     border: 1px solid black;
     position: relative;
+    background: white;
+}
+
+#addition-panel {
+    background: white;
+    width: 300px;
+    height: 100%;
+    align-content: center;
+    position: flex;
+    float: right;
+    overflow: hidden;
 }
 
 #layers-panel {
@@ -283,14 +365,4 @@ button.selected {
     height: 100%;
     margin-left: 10%;
     border: 0;
-}
-
-#addition-panel {
-    background: rgb(170, 170, 170);
-    width: 20%;
-    height: 100%;
-    align-content: center;
-    float: left;
-    position: relative;
-    overflow: hidden;
 }
