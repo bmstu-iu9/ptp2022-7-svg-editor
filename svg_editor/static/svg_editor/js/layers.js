@@ -10,11 +10,16 @@ const layerControlPanel = document.querySelector('#layer_panel');
 let currentLayerNote,
     i;
 
+function getNode() {
+    return this.layer.node;
+}
+
 function newLayerNote(relatedLayer, layerName) {
     let note = document.createElement('div');
     note.insertAdjacentHTML('beforeend', `
-    <input type="checkbox" checked/><label>${layerName}</label>`);
-
+    <div class="top" style="width: 100%; height: 10px;"><input type="checkbox" checked/><label>${layerName}</label></div>
+    <div class="bottom" style="width: 100%; height: 10px;"></div>
+    `);
     note.classList.add('layer_note');
     note.setAttribute('draggable', 'true');
 
@@ -24,14 +29,14 @@ function newLayerNote(relatedLayer, layerName) {
 
 function createLayer(baseElement) {
     let newLayer = (baseElement === undefined) ? SVG() : SVG(baseElement);
-    newLayer.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);
-    newLayer.node.classList.add('layer');
-
-    opacitySlider.value = 1;
+    newLayer.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);  
 
     let layerName = prompt('Enter layer name', 'Layer ' + i++);
     let newNote = newLayerNote(newLayer, layerName);
+    newNote.getNode = getNode;
     layerControlPanel.prepend(newNote);
+
+    newNote.getNode().classList.add('layer');
     selectLayer(newNote);
 }
 
@@ -43,12 +48,14 @@ function selectLayer(layerNote) {
 
     currentLayerNote = layerNote;
 
+    let opacity = layerNote.getNode().getAttribute('opacity');
+    opacitySlider.value = opacity == null ? 1 : opacity;
     layerUpdate(layerNote.layer);
 }
 
 function deleteLayer() {
     if (currentLayerNote === null) return;
-    currentLayerNote.layer.node.remove();
+    currentLayerNote.getNode().remove();
     currentLayerNote.remove();
     currentLayerNote = null;
     i--;
@@ -63,7 +70,11 @@ function deleteAllLayers() {
 }
 
 function changeOpacity() {
-    currentLayerNote.layer.node.setAttribute('opacity', opacitySlider.value);
+    currentLayerNote.getNode().setAttribute('opacity', opacitySlider.value);
+}
+
+function isDrawAllowed() {
+    return !(currentLayerNote === null || currentLayerNote.getNode().getAttribute('display') == 'none');
 }
 
 function getPictureAsSvg() {
@@ -73,15 +84,19 @@ function getPictureAsSvg() {
                          `width="${workspace.clientHeight}" ` + 
                          `height="${workspace.clientWidth}">\n`;
 
-    for (let layer of document.getElementById('workspace').childNodes) {
-        svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
-                            `width="${layer.getAttribute('width')}"` +
-                            `${getOpacity(layer)}` +
-                            `${getViewBox(layer)}>\n`;
-        for (let elem of layer.children) {
-            svgString += `\t\t${elem.outerHTML}\n`;
+    for (let layer of workspace.childNodes) {
+        if (layer.nodeName == 'svg') {
+            svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
+                                `width="${layer.getAttribute('width')}"` +
+                                `${getOpacity(layer)}` +
+                                `${getViewBox(layer)}>\n`;
+            for (let elem of layer.children) {
+                svgString += `\t\t${elem.outerHTML}\n`;
+            }
+            svgString += '\t</svg>\n';
+        } else {
+            svgString += layer.outerHTML;
         }
-        svgString += '\t</svg>\n';
     }
     svgString += '</svg>\n';
     console.log(svgString);
@@ -148,29 +163,48 @@ $(document).ready(function () {
     $('#layer_panel').on("dragstart", ".layer_note", function () {
         selectLayer(this);
     })
-    $('#layer_panel').on("dragenter", ".layer_note", function () {
+    $('#layer_panel').on("dragenter", ".top", function () {
+        let layerNote = this.parentElement;
         this.querySelector('input').classList.add('unactive');
-        this.classList.add('hovered');
+        layerNote.classList.add('hovered_top');
     })
-    $('#layer_panel').on("dragleave", ".layer_note", function () {
+    $('#layer_panel').on("dragleave", ".top", function () {
+        let layerNote = this.parentElement;
         this.querySelector('input').classList.remove('unactive');
-        this.classList.remove('hovered');
+        layerNote.classList.remove('hovered_top');
     })
-    $('#layer_panel').on("dragover", ".layer_note", function (e) {
+    $('#layer_panel').on("dragenter", ".bottom", function () 
+    {
+        let layerNote = this.parentElement;
+        layerNote.classList.add('hovered_bottom');
+    })
+    $('#layer_panel').on("dragleave", ".bottom", function () {
+        let layerNote = this.parentElement;
+        layerNote.classList.remove('hovered_bottom');
+    })
+    $('#layer_panel').on("dragover", ".top, .bottom", function (e) {
         e.preventDefault();
     })
-    $('#layer_panel').on("drop", ".layer_note", function () {
-        console.log('drop');
+    $('#layer_panel').on("drop", ".top", function () {
+        console.log('dropTop');
+        let layerNote = this.parentElement;
         $(this).trigger("dragleave");
-        this.layer.before(currentLayer);
-        this.after(currentLayer.note);
+        layerNote.getNode().after(currentLayerNote.getNode());
+        layerNote.before(currentLayerNote);
+    })
+    $('#layer_panel').on("drop", ".bottom", function () {
+        console.log('dropBottom');
+        let layerNote = this.parentElement;
+        $(this).trigger("dragleave");
+        layerNote.getNode().before(currentLayerNote.getNode());
+        layerNote.after(currentLayerNote);
     })
     $('#layer_panel').on("click", ".layer_note input", function () {
-        let layer = checkbox.parentElement.layer;
-        if (checkbox.checked) {
-            layer.node.setAttribute('display', '');
+        let clicked = this.parentElement.parentElement.getNode();
+        if (this.checked) {
+            clicked.setAttribute('display', '');
             return;
         }
-        layer.node.setAttribute('display', 'none');
+        clicked.setAttribute('display', 'none');
     })
 })
