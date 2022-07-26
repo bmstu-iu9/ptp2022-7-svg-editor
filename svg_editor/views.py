@@ -107,7 +107,7 @@ def files_upload(request):
         if request.method == 'POST' and 'file' in request.FILES:
             file = request.FILES['file']
             path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'+'/'+str(file)))
-            if str(path.suffix) == '.svg':
+            if str(path.suffix) in ('.svg', '.yml'):
                 if path.exists():
                     for num in itertools.count(1):
                         new_path = path.parent / (path.stem + f'({num})' + path.suffix)

@@ -31,7 +31,7 @@ def __todict(parsed):
                     tag['outers'].append(str(child))
             else:
                 tag['outers'].append(__todict(child))
-        if parsed.name == 'g':
+        if parsed.name == 'svg':
             return tag
         else:
             return {parsed.name: tag}
