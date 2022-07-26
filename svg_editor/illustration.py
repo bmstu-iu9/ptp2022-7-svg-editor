@@ -3,10 +3,12 @@ import yaml
 from bs4 import BeautifulSoup
 
 
+# Filtering all non-tag elements
 def __no_navigable_string(iterator):
     return filter(lambda element: not isinstance(element, bs4.element.NavigableString), iterator)
 
 
+# Converting svg to dictionary
 def __todict(parsed):
     if parsed.name == '[document]':
         illustration = {}
@@ -35,6 +37,7 @@ def __todict(parsed):
             return {parsed.name: tag}
 
 
+# Converting svg to yml
 def dump(svg, stream=None):
     parsed_svg = BeautifulSoup(svg.replace('\n', ''), 'html.parser')
     svg_dict = __todict(parsed_svg)
@@ -44,6 +47,7 @@ def dump(svg, stream=None):
         return svg_dict
 
 
+# Load yml file as dict
 def load(stream):
     return yaml.load(stream, Loader=yaml.Loader)
 
