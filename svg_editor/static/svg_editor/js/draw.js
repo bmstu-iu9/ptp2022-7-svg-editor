@@ -17,7 +17,7 @@ const toolMethods = {
 
 let	draw,
 	canvasRect,
-	object,
+	object = null,
 	tool,
 	mouseup = true;
 
@@ -58,9 +58,9 @@ function logMouseEvent(event) {
 	} else if (event.type == 'mousedown') {
 		mouseup = false;
 	}
-    if (currentLayerNote === null || currentLayerNote.layer.node.getAttribute('display') === 'none') {
-        return;
-    }
+
+    	if (!isDrawAllowed()) return;
+
 	if ((event.which == 1 || mouseup && event.which == 0) &&
 		tool in toolMethods && event.type.slice(5) in toolMethods[tool]) {
 		x = event.x - canvasRect.x;
