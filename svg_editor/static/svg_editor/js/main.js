@@ -7,21 +7,40 @@ $(document).ready(function () {
 	});
 
 	$('#saveFileButton').click(function () {
-
-		let dataToSave = {
-			file_name: document.getElementById('fileNameInput').value,
-		}
-		if (document.getElementById('save_file_type').value === 'svg'){
-			dataToSave.svg = getPictureAsSvg();
-		} else {
-			dataToSave.yml = getPictureAsSvg();
-		}
 		$.ajax({
-			data: dataToSave,
+			data: {
+				file_name: document.getElementById('fileNameInput').value,
+				save_as: false,
+				svg: getPictureAsSvg(),
+				type: document.getElementById('save_file_type').value,
+			},
+			type: 'POST',
+			url: saveURL,
+			success: function (response) {
+				alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно сохранен!');
+				document.getElementById('fileNameInput').value = response.file_name.slice(0,-4);
+			},
+			error: function (response) {
+				alert(response.responseJSON.errors);
+				console.log(response.responseJSON.errors);
+			}
+		});
+		return false;
+	});
+
+	$('#saveAsFileButton').click(function () {
+		$.ajax({
+			data: {
+				file_name: document.getElementById('fileNameInput').value,
+				save_as: true,
+				svg: getPictureAsSvg(),
+				type: document.getElementById('save_file_type').value,
+			},
 			type: 'POST',
 			url: saveURL,
 			success: function (response) {
 				alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно создан!');
+				document.getElementById('fileNameInput').value = response.file_name.slice(0,-4);
 			},
 			error: function (response) {
 				alert(response.responseJSON.errors);
@@ -95,6 +114,7 @@ $(document).ready(function () {
 		});
 		return false;
 	});
+
 	$("#deleteButton").click(function () {
 		$.ajax({
 			url: deleteURL,
@@ -112,6 +132,7 @@ $(document).ready(function () {
 			},
 		})
 	})
+
 	$("#editButton").click(function () {
 		$.ajax({
 			url: loadURL,
