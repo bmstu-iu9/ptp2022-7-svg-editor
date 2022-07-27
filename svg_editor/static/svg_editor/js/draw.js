@@ -59,20 +59,13 @@ function logMouseEvent(event) {
 		mouseup = false;
 	}
 
-    if (!isDrawAllowed()) return;
+    if (!isDrawAllowed() || event.type == 'mousedown' && workspace != event.target) return;
 
 	if ((event.which == 1 || mouseup && event.which == 0) &&
 		tool in toolMethods && event.type.slice(5) in toolMethods[tool]) {
-		x = event.x - canvasRect.x;
-		y = event.y - canvasRect.y;
-		if (event.type == 'mousedown') {
-			if (0 <= x && x <= canvasRect.width &&
-				0 <= y && y <= canvasRect.height) {
-					toolMethods[tool][event.type.slice(5)](x, y);
-				}
-		} else {
-			toolMethods[tool][event.type.slice(5)](x, y);
-		}
+		x = event.clientX - canvasRect.left;
+		y = event.clientY - canvasRect.top;
+		toolMethods[tool][event.type.slice(5)](x, y);
 	}
 }
 
@@ -249,6 +242,13 @@ $(document).ready(function () {
 	resizeWindowEvent();
 	$('#clearWorkspaceButton').click(function () {
 		draw.clear();
-		object = null;	
+		object = null;
 	})
 })
+
+$(window)
+	.mousedown(logMouseEvent)
+	.mouseup(logMouseEvent)
+	.mousemove(logMouseEvent)
+	.on('resize', resizeWindowEvent)
+	.on('scroll', resizeWindowEvent);
