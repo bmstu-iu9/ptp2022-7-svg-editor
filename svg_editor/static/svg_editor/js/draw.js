@@ -8,7 +8,7 @@ const widthInput = document.getElementById('widthChoice');
 const toolsInput = document.getElementsByName('toolChoice');
 
 const toolMethods = {
-	'pancil': {'down': pancilDown, 'move': pancilMove, 'up': pancilUp},
+	'pencil': {'down': pencilDown, 'move': pencilMove, 'up': pencilUp},
 	'line': {'down': lineDown, 'move': lineMove, 'up': lineUp},
 	'polygon': {'down': polygonDown, 'move': polygonMove, 'up': polygonUp},
 	'path': {'down': pathDown, 'move': pathMove, 'up': pathUp},
@@ -86,7 +86,7 @@ function distanceTo(x1, y1, x2, y2) {
 }
 
 // <=><=><=><=><=>	скрипт инструмента карандаш <=><=><=><=><=>
-function pancilDown(x, y) {
+function pencilDown(x, y) {
 	object = draw.polyline([[x, y]]);
 	if (fillValue) {
 		object.fill(colorValue);
@@ -95,13 +95,13 @@ function pancilDown(x, y) {
 	}
 }
 
-function pancilMove(x, y) {
+function pencilMove(x, y) {
 	if (object !== null) {
 		object.plot(object.array().concat([[x, y]]));
 	}
 }
 
-function pancilUp(x, y) {
+function pencilUp(x, y) {
 	stopDrawing();
 }
 
