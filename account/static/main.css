@@ -1,0 +1,165 @@
+html,
+body {
+    background: white;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow: auto;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+.parent-wrapper {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #CCD7E4;
+}
+
+.wrapper {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.wrapper .form {
+    padding: 30px;
+}
+
+
+.wrapper .form .title {
+    position: relative;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.form-signup {
+    float: left;
+    width: 50%;
+  }
+  
+  /* Clear floats after the columns */
+  .forms:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+/*.form .title {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 30px;
+    background-color: #828A95;
+}*/
+
+.form .input-field {
+    margin-top: 30px;
+    height: 50px;
+    width: 100%;
+    position: relative;
+    color: #CCD7E4;
+}
+
+.input-field input {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    padding: 0 35px;
+    border: none;
+    outline: none;
+    border: 1px solid #CCD7E4;
+}
+
+.input-field i {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: 23px;
+}
+
+.input-field input:is(:focus, :valid) {
+    border-color: #828A95;
+}
+
+.input-field input:is(:focus, :valid)  ~ i {
+    color: #828A95;
+}
+
+.input-field i.icon {
+    margin-left: 5px;
+}
+
+.form .check {
+    margin-top: 20px;
+}
+
+.form .signup {
+    margin-top: 6px;
+}
+
+.check a {
+    text-decoration: none;
+}
+
+.check a:hover {
+    text-decoration: underline;
+    color: #767D87;
+}
+
+.check-text {
+    color: #828A95;
+}
+
+.check-text a {
+    text-decoration: none;
+}
+
+.check-text a:hover {
+    text-decoration: underline;
+    color: #767D87;
+}
+
+.form .button {
+    margin-top: 30px;
+}
+
+.form .button input {
+    border: none;
+    background-color: #828A95;
+    color: #FFFFFF;
+    font-weight: 500;
+    border-radius: 7px;
+    transition: all 0.3s ease;
+}
+
+.button input:hover {
+    background-color: #767D87;
+}
+
+.instruction {
+    font-size: 70%;
+    font-weight: 600;
+    color: #828A95;
+    display:grid;
+    margin-bottom: -5px;
+}
+
+.instruction br {
+    display: block;
+    content: "";
+    margin-top: -10px;
+}
+
+.instruction ul {
+    margin-left: -17px;
+    margin-bottom: 1px;
+}
