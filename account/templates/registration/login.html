@@ -18,6 +18,10 @@
                 <div class="form-login">
                     <span class="title">Login</span>
                     <form method="post">
+                        {% csrf_token %}
+
+                        {{ form|crispy }}
+                        
                         <div class="input-field"> 
                             <input type="text" name="username" placeholder="Имя пользователя" required>
                             <i class="uil uil-user icon"></i>
@@ -31,12 +35,12 @@
                         </div>
                         <div class="signup">
                             <span class="check-text">Don't have an account yet?
-                                <a href="#" class="check-text signup-text">Sign up now!</a>
+                                <a href="{% url 'signup' %}" class="check-text signup-text">Sign up now!</a>
                             </span>
                         </div>
                         <div class="signup">
-                            <span class="check-text">Back to editor
-                                <a href="{% url 'index' %}" class="check-text signup-text">Sign up now!</a>
+                            <span class="check-text">
+                                <a href="{% url 'index' %}" class="check-text signup-text">Back to editor</a>
                             </span>
                         </div>
                         <div class="input-field button">
