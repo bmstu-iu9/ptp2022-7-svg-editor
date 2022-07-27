@@ -20,8 +20,6 @@
                     <form method="post">
                         {% csrf_token %}
 
-                        {{ form|crispy }}
-                        
                         <div class="input-field"> 
                             <input type="text" name="username" placeholder="Имя пользователя" required>
                             <i class="uil uil-user icon"></i>

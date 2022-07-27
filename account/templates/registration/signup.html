@@ -20,8 +20,6 @@
                         <span class="title">Registration</span>
                         <form method="post">
                             {% csrf_token %}
-
-                            {{ form|crispy }}
                         
                             <div class="input-field"> 
                                 <input type="text" name="username" placeholder="Имя пользователя" required>
