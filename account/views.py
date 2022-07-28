@@ -1,8 +1,10 @@
 import os
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -61,3 +63,14 @@ def activate(request, uidb64, token):
         return render(request, 'registration/active_email_complete.html')
     else:
         return render(request, 'registration/active_email_incomplete.html')
+
+
+# Username validate script
+def validate_username(request):
+    if request.method == 'GET':
+        username = request.GET.get('username', None)
+        response = {
+            'exists': User.objects.filter(username__iexact=username).exists()
+        }
+        return JsonResponse(response, status=200)
+    return JsonResponse({'errors': 'Permission denied'}, status=403)
