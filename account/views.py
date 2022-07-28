@@ -1,5 +1,6 @@
 import os
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.shortcuts import render
@@ -12,6 +13,7 @@ from .tokens import account_activation_token
 
 
 # Personal page rendering
+@login_required
 def account(request):
     return render(request, 'registration/account.html')
 
