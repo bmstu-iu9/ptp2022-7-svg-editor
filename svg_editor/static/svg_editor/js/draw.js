@@ -59,7 +59,7 @@ function logMouseEvent(event) {
 		mouseup = false;
 	}
 
-    if (!isDrawAllowed() || event.type == 'mousedown' && workspace != event.target) return;
+    if (!isDrawAllowed() || event.type == 'mousedown' && !workspace.contains(event.target)) return;
 
 	if ((event.which == 1 || mouseup && event.which == 0) &&
 		tool in toolMethods && event.type.slice(5) in toolMethods[tool]) {
