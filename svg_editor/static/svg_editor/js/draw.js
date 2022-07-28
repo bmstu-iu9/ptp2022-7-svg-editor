@@ -7,9 +7,10 @@ const colorInput = document.getElementById("color-main");
 const fillColorInput = document.getElementById("color-sub");
 const widthInput = $("input[name='stroke-width']");
 const toolsInput = document.getElementsByName("toolChoice");
+// add $ to all names !
 
 const toolMethods = {
-    pancil: { down: pancilDown, move: pancilMove, up: pancilUp },
+    pencil: { down: pencilDown, move: pencilMove, up: pencilUp },
     line: { down: lineDown, move: lineMove, up: lineUp },
     polygon: { down: polygonDown, move: polygonMove, up: polygonUp },
     path: { down: pathDown, move: pathMove, up: pathUp },
@@ -18,7 +19,7 @@ const toolMethods = {
 
 let draw,
     canvasRect,
-    object,
+    object = null,
     tool,
     mouseup = true;
 
@@ -37,18 +38,14 @@ function breakDrawing() {
 }
 
 function resizeWindowEvent() {
-    canvasRect = workspace.getBoundingClientRect();
+    canvasRect = $("#workspace")[0].getBoundingClientRect();
+
 }
 
-function changeToolEvent(newTool=null) {
+function changeToolEvent() {
     breakDrawing();
-    if (newTool != null) {
-        tool = newTool.value;
-        fillValue = fillInput.checked;
-        strokeColorValue = colorInput.value;
-        fillColorValue = fillColorInput.value;
-        widthValue = widthInput.value;
-    }
+    newTool = $(".tool-button.tool-clicked");
+    tool = newTool.attr("name");
 }
 
 function logMouseEvent(event) {
@@ -68,8 +65,8 @@ function logMouseEvent(event) {
         tool in toolMethods &&
         event.type.slice(5) in toolMethods[tool]
     ) {
-        x = event.x - canvasRect.x;
-        y = event.y - canvasRect.y;
+        x = event.pageX - canvasRect.x;
+        y = event.pageY - canvasRect.y;
         if (event.type == "mousedown") {
             if (
                 0 <= x &&
@@ -95,22 +92,24 @@ function distanceTo(x1, y1, x2, y2) {
 }
 
 // <=><=><=><=><=>	скрипт инструмента карандаш <=><=><=><=><=>
-function pancilDown(x, y) {
+function pencilDown(x, y) {
     object = draw.polyline([[x, y]]);
-    if (fillValue) {
-        object.fill(fillColorValue);
+    if (!fillInput.checked) {
+        object.fill(fillColorInput.value).stroke({ width: widthInput.val(), color: colorInput.value });
     } else {
-        object.fill("none").stroke({ width: widthValue, color: strokeColorValue });
+        object
+            .fill("none")
+            .stroke({ width: widthInput.val(), color: colorInput.value });
     }
 }
 
-function pancilMove(x, y) {
+function pencilMove(x, y) {
     if (object !== null) {
         object.plot(object.array().concat([[x, y]]));
     }
 }
 
-function pancilUp(x, y) {
+function pencilUp(x, y) {
     stopDrawing();
 }
 
@@ -118,7 +117,7 @@ function pancilUp(x, y) {
 function lineDown(x, y) {
     object = draw
         .line(x, y, x, y)
-        .stroke({ width: widthValue, color: strokeColorValue });
+        .stroke({ width: widthInput.val(), color: colorInput.value });
 }
 
 function lineMove(x, y) {
@@ -138,12 +137,12 @@ function polygonDown(x, y) {
             [x, y],
             [x, y],
         ]);
-        if (fillValue) {
-            object.fill(fillColorValue);
+        if (!fillInput.checked) {
+            object.fill(fillColorInput.value);
         } else {
             object
                 .fill("none")
-                .stroke({ width: widthValue, color: strokeColorValue });
+                .stroke({ width: widthInput.val(), color: colorInput.value });
         }
     } else {
         object.plot(object.array().concat([[x, y]]));
@@ -179,12 +178,12 @@ function pathDown(x, y) {
             ["M", x, y],
             ["C", x, y, x, y, x, y],
         ]);
-        if (fillValue) {
-            object.fill(fillColorValue);
+        if (!fillInput.checked) {
+            object.fill(fillColorInput.value);
         } else {
             object
                 .fill("none")
-                .stroke({ width: widthValue, color: strokeColorValue });
+                .stroke({ width: widthInput.val(), color: colorInput.value });
         }
     } else {
         first_line = object.array().slice(0, 2);
@@ -243,7 +242,7 @@ function textDown(x, y) {
     object = draw
         .path(path)
         .fill("none")
-        .stroke({ width: widthValue, color: strokeColorValue });
+        .stroke({ width: widthInput.val(), color: colorInput.value });
 }
 
 function textMove(x, y) {
@@ -275,7 +274,7 @@ function textUp(x, y) {
                 ["M", x1, (y1 + y2) / 2],
                 ["L", x2, (y1 + y2) / 2],
             ]);
-            object.font({ size: Math.abs(y2 - y1), fill: fillColorValue });
+            object.font({ size: Math.abs(y2 - y1), fill: fillColorInput.value });
             stopDrawing();
         } else {
             breakDrawing();
@@ -284,7 +283,7 @@ function textUp(x, y) {
 }
 
 $(document).ready(function () {
-    changeToolEvent();
+    //changeToolEvent();
     resizeWindowEvent();
     $("#clear-button").click(function () {
         draw.clear();

@@ -49,7 +49,6 @@ $(document).ready(function () {
         //buttonClick($(this), $(".tool-button"));
         const $lastPressed = $(".tool-button.tool-clicked").not(this);
         if ($lastPressed.length) {
-            console.log($lastPressed);
             $lastPressed.css(
                 "background-image",
                 $lastPressed.css("background-image").replace("-active", "")
@@ -61,7 +60,7 @@ $(document).ready(function () {
                 "background-image",
                 "url('/static/svg_editor/icons/cursor-active.svg')"
             );
-            changeToolEvent(this.value);
+            changeToolEvent();
         } else {
             $(this).css(
                 "background-image",
@@ -74,7 +73,6 @@ $(document).ready(function () {
         $(this).toggleClass("tool-clicked");
         const $lastPressed = $(".tool-button.tool-clicked").not(this);
         if ($lastPressed.length) {
-            console.log($lastPressed);
             $lastPressed.css(
                 "background-image",
                 $lastPressed.css("background-image").replace("-active", "")
@@ -88,6 +86,7 @@ $(document).ready(function () {
                 "background-image",
                 "url('/static/svg_editor/icons/pencil-active.svg')"
             );
+            changeToolEvent();
         } else {
             $("#width-parameter").css("display", "none");
             $("#filling-type").css("display", "none");
@@ -103,7 +102,6 @@ $(document).ready(function () {
         $(this).toggleClass("tool-clicked");
         const $lastPressed = $(".tool-button.tool-clicked").not(this);
         if ($lastPressed.length) {
-            console.log($lastPressed);
             $lastPressed.css(
                 "background-image",
                 $lastPressed.css("background-image").replace("-active", "")
@@ -115,6 +113,7 @@ $(document).ready(function () {
                 "background-image",
                 "url('/static/svg_editor/icons/line-active.svg')"
             );
+            changeToolEvent();
         } else {
             $(this).css(
                 "background-image",
@@ -125,9 +124,10 @@ $(document).ready(function () {
 
     $("#polygonTool").on("click", function () {
         $(this).toggleClass("tool-clicked");
-        if ($(this).data("clicked")) {
+        if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
             $("#filling-type").css("display", "inline-block");
+            changeToolEvent();
         } else {
             $("#width-parameter").css("display", "none");
             $("#filling-type").css("display", "none");
@@ -144,24 +144,6 @@ $(document).ready(function () {
         draw.clear();
         object = null;
     });
-
-    // Рабочая область
-    $("#workspace").mousedown(function (e) {
-        logMouse("down", e);
-    });
-    $("#workspace").mouseup(function (e) {
-        logMouse("up", e);
-        selectEnable();
-    });
-    $("#workspace").mousemove(function (e) {
-        logMouse("move", e);
-        selectEnable();
-    });
-    $("#workspace").mouseleave(function (e) {
-        logMouse("up", e);
-        selectEnable();
-    });
-
     // Слайдер
     $(document).on("input", ".slider", function () {
         $(".slider-value").val($(this).val());

@@ -268,7 +268,7 @@ td {
     width: 150px;
     height: 7px;
     border-radius: 5px;
-    background: #d3d3d3;
+    background: white;
     outline: none;
     opacity: 0.7;
     -webkit-transition: 0.2s;
@@ -408,6 +408,7 @@ td {
     border: 1px solid black;
     position: relative;
     background: white;
+    z-index: 0;
 }
 
 #addition-panel {

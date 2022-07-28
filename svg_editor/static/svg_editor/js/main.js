@@ -4,15 +4,17 @@ $(document).ready(function () {
     $.ajaxSetup({
         headers: { "X-CSRFToken": token },
     });
-
-    $("body")
-        .on("mousedown", logMouseEvent(e))
-        .on("mouseup", logMouseEvent(e))
-        .on("mousemove", logMouseEvent(e))
-        .on("mouseleave", breakDrawing())
-        .on("resize", resizeWindowEvent());
-
-    $("#tools-choosing").on("change", changeToolEvent($(this)));
+    $("#workspace").mousedown(function (e) {
+        logMouseEvent(e);
+    });
+    $("#workspace").mouseup(function (e) {
+        logMouseEvent(e);
+    });
+    $("#workspace").mousemove(function (e) {
+        logMouseEvent(e);
+    });
+    $("#workspace").mouseleave(breakDrawing);
+    $("#workspace").resize(resizeWindowEvent);
 
     $("#saveFileButton").click(function () {
         let dataToSave = {

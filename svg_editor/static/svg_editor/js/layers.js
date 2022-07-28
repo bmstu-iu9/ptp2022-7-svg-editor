@@ -5,7 +5,7 @@
 'use strict'
 
 const opacitySlider = document.querySelector('#opacity_slider');
-const layerControlPanel = document.querySelector('#layer_panel');
+const layerControlPanel = document.querySelector('#layers-panel');
 
 let currentLayerNote,
     i;
@@ -40,9 +40,7 @@ function selectLayer(layerNote) {
         currentLayerNote.setAttribute('checked', '');
     }
     layerNote.setAttribute('checked', 'true');
-    
     currentLayerNote = layerNote;
-
     layerUpdate(layerNote.layer);
 }
 

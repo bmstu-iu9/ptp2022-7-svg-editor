@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>СВГ-Редактор</title>
-	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %} 20220714154345">
+	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}">
 </head>
 
 <body>
@@ -119,9 +119,9 @@
 	<div id="container">
 		<div id="tools-panel">
 			<div id="tools-choosing">
-				<div id="cursorTool" class="tool-button" value="cursor"></div>
-				<div id="pencilTool" class="tool-button" value="pencil"></div>
-				<div id="lineTool" class="tool-button" value="line"></div>
+				<div id="cursorTool" class="tool-button" name="cursor"></div>
+				<div id="pencilTool" class="tool-button" name="pencil"></div>
+				<div id="lineTool" class="tool-button" name="line"></div>
 				<div id="polygonTool" class="tool-button" value="polygon"></div>
 				<div id="pathTool" class="tool-button" value="path"></div>
 				<div id="textTool" class="tool-button" value="text"></div>
@@ -145,26 +145,28 @@
      		 xmlns="http://www.w3.org/2000/svg"
 			 xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
 		<div id="addition-panel">
+			<div id="layers-panel-control">
+				<button id="createLayerButton" class="layers-panel-control-button">N</button>
+				<button id="deleteLayerButton" class="layers-panel-control-button">D</button>
+				<button id="createNewFileButton" class="layers-panel-control-button">nf</button>
+				<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
+			</div>
 			<div id="layers-panel">
-				<div id="layers-panel-control">
-					<button id="createLayerButton" class="layers-panel-control-button new"></button>
-					<button id="deleteLayerButton" class="layers-panel-control-button delete"></button>
-					<button id="createNewFileButton" class="layers-panel-control-button">new file</button>
-					<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
-				</div>
-				<div class="layer">
-					<button class="layer-button">Layer 0</button>
-				</div>
 			</div>
 		</div>
 	</div>
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script src="{% static 'svg_editor/js/design.js' %} 20220714154345"></script>
+	<!--<script src="{% static 'svg_editor/js/design.js' %} 20220714154345"></script>
 	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
 	<script src="{% static 'svg_editor/js/layers.js' %}? 202207232241"></script>
 	<script src="{% static 'svg_editor/js/draw.js' %}? 20220714154345"></script>
+	-->
+	<script src="{% static 'svg_editor/js/design.js' %}"></script>
+	<script src="{% static 'svg_editor/js/main.js' %}?"></script>
+	<script src="{% static 'svg_editor/js/layers.js' %}?"></script>
+	<script src="{% static 'svg_editor/js/draw.js' %}?"></script>
 	<script>
 		const token = "{{csrf_token}}",
 			 saveURL = "{% url 'files_save' %}",
