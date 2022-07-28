@@ -78,6 +78,15 @@ body {
     border: 1px solid #CCD7E4;
 }
 
+.is-valid {
+    border: 1px solid #08ec17!important;
+}
+
+.is-invalid {
+    border: 1px solid #ec081b!important;
+}
+
+
 .input-field i {
     position: absolute;
     top: 50%;

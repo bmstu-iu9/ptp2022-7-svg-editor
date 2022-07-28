@@ -1,7 +1,10 @@
 import os
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -12,6 +15,7 @@ from .tokens import account_activation_token
 
 
 # Personal page rendering
+@login_required
 def account(request):
     return render(request, 'registration/account.html')
 
@@ -59,3 +63,37 @@ def activate(request, uidb64, token):
         return render(request, 'registration/active_email_complete.html')
     else:
         return render(request, 'registration/active_email_incomplete.html')
+
+
+# Username validate script
+def validate_username(request):
+    if request.method == 'GET':
+        username = request.GET.get('username', None)
+        response = {
+            'exists': User.objects.filter(username__iexact=username).exists() or username == ''
+        }
+        return JsonResponse(response, status=200)
+    return JsonResponse({'errors': 'Bad request'}, status=400)
+
+
+# Email validate script
+def validate_email(request):
+    if request.method == 'GET':
+        email = request.GET.get('email', None)
+        response = {
+            'exists': User.objects.filter(email=email).exists() or email == ''
+        }
+        return JsonResponse(response, status=200)
+    return JsonResponse({'errors': 'Bad request'}, status=400)
+
+
+# Passwords missmatch check script
+def validate_passwords(request):
+    if request.method == 'GET':
+        password1 = request.GET.get('password1', None)
+        password2 = request.GET.get('password2', None)
+        response = {
+            'missmatch': password1 != password2 or not (password1 and password2)
+        }
+        return JsonResponse(response, status=200)
+    return JsonResponse({'errors': 'Bad request'}, status=400)
