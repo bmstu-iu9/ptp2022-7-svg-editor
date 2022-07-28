@@ -99,18 +99,14 @@ function getPictureAsSvg() {
                          `height="${workspace.clientWidth}">\n`;
 
     for (let layer of workspace.childNodes) {
-        if (layer.nodeName == 'svg') {
-            svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
+        svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
                                 `width="${layer.getAttribute('width')}"` +
                                 `${getOpacity(layer)}` +
                                 `${getViewBox(layer)}>\n`;
             for (let elem of layer.children) {
                 svgString += `\t\t${elem.outerHTML}\n`;
             }
-            svgString += '\t</svg>\n';
-        } else {
-            svgString += layer.outerHTML;
-        }
+            svgString += '\t</svg>\n';   
     }
     svgString += '</svg>\n';
     console.log(svgString);
@@ -178,6 +174,11 @@ function openAsProject(yml) {
                 task.node.setAttribute(attrName, attr[attrName]);
             }
             for (let child of task.obj.outers) {
+                if (typeof(child) != 'object') {
+                    task.node.textContent = child;
+                    continue;
+                }
+                console.log(typeof(child));
                 let childName = Object.keys(child)[0];
                 let childNode = document.createElement(childName);
                 task.node.append(childNode);
@@ -191,8 +192,9 @@ function openAsProject(yml) {
         let oDOM = oParser.parseFromString(svgLayer.outerHTML,"application/xml");
         svgLayer = oDOM.documentElement;
         createLayer(svgLayer,'Layer ' + i++);
+        console.log(svgLayer);
 
-        // Парсинг происходит по сути дважды, иначе добавленные слои почему-то не отображются на странице
+        // Парсинг происходит по сути дважды, иначе добавленные слои почему-то не отображаются на странице
     }
 }
 
