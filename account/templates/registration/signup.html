@@ -37,7 +37,7 @@
                             </div>
                             <small class="instruction">Обязательное поле.</small>
                             <div class="input-field"> 
-                                <input type="text" name="email" placeholder="Email" required>
+                                <input type="text" name="email" id="id_email" placeholder="Email" required>
                                 <i class="uil uil-envelope-alt icon"></i>
                             </div>
                             <small class="instruction">Обязательное поле.</small>
@@ -89,7 +89,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 		const token = "{{ csrf_token }}",
-			usernameValidationURL = "{% url 'validate_username' %}";
+			usernameValidationURL = "{% url 'validate_username' %}",
+            emailValidationURL = "{% url 'validate_email' %}";
 	</script>
 	<script src="{% static 'account/js/main.js' %}? 20220714154345"></script>
 	{% endblock javascript %}

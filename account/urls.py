@@ -3,7 +3,7 @@ The `urlpatterns` list routes URLs to views
 """
 from django.urls import path
 from django.contrib.auth import views
-from .views import signup, activate, account, validate_username
+from .views import signup, activate, account, validate_username, validate_email
 
 urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'),
@@ -20,5 +20,6 @@ urlpatterns = [
     path('password-change/', views.PasswordChangeView.as_view(), name='password_change'),
     path('password-change/done/', views.PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('', account, name='account'),
-    path('validate_username/', validate_username, name='validate_username')
+    path('validate_username/', validate_username, name='validate_username'),
+    path('validate_email/', validate_email, name='validate_email')
 ]

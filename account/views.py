@@ -70,7 +70,18 @@ def validate_username(request):
     if request.method == 'GET':
         username = request.GET.get('username', None)
         response = {
-            'exists': User.objects.filter(username__iexact=username).exists()
+            'exists': User.objects.filter(username__iexact=username).exists() or username == ''
         }
         return JsonResponse(response, status=200)
-    return JsonResponse({'errors': 'Permission denied'}, status=403)
+    return JsonResponse({'errors': 'Bad request'}, status=400)
+
+
+# Email validate script
+def validate_email(request):
+    if request.method == 'GET':
+        email = request.GET.get('email', None)
+        response = {
+            'exists': User.objects.filter(email=email).exists() or email == ''
+        }
+        return JsonResponse(response, status=200)
+    return JsonResponse({'errors': 'Bad request'}, status=400)
