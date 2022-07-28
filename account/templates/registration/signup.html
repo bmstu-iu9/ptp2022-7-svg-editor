@@ -42,7 +42,7 @@
                             </div>
                             <small class="instruction">Обязательное поле.</small>
                             <div class="input-field">
-                                <input type="text" name="password1" placeholder="Пароль" required>
+                                <input type="text" name="password1" id="id_password1" placeholder="Пароль" required>
                                 <i class="uil uil-lock icon"></i>
                             </div>
                             <small class="instruction">
@@ -62,7 +62,7 @@
                                 </ul>
                             </small>
                             <div class="input-field">
-                                <input type="text" name="password2" placeholder="Подтверждение Пароля" required>
+                                <input type="text" name="password2" id="id_password2" placeholder="Подтверждение Пароля" required>
                                 <i class="uil uil-lock icon"></i>
                             </div>
                             <small class="instruction">Для подтверждения введите, пожалуйста, пароль ещё раз.</small>
@@ -90,7 +90,8 @@
 	<script>
 		const token = "{{ csrf_token }}",
 			usernameValidationURL = "{% url 'validate_username' %}",
-            emailValidationURL = "{% url 'validate_email' %}";
+            emailValidationURL = "{% url 'validate_email' %}",
+            passwordValidationURL = "{% url 'validate_passwords' %}";
 	</script>
 	<script src="{% static 'account/js/main.js' %}? 20220714154345"></script>
 	{% endblock javascript %}

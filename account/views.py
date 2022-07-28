@@ -85,3 +85,15 @@ def validate_email(request):
         }
         return JsonResponse(response, status=200)
     return JsonResponse({'errors': 'Bad request'}, status=400)
+
+
+# Passwords missmatch check script
+def validate_passwords(request):
+    if request.method == 'GET':
+        password1 = request.GET.get('password1', None)
+        password2 = request.GET.get('password2', None)
+        response = {
+            'missmatch': password1 != password2
+        }
+        return JsonResponse(response, status=200)
+    return JsonResponse({'errors': 'Bad request'}, status=400)
