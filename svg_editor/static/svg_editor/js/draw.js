@@ -8,7 +8,7 @@ const widthInput = document.getElementById('widthChoice');
 const toolsInput = document.getElementsByName('toolChoice');
 
 const toolMethods = {
-	'pancil': {'down': pancilDown, 'move': pancilMove, 'up': pancilUp},
+	'pencil': {'down': pencilDown, 'move': pencilMove, 'up': pencilUp},
 	'line': {'down': lineDown, 'move': lineMove, 'up': lineUp},
 	'polygon': {'down': polygonDown, 'move': polygonMove, 'up': polygonUp},
 	'path': {'down': pathDown, 'move': pathMove, 'up': pathUp},
@@ -59,20 +59,13 @@ function logMouseEvent(event) {
 		mouseup = false;
 	}
 
-    	if (!isDrawAllowed()) return;
+    if (!isDrawAllowed() || event.type == 'mousedown' && workspace != event.target) return;
 
 	if ((event.which == 1 || mouseup && event.which == 0) &&
 		tool in toolMethods && event.type.slice(5) in toolMethods[tool]) {
-		x = event.x - canvasRect.x;
-		y = event.y - canvasRect.y;
-		if (event.type == 'mousedown') {
-			if (0 <= x && x <= canvasRect.width &&
-				0 <= y && y <= canvasRect.height) {
-					toolMethods[tool][event.type.slice(5)](x, y);
-				}
-		} else {
-			toolMethods[tool][event.type.slice(5)](x, y);
-		}
+		x = event.clientX - canvasRect.left;
+		y = event.clientY - canvasRect.top;
+		toolMethods[tool][event.type.slice(5)](x, y);
 	}
 }
 
@@ -86,7 +79,7 @@ function distanceTo(x1, y1, x2, y2) {
 }
 
 // <=><=><=><=><=>	скрипт инструмента карандаш <=><=><=><=><=>
-function pancilDown(x, y) {
+function pencilDown(x, y) {
 	object = draw.polyline([[x, y]]);
 	if (fillValue) {
 		object.fill(colorValue);
@@ -95,13 +88,13 @@ function pancilDown(x, y) {
 	}
 }
 
-function pancilMove(x, y) {
-	if (object !== null) {
+function pencilMove(x, y) {
+	if (object != null) {
 		object.plot(object.array().concat([[x, y]]));
 	}
 }
 
-function pancilUp(x, y) {
+function pencilUp(x, y) {
 	stopDrawing();
 }
 
@@ -122,7 +115,7 @@ function lineUp(x, y) {
 
 // <=><=><=><=><=>	скрипт инструмента полигон <=><=><=><=><=>
 function polygonDown(x, y) {
-	if (object === null) {
+	if (object == null) {
 		object = draw.polygon([[x, y], [x, y]]);
 		if (fillValue) {
 			object.fill(colorValue);
@@ -135,7 +128,7 @@ function polygonDown(x, y) {
 }
 
 function polygonMove(x, y) {
-	if (object !== null) {
+	if (object != null) {
 		if (mouseup) {
 			last_point = object.array().slice(-1)[0];
 			if (distanceTo(last_point[0], last_point[1], x, y) > 10) {
@@ -153,7 +146,7 @@ function polygonUp(x, y) {
 
 // <=><=><=><=><=>	скрипт инструмента контур <=><=><=><=><=>
 function pathDown(x, y) {
-	if (object === null) {
+	if (object == null) {
 		object = draw.path([['M', x, y], ['C', x, y, x, y, x, y]]);
 		if (fillValue) {
 			object.fill(colorValue);
@@ -206,41 +199,41 @@ function pathUp(x, y) {
 // <=><=><=><=><=>	скрипт инструмента текст <=><=><=><=><=>
 
 function textDown(x, y) {
-	path = [['M', x, y], ['L', x, y], ['L', x, y], ['L', x, y], ['z']]
-	object = draw.path(path).fill('none').stroke({ width: widthValue, color: colorValue});
+	object = draw.rect(0, 0)
+		.stroke({ width: widthValue, color: colorValue })
+		.fill('none')
+		.x(x)
+		.y(y);
+	object.x0 = x;
+	object.y0 = y;
 }
 
 function textMove(x, y) {
-	if (object !== null) {
-		array_points = object.array();
-		array_points[1][1] = x;
-		array_points[2] = ['L', x, y];
-		array_points[3][2] = y;
-		object.plot(array_points);
+	if (object != null) {
+		if (x > object.x0) {
+			object.width(x - object.x());
+		} else {
+			object.width(object.width() + object.x() - x);
+			object.x(x);
+		}
+		if (y > object.y0) {
+			object.height(y - object.y());
+		} else {
+			object.height(object.height() + object.y() - y);
+			object.y(y);
+		}
 	}
 }
 
 function textUp(x, y) {
-	if (object !== null) {
-		array_points = object.array();
-		x1 = array_points[0][1];
-		y1 = array_points[0][2];
-		x2 = array_points[2][1];
-		y2 = array_points[2][2];
-		if (x1 > x2) {
-			x = x1;
-			x1 = x2;
-			x2 = x;
+	if (object != null) {
+		if (object.height() != 0 && object.width() != 0) {
+			draw.text(prompt('Введите желаемый текст'))
+				.font({size: object.height(), fill: colorValue})
+				.x(object.x())
+				.y(object.y());
 		}
-		if (x1 != x2 && y1 != y2) {
-			object.remove();
-			object = draw.text(prompt('Введите желаемый текст'));
-			object.path([['M', x1, (y1 + y2) / 2], ['L', x2, (y1 + y2) / 2]]);
-			object.font({size: Math.abs(y2 - y1), fill: colorValue});
-			stopDrawing();
-		} else {
-			breakDrawing();
-		}
+		breakDrawing();
 	}
 }
 
@@ -249,6 +242,13 @@ $(document).ready(function () {
 	resizeWindowEvent();
 	$('#clearWorkspaceButton').click(function () {
 		draw.clear();
-		object = null;	
+		object = null;
 	})
 })
+
+$(window)
+	.mousedown(logMouseEvent)
+	.mouseup(logMouseEvent)
+	.mousemove(logMouseEvent)
+	.on('resize', resizeWindowEvent)
+	.on('scroll', resizeWindowEvent);
