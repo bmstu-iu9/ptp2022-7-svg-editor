@@ -93,7 +93,7 @@ def validate_passwords(request):
         password1 = request.GET.get('password1', None)
         password2 = request.GET.get('password2', None)
         response = {
-            'missmatch': password1 != password2
+            'missmatch': password1 != password2 or not (password1 and password2)
         }
         return JsonResponse(response, status=200)
     return JsonResponse({'errors': 'Bad request'}, status=400)

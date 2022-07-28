@@ -50,7 +50,7 @@ $(document).ready(function () {
 
 	$('#id_password2, #id_password1').keyup(function (){
 		$.ajax({
-			data: $(this).serialize(),
+			data: $('#id_password2, #id_password1').serialize(),
 			type: 'GET',
 			url: passwordValidationURL,
 			success: function (response) {
