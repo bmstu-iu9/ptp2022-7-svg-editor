@@ -59,6 +59,20 @@ function historyNew() {
 	}
 }
 
+function historyOld(old_layer) {
+	for (i = draw_history.h.length - 1; i >= 0; i--) {
+		draw_history.h[i] = draw_history.h[i].filter(obj => {
+			return old_layer != obj.root.node;
+		});
+		if (i + 1 != draw_history.h.length && draw_history.h[i].length == draw_history.h[i + 1].length && 
+			draw_history.h[i].slice(-1)[0] == draw_history.h[i + 1].slice(-1)[0]) {
+			draw_history.h.splice(i, 1);
+			if (draw_history.i > i)
+				draw_history.i--;
+		}
+	}
+}
+
 function historyBack() {
 	if (draw_history.i != 0)
 		historyUpdate(draw_history.i--);
@@ -295,6 +309,11 @@ $(document).bind('keypress', function(event) {
 			historyBack();
 		}
     }
+});
+
+$(document).bind("DOMNodeRemoved", function(e) {
+	if (e.target.nodeName == 'svg')
+		historyOld(e.target);
 });
 
 $(window)
