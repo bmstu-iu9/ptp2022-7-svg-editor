@@ -15,6 +15,7 @@ const toolMethods = {
 	'text': {'mousedown': textDown, 'mousemove': textMove, 'mouseup': textUp},
 	'ellipse': {'mousedown': ellipseDown, 'mousemove': ellipseMove, 'mouseup': ellipseUp},
 	'rect': {'mousedown': rectDown, 'mousemove': rectMove, 'mouseup': rectUp},
+	'fill': {'mouseup': fillUp},
 };
 
 let	draw,
@@ -265,7 +266,9 @@ function textUp(x, y) {
 	if (object != null) {
 		if (object.height() != 0 && object.width() != 0) {
 			draw.text(prompt('Введите желаемый текст'))
-				.font({size: object.height(), fill: colorValue})
+				.font({size: object.height()})
+				.stroke({ width: widthValue, color: colorValue })
+				.fill(colorValue)
 				.x(object.x())
 				.y(object.y());
 		}
@@ -328,6 +331,21 @@ function rectUp(x, y) {
 	stopDrawing();
 }
 
+// <=><=><=><=><=>	скрипт инструмента заливка <=><=><=><=><=>
+
+function fillUp(x, y) {
+	for (const obj of [...draw.children()].reverse()) {
+		if (obj.inside(x, y)) {
+			obj.clone()
+				.fill(fillValue ? colorValue : 'none')
+				.stroke({ width: widthValue, color: colorValue })
+				.insertAfter(obj);
+			obj.remove();
+			historyNew();
+			break;
+		}
+	}
+}
 
 $(document).ready(function () {
 	changeToolEvent();
