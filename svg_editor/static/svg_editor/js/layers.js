@@ -19,25 +19,26 @@ function newLayerNote(relatedLayer, layerName) {
     note.classList.add('layer_note');
     note.setAttribute('draggable', 'true');
 
-    note.layer = relatedLayer;
+    note.svg = relatedLayer;
     return note;
 };
 
 function newLayer(baseElement, layerName) {
-    let newLayer = (baseElement === undefined) ? SVG() : SVG(baseElement);
-    newLayer.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);  
+    let newLayer = (baseElement === undefined) ? SVG() : SVG(baseElement);  
 
     if (layerName === undefined) {
         layerName = prompt('Enter layer name', 'Layer ' + i++);
     }
+
     let newNote = newLayerNote(newLayer, layerName);
-    newNote.layerNode = newNote.layer.node;
+    newNote.layerNode = newNote.svg.node;
     newNote.layerName = newNote.children[0].lastChild.innerText;
     newNote.layerNode.classList.add('layer');
     return newNote;
 }
 
 function addToPanel(layer) {
+    layer.svg.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);  
     layerControlPanel.prepend(layer);
     selectLayer(layer);
 }
@@ -52,7 +53,7 @@ function selectLayer(layerNote) {
 
     let opacity = layerNote.layerNode.getAttribute('opacity');
     opacitySlider.value = opacity == null ? 1 : opacity;
-    layerUpdate(layerNote.layer);
+    layerUpdate(layerNote.svg);
 }
 
 function deleteLayer() {
@@ -86,19 +87,16 @@ function getPictureAsSvg() {
                          `width="${workspace.clientHeight}" ` + 
                          `height="${workspace.clientWidth}">\n`;
 
-    for (let layer of workspace.childNodes) {
-        if (layer.nodeName == 'svg') {
-            svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
-                                `width="${layer.getAttribute('width')}"` +
-                                `${getOpacity(layer)}` +
-                                `${getViewBox(layer)}>\n`;
-            for (let elem of layer.children) {
-                svgString += `\t\t${elem.outerHTML}\n`;
-            }
-            svgString += '\t</svg>\n';
-        } else {
-            svgString += layer.outerHTML;
+    for (let layer of layerControlPanel.childNodes) {
+        if (layer.layerNode.getAttribute('display') == 'none') continue;
+        svgString += `\t<svg height="${layer.layerNode.getAttribute('height')}" ` +
+                                `width="${layer.layerNode.getAttribute('width')}"` +
+                                `${getOpacity(layer.layerNode)}` +
+                                `${getViewBox(layer.layerNote)}>\n`;
+        for (let elem of layer.layerNode.children) {
+            svgString += `\t\t${elem.outerHTML}\n`;
         }
+        svgString += '\t</svg>\n';
     }
     svgString += '</svg>\n';
     console.log(svgString);
@@ -163,15 +161,49 @@ $(document).ready(function () {
         let previousLayer = currentLayerNote.nextElementSibling;
         console.log(targetLayer);
         console.log(previousLayer);
-        let layer = newLayer(undefined,targetLayer.layerName);
-        layer.layerNode.append(previousLayer.layerNode);
-        layer.layerNode.append(targetLayer.layerNode);
-        targetLayer.before(layer);
+        let union = newLayer(undefined,targetLayer.layerName);
+        targetLayer.layerNode.after(union.layerNode);
+        union.layerNode.append(previousLayer.layerNode);
+        union.layerNode.append(targetLayer.layerNode);
+        targetLayer.before(union);
         targetLayer.layerNode.removeAttribute("xmlns:svgjs");
+        targetLayer.layerNode.removeAttribute("xmlns:xlink");
+        targetLayer.layerNode.removeAttribute("xmlns");
+        targetLayer.layerNode.removeAttribute("version");
+        targetLayer.layerNode.removeAttribute("class");
         previousLayer.layerNode.removeAttribute("xmlns:svgjs");
+        previousLayer.layerNode.removeAttribute("xmlns:xlink");
+        previousLayer.layerNode.removeAttribute("xmlns");
+        previousLayer.layerNode.removeAttribute("version");
+        previousLayer.layerNode.removeAttribute("class");
         previousLayer.remove();
         targetLayer.remove();
-        selectLayer(layer);
+        selectLayer(union);
+    })
+
+    $("#mergeVisible").click(function () {
+        let visibleLayers = [];
+        for (let layer of layerControlPanel.childNodes) {
+            if (layer.layerNode.getAttribute('display') == 'none') continue;
+            layer.layerNode.removeAttribute("xmlns:xlink");
+            layer.layerNode.removeAttribute("xmlns:svgjs");
+            layer.layerNode.removeAttribute("xmlns");
+            layer.layerNode.removeAttribute("version");
+            layer.layerNode.removeAttribute("class");
+            layer.layerNode.removeAttribute("display");
+            visibleLayers.push(layer);
+        }
+        if (visibleLayers.length < 2) return;
+        let lastVisible = visibleLayers[visibleLayers.length - 1];
+        let union = newLayer(undefined,lastVisible.layerName);
+        lastVisible.layerNode.before(union.layerNode);
+        lastVisible.before(union);
+
+        for (let layer of visibleLayers) {
+            union.layerNode.prepend(layer.layerNode);
+            layer.remove();
+        }
+        console.log(visibleLayers); 
     })
 
     $("#createNewFileButton").click();
