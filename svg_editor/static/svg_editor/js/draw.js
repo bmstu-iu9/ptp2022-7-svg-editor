@@ -17,6 +17,7 @@ const toolMethods = {
 	'rect': {'mousedown': rectDown, 'mousemove': rectMove, 'mouseup': rectUp},
 	'fill': {'mouseup': fillUp},
 	'eraser': {'mouseup': eraserUp},
+	'move': {'mousedown': moveDown, 'mousemove': moveMove, 'mouseup': moveUp},
 };
 
 let	draw,
@@ -52,9 +53,8 @@ function historyNew() {
 	});
 	for (const obj of draw.children()) {
 		obj.root = draw;
-		if (new_history.indexOf(obj) == -1) {
+		if (new_history.indexOf(obj) == -1)
 			new_history.push(obj);
-		}
 	}
 	if (new_history.length !== draw_history.h[draw_history.i].length || 
 		new_history.slice(-1)[0] !== draw_history.h[draw_history.i].slice(-1)[0]) {
@@ -111,16 +111,15 @@ function changeToolEvent() {
 }
 
 function logMouseEvent(event) {
-	if (event.type == 'mouseup') {
+	if (event.type == 'mouseup')
 		mouseup = true;
-	} else if (event.type == 'mousedown') {
+	else if (event.type == 'mousedown')
 		mouseup = false;
-	}
 
     if (!isDrawAllowed() || event.type == 'mousedown' && !workspace.contains(event.target)) return;
 
-	if ((event.which == 1 || mouseup && event.which == 0) &&
-		tool in toolMethods && event.type in toolMethods[tool]) {
+	if ((event.which == 1 || mouseup && event.which == 0) && 
+			tool in toolMethods && event.type in toolMethods[tool]) {
 		x = event.clientX - canvasRect.left;
 		y = event.clientY - canvasRect.top;
 		toolMethods[tool][event.type](x, y);
@@ -133,18 +132,14 @@ function distanceTo(x1, y1, x2, y2) {
 
 // <=><=><=><=><=>	скрипт инструмента карандаш <=><=><=><=><=>
 function pencilDown(x, y) {
-	object = draw.polyline([[x, y]]);
-	if (fillValue) {
-		object.fill(colorValue);
-	} else {
-		object.fill('none').stroke({width: widthValue, color: colorValue});
-	}
+	object = draw.polyline([[x, y]])
+		.fill(fillValue ? colorValue : 'none')
+		.stroke({ width: widthValue, color: colorValue });
 }
 
 function pencilMove(x, y) {
-	if (object != null) {
+	if (object != null)
 		object.plot(object.array().concat([[x, y]]));
-	}
 }
 
 function pencilUp(x, y) {
@@ -158,56 +153,46 @@ function pencilUp(x, y) {
 
 // <=><=><=><=><=>	скрипт инструмента линия <=><=><=><=><=>
 function lineDown(x, y) {
-	object = draw.line(x, y, x + 1, y + 1).stroke({width: widthValue, color: colorValue});
+	object = draw.line(x, y, x + 1, y + 1)
+		.fill(fillValue ? colorValue : 'none')
+		.stroke({ width: widthValue, color: colorValue });;
 }
 
 function lineMove(x, y) {
-	if (object !== null) {
+	if (object !== null)
 		object.plot([object.array()[0], [x, y]]);
-	}
 }
 
 function lineUp(x, y) {
-	if (object != null)
-		stopDrawing();
+	stopDrawing();
 }
 
 // <=><=><=><=><=>	скрипт инструмента полигон <=><=><=><=><=>
 function polygonDown(x, y) {
-	if (object == null) {
-		object = draw.polygon([[x, y], [x, y]]);
-		if (fillValue) {
-			object.fill(colorValue);
-		} else {
-			object.fill('none').stroke({ width: widthValue, color: colorValue});
-		}
-	} else {
+	if (object == null)
+		object = draw.polygon([[x, y], [x, y]])
+			.fill(fillValue ? colorValue : 'none')
+			.stroke({ width: widthValue, color: colorValue });
+	else
 		object.plot(object.array().concat([[x, y]]));
-	}
 }
 
 function polygonMove(x, y) {
-	if (object != null) {
+	if (object != null)
 		if (mouseup) {
 			last_point = object.array().slice(-1)[0];
-			if (distanceTo(last_point[0], last_point[1], x, y) > 10) {
+			if (distanceTo(last_point[0], last_point[1], x, y) > 10)
 				stopDrawing();
-			}
-		} else {
+		} else
 			object.plot(object.array().slice(0, -1).concat([[x, y]]));
-		}
-	}
 }
 
 // <=><=><=><=><=>	скрипт инструмента контур <=><=><=><=><=>
 function pathDown(x, y) {
 	if (object == null) {
-		object = draw.path([['M', x, y], ['C', x, y, x, y, x, y]]);
-		if (fillValue) {
-			object.fill(colorValue);
-		} else {
-			object.fill('none').stroke({ width: widthValue, color: colorValue});
-		}
+		object = draw.path([['M', x, y], ['C', x, y, x, y, x, y]])
+			.fill(fillValue ? colorValue : 'none')
+			.stroke({ width: widthValue, color: colorValue });;
 	} else {
 		first_line = object.array().slice(0, 2);
 		last_line = object.array().slice(-2);
@@ -218,11 +203,10 @@ function pathDown(x, y) {
 			last_line[1][4] = first_line[0][2] * 2 - first_line[1][2];
 			object.plot(object.array().slice(0, -2).concat(last_line, [['z']]));
 			stopDrawing();
-		} else if (last_line[0][5] == x && last_line[0][6] == y) {
+		} else if (last_line[0][5] == x && last_line[0][6] == y)
 			stopDrawing();
-		} else {
+		else
 			object.plot(object.array().concat([['C', x, y, x, y, x, y]]));
-		}
 	}
 }
 
@@ -268,8 +252,8 @@ function textUp(x, y) {
 		if (object.height() != 0 && object.width() != 0) {
 			draw.text(prompt('Введите желаемый текст'))
 				.font({size: object.height()})
+				.fill(fillValue ? colorValue : 'none')
 				.stroke({ width: widthValue, color: colorValue })
-				.fill(colorValue)
 				.x(object.x())
 				.y(object.y());
 		}
@@ -335,7 +319,7 @@ function rectUp(x, y) {
 // <=><=><=><=><=>	скрипт инструмента заливка <=><=><=><=><=>
 
 function fillUp(x, y) {
-	for (const obj of [...draw.children()].reverse()) {
+	for (const obj of [...draw.children()].reverse())
 		if (obj.inside(x, y)) {
 			obj.clone()
 				.fill(fillValue ? colorValue : 'none')
@@ -345,19 +329,44 @@ function fillUp(x, y) {
 			historyNew();
 			break;
 		}
-	}
 }
 
 // <=><=><=><=><=>	скрипт инструмента ластик <=><=><=><=><=>
 
 function eraserUp(x, y) {
-	for (const obj of [...draw.children()].reverse()) {
+	for (const obj of [...draw.children()].reverse())
 		if (obj.inside(x, y)) {
 			obj.remove();
 			historyNew();
 			break;
 		}
+}
+
+// <=><=><=><=><=>	скрипт инструмента перемещение <=><=><=><=><=>
+
+function moveDown(x, y) {
+	if (object == null)
+		for (const obj of [...draw.children()].reverse()) {
+			if (obj.inside(x, y)) {
+				object = obj.clone().insertAfter(obj);
+				obj.remove()
+				object.x0 = x;
+				object.y0 = y;
+				break;
+			}
+		}
+}
+
+function moveMove(x, y) {
+	if (object != null) {
+		object.dx(x - object.x0).dy(y - object.y0);
+		object.x0 = x;
+		object.y0 = y;
 	}
+}
+
+function moveUp(x, y) {
+	stopDrawing();
 }
 
 $(document).ready(function () {
