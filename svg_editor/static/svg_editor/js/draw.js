@@ -18,6 +18,7 @@ const toolMethods = {
 	'fill': {'mouseup': fillUp},
 	'eraser': {'mouseup': eraserUp},
 	'move': {'mousedown': moveDown, 'mousemove': moveMove, 'mouseup': moveUp},
+	'rotate': {'mousedown': rotateDown, 'mousemove': rotateMove, 'mouseup': rotateUp},
 };
 
 let	draw,
@@ -317,10 +318,10 @@ function rectUp(x, y) {
 }
 
 // <=><=><=><=><=>	скрипт инструмента заливка <=><=><=><=><=>
-
 function fillUp(x, y) {
-	for (const obj of [...draw.children()].reverse())
-		if (obj.inside(x, y)) {
+	for (const obj of [...draw.children()].reverse()) {
+		updateDetXY(obj);
+		if (obj.inside(obj.detX(x, y), obj.detY(x, y))) {
 			obj.clone()
 				.fill(fillValue ? colorValue : 'none')
 				.stroke({ width: widthValue, color: colorValue })
@@ -329,27 +330,37 @@ function fillUp(x, y) {
 			historyNew();
 			break;
 		}
+	}
+}
+
+function updateDetXY(obj) {
+	tr = obj.transform();
+	obj.detX = ((x, y) => (x * tr.d - y * tr.c - tr.d * tr.e + tr.c * tr.f) / (tr.a * tr.d - tr.b * tr.c));
+	obj.detY = ((x, y) => (x * tr.b - y * tr.a - tr.b * tr.e + tr.a * tr.f) / (tr.b * tr.c - tr.a * tr.d));
 }
 
 // <=><=><=><=><=>	скрипт инструмента ластик <=><=><=><=><=>
-
 function eraserUp(x, y) {
-	for (const obj of [...draw.children()].reverse())
-		if (obj.inside(x, y)) {
+	for (const obj of [...draw.children()].reverse()) {
+		updateDetXY(obj);
+		if (obj.inside(obj.detX(x, y), obj.detY(x, y))) {
 			obj.remove();
 			historyNew();
 			break;
 		}
+	}
 }
 
 // <=><=><=><=><=>	скрипт инструмента перемещение <=><=><=><=><=>
-
 function moveDown(x, y) {
 	if (object == null)
 		for (const obj of [...draw.children()].reverse()) {
-			if (obj.inside(x, y)) {
+			updateDetXY(obj);
+			if (obj.inside(obj.detX(x, y), obj.detY(x, y))) {
 				object = obj.clone().insertAfter(obj);
-				obj.remove()
+				object.detX = obj.detX;
+				object.detY = obj.detY;
+				obj.remove();
 				object.x0 = x;
 				object.y0 = y;
 				break;
@@ -359,7 +370,8 @@ function moveDown(x, y) {
 
 function moveMove(x, y) {
 	if (object != null) {
-		object.dx(x - object.x0).dy(y - object.y0);
+		object.dx(object.detX(x, y) - object.detX(object.x0, object.y0));
+		object.dy(object.detY(x, y) - object.detY(object.x0, object.y0));
 		object.x0 = x;
 		object.y0 = y;
 	}
@@ -368,6 +380,41 @@ function moveMove(x, y) {
 function moveUp(x, y) {
 	stopDrawing();
 }
+
+// <=><=><=><=><=>	скрипт инструмента вращение <=><=><=><=><=>
+function rotateDown(x, y) {
+	if (object == null)
+		for (var obj of [...draw.children()].reverse()) {
+			updateDetXY(obj);
+			if (obj.inside(obj.detX(x, y), obj.detY(x, y))) {
+				object = obj.clone().insertAfter(obj);
+				object.detX = obj.detX;
+				object.detY = obj.detY;
+				obj.remove();
+				object.angle = Math.acos((object.detX(x, y) - object.cx()) / 
+							distanceTo(object.cx(), object.cy(), object.detX(x, y), object.detY(x, y)));
+				if (object.detY(x, y) > object.cy())
+					object.angle = 2 * Math.PI - object.angle;
+				break;
+			}
+		}
+}
+
+function rotateMove(x, y) {
+	if (object != null) {
+		angle = Math.acos((object.detX(x, y) - object.cx()) / 
+					distanceTo(object.cx(), object.cy(), object.detX(x, y), object.detY(x, y)));
+		if (object.detY(x, y) > object.cy())
+			angle = 2 * Math.PI - angle;
+		object.rotate((object.angle - angle) * 180 / Math.PI);
+		object.angle = angle;
+	}
+}
+
+function rotateUp(x, y) {
+	stopDrawing();
+}
+
 
 $(document).ready(function () {
 	changeToolEvent();
