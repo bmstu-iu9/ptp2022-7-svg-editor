@@ -144,6 +144,28 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (response.file_name.split('.').pop().toLowerCase() === 'svg') {
+                    deleteAllLayers();
+                    openAsSvg(response.svg);
+                } else {
+                    console.log(response.yml);
+                }
+            },
+            error: function (response) {
+                alert(response.responseJSON.errors);
+            },
+        })
+    })
+
+    // Add file from server to new layer
+    $("#addToNewLayer").click(function () {
+        $.ajax({
+            url: loadURL,
+            type: 'GET',
+            data: {
+                file_name: currentFileName,
+            },
+            success: function (response) {
+                if (response.file_name.split('.').pop().toLowerCase() === 'svg') {
                     openAsSvg(response.svg);
                 } else {
                     console.log(response.yml);

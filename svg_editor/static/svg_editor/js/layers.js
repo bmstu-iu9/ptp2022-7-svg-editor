@@ -138,7 +138,6 @@ function getViewBox(svg) {
 function openAsSvg(svgString) {
     let oParser = new DOMParser();
     let oDOM = oParser.parseFromString(svgString,"application/xml");
-    deleteAllLayers();
     createLayer(oDOM.documentElement);
 }
 
