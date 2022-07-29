@@ -207,7 +207,6 @@ $(document).ready(function () {
             union.layerNode.prepend(layer.layerNode);
             layer.remove();
         }
-        console.log(visibleLayers); 
     })
 
     $('#layerUp').click(function () {
@@ -220,6 +219,36 @@ $(document).ready(function () {
         let previousLayer = currentLayerNote.nextElementSibling;
         if (currentLayerNote == null || previousLayer == null) return;
         addAfter(previousLayer, currentLayerNote);
+    })
+
+    $('#copyLayer').click(function () {
+        if (currentLayerNote == null) return;
+        let copyNode = currentLayerNote.layerNode.cloneNode(true);
+        let copyLayer = newLayer(copyNode, currentLayerNote.layerName);
+        addAfter(copyLayer,currentLayerNote);
+        selectLayer(copyLayer);
+    })
+
+    $('#createFromVisible').click(function () {
+        let visibleNodes = [];
+        for (let layer of layerControlPanel.childNodes) {
+            if (layer.layerNode.getAttribute('display') == 'none') continue;
+            let copy = layer.layerNode.cloneNode(true);
+            copy.removeAttribute("xmlns:xlink");
+            copy.removeAttribute("xmlns:svgjs");
+            copy.removeAttribute("xmlns");
+            copy.removeAttribute("version");
+            copy.removeAttribute("class");
+            copy.removeAttribute("display");
+            visibleNodes.push(copy);
+        }
+        if (visibleNodes.length < 1) return;
+        let union = newLayer(undefined,"Visible");
+
+        for (let layer of visibleNodes) {
+            union.layerNode.prepend(layer);
+        }
+        addToPanel(union);
     })
 
     $("#createNewFileButton").click();
