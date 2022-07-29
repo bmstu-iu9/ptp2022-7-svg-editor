@@ -1,3 +1,8 @@
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
+
 html,
 body {
     background: white;
@@ -18,7 +23,7 @@ body {
     background: #CCD7E4;
 }
 
-.wrapper {
+.wrapper-login {
     position: relative;
     max-width: 430px;
     width: 100%;
@@ -27,38 +32,35 @@ body {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-.wrapper .form {
+.wrapper-signup {
+    position: relative;
+    max-width: 900px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-signup form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.form1 {
+    grid-column: 1;
+}
+
+.form {
     padding: 30px;
 }
 
 
-.wrapper .form .title {
+.form .title {
     position: relative;
     font-size: 27px;
     font-weight: 600;
 }
-
-.form-signup {
-    float: left;
-    width: 50%;
-  }
-  
-  /* Clear floats after the columns */
-  .forms:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
-/*.form .title {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px;
-    width: 30px;
-    background-color: #828A95;
-}*/
 
 .form .input-field {
     margin-top: 30px;
@@ -81,7 +83,6 @@ body {
 .input-field i {
     position: absolute;
     top: 50%;
-    left: 0;
     transform: translateY(-50%);
     font-size: 23px;
 }
@@ -90,13 +91,20 @@ body {
     border-color: #828A95;
 }
 
-.input-field input:is(:focus, :valid)  ~ i {
+.input-field input:is(:focus, :valid)~i {
     color: #828A95;
 }
 
 .input-field i.icon {
     margin-left: 5px;
 }
+
+.input-field #showHidePassword {
+    right: 14px;
+    bottom: 0;
+    cursor: pointer;
+}
+
 
 .form .check {
     margin-top: 20px;
@@ -149,7 +157,7 @@ body {
     font-size: 70%;
     font-weight: 600;
     color: #828A95;
-    display:grid;
+    display: grid;
     margin-bottom: -5px;
 }
 
