@@ -141,6 +141,11 @@ function openAsSvg(svgString, fileName) {
     addToPanel(newLayer(oDOM.documentElement, fileName));
 }
 
+function addAfter(layer1, layer2) {
+    layer2.layerNode.after(layer1.layerNode);
+    layer2.before(layer1);
+}
+
 $(document).ready(function () {
 
     $("#createLayerButton").click(function () {
@@ -159,13 +164,13 @@ $(document).ready(function () {
     $("#mergeWithPrevious").click(function () {
         let targetLayer = currentLayerNote;
         let previousLayer = currentLayerNote.nextElementSibling;
+        if (targetLayer == null || previousLayer == null) return;
         console.log(targetLayer);
         console.log(previousLayer);
         let union = newLayer(undefined,targetLayer.layerName);
-        targetLayer.layerNode.after(union.layerNode);
+        addAfter(union,targetLayer);
         union.layerNode.append(previousLayer.layerNode);
         union.layerNode.append(targetLayer.layerNode);
-        targetLayer.before(union);
         targetLayer.layerNode.removeAttribute("xmlns:svgjs");
         targetLayer.layerNode.removeAttribute("xmlns:xlink");
         targetLayer.layerNode.removeAttribute("xmlns");
@@ -196,14 +201,25 @@ $(document).ready(function () {
         if (visibleLayers.length < 2) return;
         let lastVisible = visibleLayers[visibleLayers.length - 1];
         let union = newLayer(undefined,lastVisible.layerName);
-        lastVisible.layerNode.before(union.layerNode);
-        lastVisible.before(union);
+        addAfter(union,lastVisible);
 
         for (let layer of visibleLayers) {
             union.layerNode.prepend(layer.layerNode);
             layer.remove();
         }
         console.log(visibleLayers); 
+    })
+
+    $('#layerUp').click(function () {
+        let nextLayer = currentLayerNote.previousElementSibling;
+        if (currentLayerNote == null || nextLayer == null) return;
+        addAfter(currentLayerNote,nextLayer);
+    })
+
+    $('#layerDown').click(function () {
+        let previousLayer = currentLayerNote.nextElementSibling;
+        if (currentLayerNote == null || previousLayer == null) return;
+        addAfter(previousLayer, currentLayerNote);
     })
 
     $("#createNewFileButton").click();
