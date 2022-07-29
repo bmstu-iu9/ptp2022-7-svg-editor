@@ -8,12 +8,13 @@ const widthInput = document.getElementById('widthChoice');
 const toolsInput = document.getElementsByName('toolChoice');
 
 const toolMethods = {
-	'pencil': {'down': pencilDown, 'move': pencilMove, 'up': pencilUp},
-	'line': {'down': lineDown, 'move': lineMove, 'up': lineUp},
-	'polygon': {'down': polygonDown, 'move': polygonMove},
-	'path': {'down': pathDown, 'move': pathMove},
-	'text': {'down': textDown, 'move': textMove, 'up': textUp},
-	'ellipse': {'down': ellipseDown, 'move': ellipseMove, 'up': ellipseUp},
+	'pencil': {'mousedown': pencilDown, 'mousemove': pencilMove, 'mouseup': pencilUp},
+	'line': {'mousedown': lineDown, 'mousemove': lineMove, 'mouseup': lineUp},
+	'polygon': {'mousedown': polygonDown, 'mousemove': polygonMove},
+	'path': {'mousedown': pathDown, 'mousemove': pathMove},
+	'text': {'mousedown': textDown, 'mousemove': textMove, 'mouseup': textUp},
+	'ellipse': {'mousedown': ellipseDown, 'mousemove': ellipseMove, 'mouseup': ellipseUp},
+	'rect': {'mousedown': rectDown, 'mousemove': rectMove, 'mouseup': rectUp},
 };
 
 let	draw,
@@ -117,10 +118,10 @@ function logMouseEvent(event) {
     if (!isDrawAllowed() || event.type == 'mousedown' && !workspace.contains(event.target)) return;
 
 	if ((event.which == 1 || mouseup && event.which == 0) &&
-		tool in toolMethods && event.type.slice(5) in toolMethods[tool]) {
+		tool in toolMethods && event.type in toolMethods[tool]) {
 		x = event.clientX - canvasRect.left;
 		y = event.clientY - canvasRect.top;
-		toolMethods[tool][event.type.slice(5)](x, y);
+		toolMethods[tool][event.type](x, y);
 	}
 }
 
@@ -257,6 +258,54 @@ function textDown(x, y) {
 }
 
 function textMove(x, y) {
+	rectMove(x, y);
+}
+
+function textUp(x, y) {
+	if (object != null) {
+		if (object.height() != 0 && object.width() != 0) {
+			draw.text(prompt('Введите желаемый текст'))
+				.font({size: object.height(), fill: colorValue})
+				.x(object.x())
+				.y(object.y());
+		}
+		breakDrawing();
+	}
+}
+
+// <=><=><=><=><=>	скрипт инструмента эллипс <=><=><=><=><=>
+function ellipseDown(x, y) {
+	if (object == null) {
+		object = draw.ellipse(0, 0)
+			.move(x, y)
+			.fill(fillValue ? colorValue : 'none')
+			.stroke({ width: widthValue, color: colorValue });
+		object.x0 = x;
+		object.y0 = y;
+	}
+}
+
+function ellipseMove(x, y) {
+	rectMove(x, y);
+}
+
+function ellipseUp(x, y) {
+	stopDrawing();
+}
+
+// <=><=><=><=><=>	скрипт инструмента прямоугольник <=><=><=><=><=>
+function rectDown(x, y) {
+	if (object == null) {
+		object = draw.rect(0, 0)
+			.move(x, y)
+			.fill(fillValue ? colorValue : 'none')
+			.stroke({ width: widthValue, color: colorValue });
+		object.x0 = x;
+		object.y0 = y;
+	}
+}
+
+function rectMove(x, y) {
 	if (object != null) {
 		if (x > object.x0) {
 			object.x(object.x0);
@@ -275,35 +324,7 @@ function textMove(x, y) {
 	}
 }
 
-function textUp(x, y) {
-	if (object != null) {
-		if (object.height() != 0 && object.width() != 0) {
-			draw.text(prompt('Введите желаемый текст'))
-				.font({size: object.height(), fill: colorValue})
-				.x(object.x())
-				.y(object.y());
-		}
-		breakDrawing();
-	}
-}
-
-// <=><=><=><=><=>	скрипт инструмента овал <=><=><=><=><=>
-function ellipseDown(x, y) {
-	if (object == null) {
-		object = draw.ellipse(0, 0)
-			.move(x, y)
-			.fill(fillValue ? 'none' : colorValue)
-			.stroke({ width: widthValue, color: colorValue });
-		object.x0 = x;
-		object.y0 = y;
-	}
-}
-
-function ellipseMove(x, y) {
-	textMove(x, y);
-}
-
-function ellipseUp(x, y) {
+function rectUp(x, y) {
 	stopDrawing();
 }
 
