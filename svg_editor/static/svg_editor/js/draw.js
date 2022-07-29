@@ -19,11 +19,12 @@ let	draw,
 	canvasRect,
 	object = null,
 	tool,
-	mouseup = true;
+	mouseup = true,
+	draw_history = {h: [[]], i: 0};
 
 ///////////выполняется при переключении на новый слой/////////////
 function layerUpdate(newDraw) {
-	draw = newDraw; 
+	draw = newDraw;
 	breakDrawing();
 }
 //////////////////////////////////////////
@@ -33,6 +34,44 @@ function breakDrawing() {
 		object.remove();
 		object = null;
 	}
+}
+
+function stopDrawing() {
+	historyNew();
+	object = null;
+}
+
+function historyNew() {
+	new_history = draw_history.h[draw_history.i].filter(obj => {
+		return obj.root != draw || draw.has(obj);
+	});
+	for (const obj of draw.children()) {
+		obj.root = draw;
+		if (new_history.indexOf(obj) == -1) {
+			new_history.push(obj);
+		}
+	}
+	if (new_history.length !== draw_history.h[draw_history.i].length || 
+		new_history.slice(-1)[0] !== draw_history.h[draw_history.i].slice(-1)[0]) {
+		draw_history.h[++draw_history.i] = new_history;
+		if (draw_history.h.length != draw_history.i - 1)
+			draw_history.h = draw_history.h.slice(0, draw_history.i + 1)
+	}
+}
+
+function historyBack() {
+	if (draw_history.i != 0)
+		historyUpdate(draw_history.i--);
+}
+
+function historyUndo() {
+	if (draw_history.i + 1 != draw_history.h.length)
+		historyUpdate(draw_history.i++);
+}
+
+function historyUpdate(last_index) {
+	draw_history.h[last_index].forEach(obj => obj.remove());
+	draw_history.h[draw_history.i].forEach(obj => obj.root.add(obj));
 }
 
 function resizeWindowEvent() {
@@ -69,11 +108,6 @@ function logMouseEvent(event) {
 	}
 }
 
-function stopDrawing() {
-	// здесь будет сохранение ссылки на нарисованный объект для последующего обращения к ней
-	object = null;
-}
-
 function distanceTo(x1, y1, x2, y2) {
 	return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** .5;
 }
@@ -95,12 +129,17 @@ function pencilMove(x, y) {
 }
 
 function pencilUp(x, y) {
-	stopDrawing();
+	if (object != null) {
+		if (object.plot().length === 1)
+			breakDrawing();
+		else
+			stopDrawing();
+	}
 }
 
 // <=><=><=><=><=>	скрипт инструмента линия <=><=><=><=><=>
 function lineDown(x, y) {
-	object = draw.line(x, y, x, y).stroke({width: widthValue, color: colorValue});
+	object = draw.line(x, y, x + 1, y + 1).stroke({width: widthValue, color: colorValue});
 }
 
 function lineMove(x, y) {
@@ -110,7 +149,8 @@ function lineMove(x, y) {
 }
 
 function lineUp(x, y) {
-	stopDrawing();
+	if (object != null)
+		stopDrawing();
 }
 
 // <=><=><=><=><=>	скрипт инструмента полигон <=><=><=><=><=>
@@ -243,8 +283,19 @@ $(document).ready(function () {
 	$('#clearWorkspaceButton').click(function () {
 		draw.clear();
 		object = null;
+		draw_history.i = 0;
 	})
-})
+});
+
+$(document).bind('keypress', function(event) {
+    if (event.which === 26 && event.ctrlKey) {
+		if (event.shiftKey) {
+			historyUndo();
+		} else {
+			historyBack();
+		}
+    }
+});
 
 $(window)
 	.mousedown(logMouseEvent)
