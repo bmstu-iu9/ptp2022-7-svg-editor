@@ -27,6 +27,8 @@
 				<div name="open-file" class="drop-moving-button">Open</div>
 			</div>
 		</div>
+		<div id="account-panel">
+		</div>
 		<!--<div style="padding-top: 50px"><label>Name your file: </label>
 	<input type="text" id="fileNameInput" value="untitled" style="width: 300px">
 	<select id="save_file_type" size=1>
@@ -64,8 +66,8 @@
 	<div id="control-panel">
 		<div id="width-parameter">
 			<label for="stroke-width" id="stroke-width">Stroke width:</label>
-			<input type="range" name="stroke-width" min="1" max="10" value="1" step="0.1" class="slider">
-			<input type="number" min="1" max="10" value="1" class="slider-value">
+			<input id="width-slider" type="range" name="stroke-width" min="1" max="10" value="1" step="0.1">
+			<input id="width-slider-value" type="number" min="1" max="10" value="1" >
 		</div>
 	</div>
 	<div id="new-menu" class="file-menu-panel">
@@ -125,7 +127,7 @@
 				<div id="polygonTool" class="tool-button" value="polygon"></div>
 				<div id="pathTool" class="tool-button" value="path"></div>
 				<div id="textTool" class="tool-button" value="text"></div>
-				<div id="clear-button">Clear</div>
+				<div class="vertical-divider"></div>
 				<div id="color-choosing">
 					<div id="color-choosing-box-main">
 						<input id="color-main" class="box" type="color">
@@ -140,18 +142,22 @@
 				</div>
 			</div>
 		</div>
-		<svg id="workspace"
-			 version="1.1"
-     		 xmlns="http://www.w3.org/2000/svg"
-			 xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
+		<svg id="workspace" version="1.1" xmlns="http://www.w3.org/2000/svg"
+			xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
 		<div id="addition-panel">
-			<div id="layers-panel-control">
-				<button id="createLayerButton" class="layers-panel-control-button">N</button>
-				<button id="deleteLayerButton" class="layers-panel-control-button">D</button>
-				<button id="createNewFileButton" class="layers-panel-control-button">nf</button>
-				<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
-			</div>
-			<div id="layers-panel">
+			<div id="layers-panel-list">
+				<div id="layers-panel-button" class="tool-button"></div>
+				<div id="layers-panel-content">
+					<div id="layers-panel-control">
+						<div id="createLayerButton" class="layers-panel-control-button"></div>
+						<div id="deleteLayerButton" class="layers-panel-control-button"></div>
+						<div id="createNewFileButton" class="layers-panel-control-button"></div>
+						<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
+						<div>Layers</div>
+					</div>
+					<div id="layers-panel-choosing">
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -169,12 +175,12 @@
 	<script src="{% static 'svg_editor/js/draw.js' %}?"></script>
 	<script>
 		const token = "{{csrf_token}}",
-			 saveURL = "{% url 'files_save' %}",
-			 uploadURL = "{% url 'files_upload' %}",
-			 downloadURL = "{% url 'files_download' %}",
-			 viewURL = "{% url 'files_view' %}",
-			 loadURL = "{% url 'files_get' %}";
-			 
+			saveURL = "{% url 'files_save' %}",
+			uploadURL = "{% url 'files_upload' %}",
+			downloadURL = "{% url 'files_download' %}",
+			viewURL = "{% url 'files_view' %}",
+			loadURL = "{% url 'files_get' %}";
+
 		const workspace = document.querySelector('#workspace');
 	</script>
 	{% endblock javascript %}

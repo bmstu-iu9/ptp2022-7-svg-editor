@@ -11,11 +11,19 @@ body {
     padding: 0px;
     overflow: hidden;
     -webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#account-panel {
+    display: flex;
+    float: right;
+    width: 200px;
+    height: 100%;
+    border-left: 1px solid;
 }
 
 /* #file {
@@ -242,10 +250,12 @@ td {
 }
 
 #control-panel {
-    color: red;
     width: 100%;
     height: 30px;
+    background-color: white;
     border: 1px solid black;
+    border-left: 0;
+    border-right: 0;
 }
 
 #stroke-width {
@@ -263,43 +273,20 @@ td {
     margin-left: 100px;
 }
 
-.slider {
-    -webkit-appearance: none;
+#width-slider {
     width: 150px;
     height: 7px;
     border-radius: 5px;
-    background: white;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: 0.2s;
-    transition: opacity 0.2s;
+    accent-color: #0c76da;
 }
 
-.slider-value {
+#width-slider-value {
     color: black;
     display: inline-block;
     text-align: center;
     border: 0px solid;
     width: 50px;
     height: 20px;
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: rgb(62, 62, 194);
-    cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: rgb(62, 62, 194);
-    cursor: pointer;
 }
 
 #container {
@@ -323,7 +310,7 @@ td {
 }
 
 #cursorTool {
-    background-image: url("/static/svg_editor/icons/cursor.svg");   
+    background-image: url("/static/svg_editor/icons/cursor.svg");
 }
 
 #pencilTool {
@@ -341,6 +328,7 @@ td {
     height: 100%;
     align-content: center;
     float: left;
+    border-right: 1px solid #3E3E3E;
 }
 
 #tools-choosing {
@@ -356,15 +344,6 @@ td {
     transition: background-color 0.2s ease-out;
 }
 
-#clear-button {
-    margin-top: 10px;
-    margin-left: 10px;
-    width: 50px;
-    height: 30px;
-    text-align: center;
-    display: inline-block;
-}
-
 #color-choosing {
     position: relative;
     margin: 0 auto;
@@ -374,8 +353,8 @@ td {
 }
 
 .box {
-    width: 60px;
-    height: 60px;
+    width: 20px;
+    height: 20px;
 }
 
 #color-choosing-box-sub {
@@ -401,11 +380,19 @@ td {
     vertical-align: middle;
 }
 
+.vertical-divider {
+    background-color: #3e3e3e;
+    width: 90%;
+    height: 2px;
+    margin: auto;
+    opacity: 0.5;
+}
+
 #workspace {
     width: 900px;
     height: 600px;
     margin: 10px 100px 0 100px;
-    border: 1px solid black;
+    border: 1px solid #3e3e3e;
     position: relative;
     background: white;
     z-index: 0;
@@ -413,43 +400,85 @@ td {
 
 #addition-panel {
     background: white;
-    width: 300px;
+    width: 40px;
     height: 100%;
-    align-content: center;
     position: flex;
     float: right;
+    align-content: center;
+    justify-content: center;
+    border: 1px solid #3e3e3e;
+    border-top: 0;
+}
+
+#layers-panel-content {
+    width: 300px;
+    height: 200px;
+    display: inline-block;
+    position: absolute;
+    border: 1px solid #3e3e3e;
+    transform: scale(0.01);
+    right: 40px;
+    top: 0;
+    background-color: white;
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease,
+        box-shadow 0.3s ease 0.15s;
+    transform-origin: right top;
     overflow: hidden;
 }
 
-#layers-panel {
+#layers-panel-content.open {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#layers-panel-button {
+    background-image: url("/static/svg_editor/icons/layers.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 30px 30px;
+    width: 30px;
+    height: 30px;
+}
+
+#layers-panel-choosing {
     background: white;
     width: 90%;
-    height: 30%;
+    height: 70%;
     margin: 5%;
-    border: solid 2px black;
+    border: solid 1px #3e3e3e;
 }
 
 #layers-panel-control {
-    background: rgb(142, 142, 142);
+    background: white;
     width: 100%;
-    height: 7%;
+    height: 30px;
     display: flex;
     align-items: center;
+    text-align: right;
+    font-size: 18px;
+    font-family: "Mukta", sans-serif;
     margin: 0 auto;
     border-bottom: 1px solid black;
 }
 
 .layers-panel-control-button {
-    width: 5%;
-    height: 90%;
+    width: 20px;
+    height: 20px;
+    border-radius: 15%;
+    margin-right: 5px;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-.layers-panel-control-button.new {
-    margin-left: 85%;
+#createLayerButton {
+    background-image: url("/static/svg_editor/icons/plus.svg");
+    margin-left: 5px;
 }
 
-.layers-panel-control-button.delete {
-    margin-left: 1%;
+#deleteLayerButton {
+    background-image: url("/static/svg_editor/icons/trash.svg");
 }
 
 .layer {
@@ -467,6 +496,22 @@ td {
     border: 0;
 }
 
+.layer-note {
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid #3e3e3e;
+    border-right: 1px solid #3e3e3e;
+    background: linear-gradient(to left, white 50%, #FFC673 50%) right;
+    background-size: 200%;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.layer-note.selected {
+    color: #2f2f2f;
+    background-position: left;
+}
 /* login-signup */
 
 .parent-wrapper {
@@ -474,14 +519,14 @@ td {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #CCD7E4;
+    background: #ccd7e4;
 }
 
 .wrapper {
     position: relative;
     max-width: 430px;
     width: 100%;
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 10px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
@@ -489,7 +534,6 @@ td {
 .wrapper .form {
     padding: 30px;
 }
-
 
 .wrapper .form .title {
     position: relative;
@@ -500,14 +544,14 @@ td {
 .form-signup {
     float: left;
     width: 50%;
-  }
-  
-  /* Clear floats after the columns */
-  .forms:after {
+}
+
+/* Clear floats after the columns */
+.forms:after {
     content: "";
     display: table;
     clear: both;
-  }
+}
 
 /*.form .title {
     content: "";
@@ -524,7 +568,7 @@ td {
     height: 50px;
     width: 100%;
     position: relative;
-    color: #CCD7E4;
+    color: #ccd7e4;
 }
 
 .input-field input {
@@ -534,7 +578,7 @@ td {
     padding: 0 35px;
     border: none;
     outline: none;
-    border: 1px solid #CCD7E4;
+    border: 1px solid #ccd7e4;
 }
 
 .input-field i {
@@ -546,11 +590,11 @@ td {
 }
 
 .input-field input:is(:focus, :valid) {
-    border-color: #828A95;
+    border-color: #828a95;
 }
 
-.input-field input:is(:focus, :valid)  ~ i {
-    color: #828A95;
+.input-field input:is(:focus, :valid) ~ i {
+    color: #828a95;
 }
 
 .input-field i.icon {
@@ -571,11 +615,11 @@ td {
 
 .check a:hover {
     text-decoration: underline;
-    color: #767D87;
+    color: #767d87;
 }
 
 .check-text {
-    color: #828A95;
+    color: #828a95;
 }
 
 .check-text a {
@@ -584,7 +628,7 @@ td {
 
 .check-text a:hover {
     text-decoration: underline;
-    color: #767D87;
+    color: #767d87;
 }
 
 .form .button {
@@ -593,22 +637,22 @@ td {
 
 .form .button input {
     border: none;
-    background-color: #828A95;
-    color: #FFFFFF;
+    background-color: #828a95;
+    color: #ffffff;
     font-weight: 500;
     border-radius: 7px;
     transition: all 0.3s ease;
 }
 
 .button input:hover {
-    background-color: #767D87;
+    background-color: #767d87;
 }
 
 .instruction {
     font-size: 70%;
     font-weight: 600;
-    color: #828A95;
-    display:grid;
+    color: #828a95;
+    display: grid;
     margin-bottom: -5px;
 }
 

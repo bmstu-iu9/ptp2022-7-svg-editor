@@ -144,12 +144,12 @@ $(document).ready(function () {
         draw.clear();
         object = null;
     });
-    // Слайдер
-    $(document).on("input", ".slider", function () {
-        $(".slider-value").val($(this).val());
+    // Слайдер ширины
+    $(document).on("input", "#width-slider", function () {
+        $("#width-slider-value").val($(this).val());
     });
-    $(document).on("input", ".slider-value", function () {
-        $(".slider").val($(this).val());
+    $(document).on("input", "#width-slider-value", function () {
+        $("#width-slider").val($(this).val());
     });
 
     // Выпадающие кнопки сверху
@@ -160,6 +160,24 @@ $(document).ready(function () {
         $(this).toggleClass("selected");
         currentDropdown.toggleClass("open");
         $(".drop-content").not(currentDropdown).removeClass("open");
+    });
+    // Слои
+    $("#layers-panel-button").on("click", function () {
+        let $currentDropdown = $("#layers-panel-content");
+        $(this).toggleClass("tool-clicked");
+        if ($(this).hasClass("tool-clicked")) {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/layers-active.svg')"
+            );
+            changeToolEvent();
+        } else {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/layers.svg')"
+            );
+        }
+        $currentDropdown.toggleClass("open");
     });
 
     // Закрытие из любого места
@@ -258,8 +276,4 @@ $(document).ready(function () {
         clearInputForm();
     });
 
-    // Работа со слоями
-    $("#layers-panel").on("click", ".layer-button", function () {
-        buttonClick($(this), $(".layer-button"));
-    });
 });

@@ -5,7 +5,7 @@
 'use strict'
 
 const opacitySlider = document.querySelector('#opacity_slider');
-const layerControlPanel = document.querySelector('#layers-panel');
+const layerControlPanel = document.querySelector('#layers-panel-choosing');
 
 let currentLayerNote,
     i;
@@ -15,7 +15,7 @@ function newLayerNote(relatedLayer, layerName) {
     note.insertAdjacentHTML('beforeend', `
     <input type="checkbox" checked/><label>${layerName}</label>`);
     
-    note.classList.add('layer_note');
+    note.classList.add('layer-note');
     note.setAttribute('draggable', 'true');
 
     note.layer = relatedLayer;
@@ -142,30 +142,33 @@ $(document).ready(function () {
 
     $("#createNewFileButton").click();
     
-    $('#layer_panel').on("click", ".layer_note", function () {
+    $('#layers-panel-choosing').on("click", ".layer-note", function () {
+        $(".layer-note.selected").not(this).removeClass("selected");
+        $(this).toggleClass("selected");
+        selectLayer(this);
+        console.log(currentLayerNote);
+    })
+    $('#layers-panel-choosing').on("dragstart", ".layer-note", function () {
         selectLayer(this);
     })
-    $('#layer_panel').on("dragstart", ".layer_note", function () {
-        selectLayer(this);
-    })
-    $('#layer_panel').on("dragenter", ".layer_note", function () {
+    $('#layers-panel-choosing').on("dragenter", ".layer-note", function () {
         this.querySelector('input').classList.add('unactive');
         this.classList.add('hovered');
     })
-    $('#layer_panel').on("dragleave", ".layer_note", function () {
+    $('#layers-panel-choosing').on("dragleave", ".layer-note", function () {
         this.querySelector('input').classList.remove('unactive');
         this.classList.remove('hovered');
     })
-    $('#layer_panel').on("dragover", ".layer_note", function (e) {
+    $('#layers-panel-choosing').on("dragover", ".layer-note", function (e) {
         e.preventDefault();
     })
-    $('#layer_panel').on("drop", ".layer_note", function () {
+    $('#layers-panel-choosing').on("drop", ".layer-note", function () {
         console.log('drop');
         $(this).trigger("dragleave");
         this.layer.before(currentLayer);
         this.after(currentLayer.note);
     })
-    $('#layer_panel').on("click", ".layer_note input", function () {
+    $('#layers-panel-choosing').on("click", ".layer-note input", function () {
         let layer = checkbox.parentElement.layer;
         if (checkbox.checked) {
             layer.node.setAttribute('display', '');
