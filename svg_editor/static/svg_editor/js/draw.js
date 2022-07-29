@@ -10,9 +10,10 @@ const toolsInput = document.getElementsByName('toolChoice');
 const toolMethods = {
 	'pencil': {'down': pencilDown, 'move': pencilMove, 'up': pencilUp},
 	'line': {'down': lineDown, 'move': lineMove, 'up': lineUp},
-	'polygon': {'down': polygonDown, 'move': polygonMove, 'up': polygonUp},
-	'path': {'down': pathDown, 'move': pathMove, 'up': pathUp},
+	'polygon': {'down': polygonDown, 'move': polygonMove},
+	'path': {'down': pathDown, 'move': pathMove},
 	'text': {'down': textDown, 'move': textMove, 'up': textUp},
+	'ellipse': {'down': ellipseDown, 'move': ellipseMove, 'up': ellipseUp},
 };
 
 let	draw,
@@ -33,6 +34,7 @@ function breakDrawing() {
 	if (object != null) {
 		object.remove();
 		object = null;
+		historyNew();
 	}
 }
 
@@ -194,10 +196,6 @@ function polygonMove(x, y) {
 	}
 }
 
-function polygonUp(x, y) {
-	null;
-}
-
 // <=><=><=><=><=>	скрипт инструмента контур <=><=><=><=><=>
 function pathDown(x, y) {
 	if (object == null) {
@@ -246,32 +244,30 @@ function pathMove(x, y) {
 	}
 }
 
-function pathUp(x, y) {
-	null;
-}
-
 // <=><=><=><=><=>	скрипт инструмента текст <=><=><=><=><=>
-
 function textDown(x, y) {
-	object = draw.rect(0, 0)
-		.stroke({ width: widthValue, color: colorValue })
-		.fill('none')
-		.x(x)
-		.y(y);
-	object.x0 = x;
-	object.y0 = y;
+	if (object == null) {
+		object = draw.rect(0, 0)
+			.move(x, y)
+			.fill('none')
+			.stroke({ width: widthValue, color: colorValue });
+		object.x0 = x;
+		object.y0 = y;
+	}
 }
 
 function textMove(x, y) {
 	if (object != null) {
 		if (x > object.x0) {
-			object.width(x - object.x());
+			object.x(object.x0);
+			object.width(x - object.x0);
 		} else {
 			object.width(object.width() + object.x() - x);
 			object.x(x);
 		}
 		if (y > object.y0) {
-			object.height(y - object.y());
+			object.y(object.y0);
+			object.height(y - object.y0);
 		} else {
 			object.height(object.height() + object.y() - y);
 			object.y(y);
@@ -290,6 +286,27 @@ function textUp(x, y) {
 		breakDrawing();
 	}
 }
+
+// <=><=><=><=><=>	скрипт инструмента овал <=><=><=><=><=>
+function ellipseDown(x, y) {
+	if (object == null) {
+		object = draw.ellipse(0, 0)
+			.move(x, y)
+			.fill(fillValue ? 'none' : colorValue)
+			.stroke({ width: widthValue, color: colorValue });
+		object.x0 = x;
+		object.y0 = y;
+	}
+}
+
+function ellipseMove(x, y) {
+	textMove(x, y);
+}
+
+function ellipseUp(x, y) {
+	stopDrawing();
+}
+
 
 $(document).ready(function () {
 	changeToolEvent();
