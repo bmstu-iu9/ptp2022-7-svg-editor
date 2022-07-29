@@ -145,7 +145,7 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.file_name.split('.').pop().toLowerCase() === 'svg') {
                     deleteAllLayers();
-                    openAsSvg(response.svg);
+                    openAsSvg(response.svg, response.file_name);
                 } else {
                     console.log(response.yml);
                 }
@@ -166,7 +166,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (response.file_name.split('.').pop().toLowerCase() === 'svg') {
-                    openAsSvg(response.svg);
+                    openAsSvg(response.svg, response.file_name);
                 } else {
                     console.log(response.yml);
                 }

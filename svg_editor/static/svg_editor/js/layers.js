@@ -10,10 +10,6 @@ const layerControlPanel = document.querySelector('#layer_panel');
 let currentLayerNote,
     i;
 
-function getNode() {
-    return this.layer.node;
-}
-
 function newLayerNote(relatedLayer, layerName) {
     let note = document.createElement('div');
     note.insertAdjacentHTML('beforeend', `
@@ -27,17 +23,23 @@ function newLayerNote(relatedLayer, layerName) {
     return note;
 };
 
-function createLayer(baseElement) {
+function newLayer(baseElement, layerName) {
     let newLayer = (baseElement === undefined) ? SVG() : SVG(baseElement);
     newLayer.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);  
 
-    let layerName = prompt('Enter layer name', 'Layer ' + i++);
+    if (layerName === undefined) {
+        layerName = prompt('Enter layer name', 'Layer ' + i++);
+    }
     let newNote = newLayerNote(newLayer, layerName);
-    newNote.getNode = getNode;
-    layerControlPanel.prepend(newNote);
+    newNote.layerNode = newNote.layer.node;
+    newNote.layerName = newNote.children[0].lastChild.innerText;
+    newNote.layerNode.classList.add('layer');
+    return newNote;
+}
 
-    newNote.getNode().classList.add('layer');
-    selectLayer(newNote);
+function addToPanel(layer) {
+    layerControlPanel.prepend(layer);
+    selectLayer(layer);
 }
 
 function selectLayer(layerNote) {
@@ -48,14 +50,14 @@ function selectLayer(layerNote) {
 
     currentLayerNote = layerNote;
 
-    let opacity = layerNote.getNode().getAttribute('opacity');
+    let opacity = layerNote.layerNode.getAttribute('opacity');
     opacitySlider.value = opacity == null ? 1 : opacity;
     layerUpdate(layerNote.layer);
 }
 
 function deleteLayer() {
     if (currentLayerNote === null) return;
-    currentLayerNote.getNode().remove();
+    currentLayerNote.layerNode.remove();
     currentLayerNote.remove();
     currentLayerNote = null;
     i--;
@@ -70,11 +72,11 @@ function deleteAllLayers() {
 }
 
 function changeOpacity() {
-    currentLayerNote.getNode().setAttribute('opacity', opacitySlider.value);
+    currentLayerNote.layerNode.setAttribute('opacity', opacitySlider.value);
 }
 
 function isDrawAllowed() {
-    return !(currentLayerNote === null || currentLayerNote.getNode().getAttribute('display') == 'none');
+    return !(currentLayerNote === null || currentLayerNote.layerNode.getAttribute('display') == 'none');
 }
 
 function getPictureAsSvg() {
@@ -135,23 +137,41 @@ function getViewBox(svg) {
     return viewBox === null? '' : ` viewBox="${viewBox}"`;
 }
 
-function openAsSvg(svgString) {
+function openAsSvg(svgString, fileName) {
     let oParser = new DOMParser();
     let oDOM = oParser.parseFromString(svgString,"application/xml");
-    createLayer(oDOM.documentElement);
+    addToPanel(newLayer(oDOM.documentElement, fileName));
 }
 
 $(document).ready(function () {
 
     $("#createLayerButton").click(function () {
-        createLayer();
+        addToPanel(newLayer());
     })
+
     $("#deleteLayerButton").click(function () {
         deleteLayer();
     })
+
     $("#createNewFileButton").click(function () {
         deleteAllLayers();
-        createLayer();
+        addToPanel(newLayer(undefined, "фон"));
+    })
+
+    $("#mergeWithPrevious").click(function () {
+        let targetLayer = currentLayerNote;
+        let previousLayer = currentLayerNote.nextElementSibling;
+        console.log(targetLayer);
+        console.log(previousLayer);
+        let layer = newLayer(undefined,targetLayer.layerName);
+        layer.layerNode.append(previousLayer.layerNode);
+        layer.layerNode.append(targetLayer.layerNode);
+        targetLayer.before(layer);
+        targetLayer.layerNode.removeAttribute("xmlns:svgjs");
+        previousLayer.layerNode.removeAttribute("xmlns:svgjs");
+        previousLayer.remove();
+        targetLayer.remove();
+        selectLayer(layer);
     })
 
     $("#createNewFileButton").click();
@@ -188,18 +208,18 @@ $(document).ready(function () {
         console.log('dropTop');
         let layerNote = this.parentElement;
         $(this).trigger("dragleave");
-        layerNote.getNode().after(currentLayerNote.getNode());
+        layerNote.layerNode.after(currentLayerNote.layerNode);
         layerNote.before(currentLayerNote);
     })
     $('#layer_panel').on("drop", ".bottom", function () {
         console.log('dropBottom');
         let layerNote = this.parentElement;
         $(this).trigger("dragleave");
-        layerNote.getNode().before(currentLayerNote.getNode());
+        layerNote.layerNode.before(currentLayerNote.layerNode);
         layerNote.after(currentLayerNote);
     })
     $('#layer_panel').on("click", ".layer_note input", function () {
-        let clicked = this.parentElement.parentElement.getNode();
+        let clicked = this.parentElement.parentElement.layerNode;
         if (this.checked) {
             clicked.setAttribute('display', '');
             return;
