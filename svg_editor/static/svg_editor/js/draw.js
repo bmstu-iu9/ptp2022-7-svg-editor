@@ -16,6 +16,7 @@ const toolMethods = {
 	'ellipse': {'mousedown': ellipseDown, 'mousemove': ellipseMove, 'mouseup': ellipseUp},
 	'rect': {'mousedown': rectDown, 'mousemove': rectMove, 'mouseup': rectUp},
 	'fill': {'mouseup': fillUp},
+	'eraser': {'mouseup': eraserUp},
 };
 
 let	draw,
@@ -340,6 +341,18 @@ function fillUp(x, y) {
 				.fill(fillValue ? colorValue : 'none')
 				.stroke({ width: widthValue, color: colorValue })
 				.insertAfter(obj);
+			obj.remove();
+			historyNew();
+			break;
+		}
+	}
+}
+
+// <=><=><=><=><=>	скрипт инструмента ластик <=><=><=><=><=>
+
+function eraserUp(x, y) {
+	for (const obj of [...draw.children()].reverse()) {
+		if (obj.inside(x, y)) {
 			obj.remove();
 			historyNew();
 			break;
