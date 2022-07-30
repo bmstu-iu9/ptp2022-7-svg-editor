@@ -1,77 +1,95 @@
 /**
+ * @module Layers 
+ *
  * @author wizardOfOz21
- **/
+ * 
+ * */
 
 'use strict'
 
 const opacitySlider = document.querySelector('#opacity_slider');
 const layerControlPanel = document.querySelector('#layer_panel');
 
-let currentLayerNote,
+let currentLayer,
     i;
 
-function newLayerNote(relatedLayer, layerName) {
-    let note = document.createElement('div');
-    note.insertAdjacentHTML('beforeend', `
-    <div class="top" style="width: 100%; height: 10px;"><input type="checkbox" checked/><label>${layerName}</label></div>
-    <div class="bottom" style="width: 100%; height: 10px;"></div>
-    `);
-    note.classList.add('layer_note');
-    note.setAttribute('draggable', 'true');
+/**
+ * Создаёт и возвращает новый слой
+ * (на самом деле в роли слоя выступает div-запись о нём в layerControlPanel,
+ * которая содержит ссылку на слой как на html-узел (.layerNode) 
+ * и как на элемент библиотеки svgjs (.svg))
+ * @param {Element} baseElement - html-узел, который будет преобразован в слой
+ * @param {string} layerName - имя создаваемого слоя
+ * @returns новый слой
+ */
+function newLayer(baseElement, layerName) {
+    let newSVG = (baseElement === undefined) ? SVG() : SVG(baseElement);
 
-    note.svg = relatedLayer;
-    return note;
-};
+    let newLayer = newLayerNote(layerName);
+    newLayer.svg = newSVG;
+    newLayer.layerNode = newNote.svg.node;
+    newLayer.layerName = layerName;
+    newLayer.layerNode.classList.add('layer');
+    return newLayer;
 
-function checkDisplay(layer) {
-    let display = layer.layerNode.getAttribute('display');
-    console.log(display);
-    if (display == 'none') {
-        layer.children[0].children[0].checked = false;
-    }
-}
-
-function newLayer(baseElement, layerName) {    
-    let newLayer = (baseElement === undefined) ? SVG() : SVG(baseElement);  
+    function newLayerNote(layerName) {
+        let note = document.createElement('div');
+        note.insertAdjacentHTML('beforeend', `
+        <div class="top" style="width: 100%; height: 10px;">
+        <input type="checkbox" checked/>
+        <label>${layerName}</label>
+        </div>
+        <div class="bottom" style="width: 100%; height: 10px;"></div>
+        `);
+        note.classList.add('layer_note');
+        note.setAttribute('draggable', 'true');
     
-    let newNote = newLayerNote(newLayer, layerName);
-    newNote.layerNode = newNote.svg.node;
-    newNote.layerName = newNote.children[0].lastChild.innerText;
-    newNote.layerNode.classList.add('layer');
-    return newNote;
+        note.svg = relatedLayerSVG;
+        return note;
+    };
 }
 
+/**
+ * Добавляет переданный слой в редактор
+ * (по умолчанию над остальными)
+ * @param {} layer - вставляемый слой
+ * @param {string} place - если 'end', слой вставляется под остальные
+ */
 function addToPanel(layer, place) {
     layer.layerNode.setAttribute("width", workspace.clientWidth);
     layer.layerNode.setAttribute("height", workspace.clientHeight);
     if (place == 'end') {
-        workspace.prepend(layer.layerNode);  
+        workspace.prepend(layer.layerNode);
         layerControlPanel.append(layer);
     } else {
-        workspace.append(layer.layerNode);  
+        workspace.append(layer.layerNode);
         layerControlPanel.prepend(layer);
     }
     selectLayer(layer);
 }
 
-function selectLayer(layerNote) {
-    if (currentLayerNote !== null) {
-        currentLayerNote.setAttribute('checked', '');
+/**
+ * Выбирает переданный слой как текущий активный
+ * @param {} layer - выбираемый слой
+ */
+function selectLayer(layer) {
+    if (currentLayer !== null) {
+        currentLayer.setAttribute('checked', '');
     }
-    layerNote.setAttribute('checked', 'true');
+    layer.setAttribute('checked', 'true');
 
-    currentLayerNote = layerNote;
+    currentLayer = layer;
 
-    let opacity = layerNote.layerNode.getAttribute('opacity');
+    let opacity = layer.layerNode.getAttribute('opacity');
     opacitySlider.value = opacity == null ? 1 : opacity;
-    layerUpdate(layerNote.svg);
+    layerUpdate(layer.svg);
 }
 
 function deleteLayer() {
-    if (currentLayerNote === null) return;
-    currentLayerNote.layerNode.remove();
-    currentLayerNote.remove();
-    currentLayerNote = null;
+    if (currentLayer === null) return;
+    currentLayer.layerNode.remove();
+    currentLayer.remove();
+    currentLayer = null;
     i--;
 }
 
@@ -79,32 +97,32 @@ function deleteAllLayers() {
     workspace.innerHTML = "";
     layerControlPanel.innerHTML = "";
 
-    currentLayerNote = null;
+    currentLayer = null;
     i = 0;
 }
 
 function changeOpacity() {
-    currentLayerNote.layerNode.setAttribute('opacity', opacitySlider.value);
+    currentLayer.layerNode.setAttribute('opacity', opacitySlider.value);
 }
 
 function isDrawAllowed() {
-    return !(currentLayerNote === null || currentLayerNote.layerNode.getAttribute('display') == 'none');
+    return !(currentLayer === null || currentLayer.layerNode.getAttribute('display') == 'none');
 }
 
 function getPicture(format) {
     let svgString = `<svg xmlns="http://www.w3.org/2000/svg" ` +
-                         `xmlns:xlink="http://www.w3.org/1999/xlink" ` + 
-                         `version="1.1" ` +
-                         `width="${workspace.clientHeight}" ` + 
-                         `height="${workspace.clientWidth}">\n`;
+        `xmlns:xlink="http://www.w3.org/1999/xlink" ` +
+        `version="1.1" ` +
+        `width="${workspace.clientHeight}" ` +
+        `height="${workspace.clientWidth}">\n`;
 
     if (format == "svg") {
         for (let layer of layerControlPanel.childNodes) {
             if (layer.layerNode.getAttribute('display') == 'none') continue;
             svgString += `\t<svg height="${layer.layerNode.getAttribute('height')}" ` +
-                                    `width="${layer.layerNode.getAttribute('width')}"` +
-                                    `${getOpacity(layer.layerNode)}` +
-                                    `${getViewBox(layer.layerNode)}>\n`;
+                `width="${layer.layerNode.getAttribute('width')}"` +
+                `${getOpacity(layer.layerNode)}` +
+                `${getViewBox(layer.layerNode)}>\n`;
             for (let elem of layer.layerNode.children) {
                 svgString += `\t\t${elem.outerHTML}\n`;
             }
@@ -114,11 +132,11 @@ function getPicture(format) {
         for (let layer of layerControlPanel.childNodes) {
             console.log(layer.layerNode);
             svgString += `\t<svg height="${layer.layerNode.getAttribute('height')}" ` +
-                                    `width="${layer.layerNode.getAttribute('width')}"` +
-                                    `${getOpacity(layer.layerNode)}` +
-                                    `${getViewBox(layer.layerNode)}` +
-                                    `${getDisplay(layer.layerNode)}` +
-                                    ` name="${(layer.layerName)}">\n`;
+                `width="${layer.layerNode.getAttribute('width')}"` +
+                `${getOpacity(layer.layerNode)}` +
+                `${getViewBox(layer.layerNode)}` +
+                `${getDisplay(layer.layerNode)}` +
+                ` name="${(layer.layerName)}">\n`;
             for (let elem of layer.layerNode.children) {
                 svgString += `\t\t${elem.outerHTML}\n`;
             }
@@ -137,17 +155,17 @@ function getOpacity(svg) {
 
 function getViewBox(svg) {
     let viewBox = svg.getAttribute('viewBox');
-    return viewBox === null? '' : ` viewBox="${viewBox}"`;
+    return viewBox === null ? '' : ` viewBox="${viewBox}"`;
 }
 
 function getDisplay(svg) {
     let display = svg.getAttribute('display');
-    return display === null? '' : ` display="${display}"`;
+    return display === null ? '' : ` display="${display}"`;
 }
 
 function openAsSvg(svgString, fileName) {
     let oParser = new DOMParser();
-    let oDOM = oParser.parseFromString(svgString,"application/xml");
+    let oDOM = oParser.parseFromString(svgString, "application/xml");
     addToPanel(newLayer(oDOM.documentElement, fileName));
 }
 
@@ -166,8 +184,8 @@ function openAsProject(yml) {
         svgLayer = document.createElement("svg");
         svgLayer.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
         svgLayer.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-        svgLayer.setAttribute('version','1.1');
-        taskStack.push({node: svgLayer, obj: layer});
+        svgLayer.setAttribute('version', '1.1');
+        taskStack.push({ node: svgLayer, obj: layer });
 
         while (taskStack.length > 0) {
             const task = taskStack.pop();
@@ -177,7 +195,7 @@ function openAsProject(yml) {
                 task.node.setAttribute(attrName, attr[attrName]);
             }
             for (let child of task.obj.outers) {
-                if (typeof(child) != 'object') {
+                if (typeof (child) != 'object') {
                     task.node.textContent = child;
                     continue;
                 }
@@ -187,13 +205,13 @@ function openAsProject(yml) {
                 if (Object.keys(child).length != 1) {
                     childNode = document.createElement('svg');
                     task.node.append(childNode);
-                    taskStack.push({node: childNode, obj: child});
+                    taskStack.push({ node: childNode, obj: child });
                 } else {
                     // console.log(typeof(child));
                     let childName = Object.keys(child)[0];
                     childNode = document.createElement(childName);
                     task.node.append(childNode);
-                    taskStack.push({node: childNode, obj: child[childName]});
+                    taskStack.push({ node: childNode, obj: child[childName] });
                 }
 
             }
@@ -202,15 +220,22 @@ function openAsProject(yml) {
         // createLayer(svgLayer,'Layer ' + i++);
 
         let oParser = new DOMParser();
-        let oDOM = oParser.parseFromString(svgLayer.outerHTML,"application/xml");
+        let oDOM = oParser.parseFromString(svgLayer.outerHTML, "application/xml");
         svgLayer = oDOM.documentElement;
         let newL = newLayer(svgLayer, svgLayer.getAttribute("name"));
         svgLayer.removeAttribute("name");
         addToPanel(newL, "end");
         checkDisplay(newL);
         console.log(svgLayer);
-
         // Парсинг происходит по сути дважды, иначе добавленные слои почему-то не отображаются на странице
+    }
+
+    function checkDisplay(layer) {
+        let display = layer.layerNode.getAttribute('display');
+        console.log(display);
+        if (display == 'none') {
+            layer.children[0].children[0].checked = false;
+        }
     }
 }
 
@@ -235,13 +260,13 @@ $(document).ready(function () {
     })
 
     $("#mergeWithPrevious").click(function () {
-        let targetLayer = currentLayerNote;
-        let previousLayer = currentLayerNote.nextElementSibling;
+        let targetLayer = currentLayer;
+        let previousLayer = currentLayer.nextElementSibling;
         if (targetLayer == null || previousLayer == null) return;
         console.log(targetLayer);
         console.log(previousLayer);
-        let union = newLayer(undefined,targetLayer.layerName);
-        addAfter(union,targetLayer);
+        let union = newLayer(undefined, targetLayer.layerName);
+        addAfter(union, targetLayer);
         union.layerNode.append(previousLayer.layerNode);
         union.layerNode.append(targetLayer.layerNode);
         targetLayer.layerNode.removeAttribute("xmlns:svgjs");
@@ -273,8 +298,8 @@ $(document).ready(function () {
         }
         if (visibleLayers.length < 2) return;
         let lastVisible = visibleLayers[visibleLayers.length - 1];
-        let union = newLayer(undefined,lastVisible.layerName);
-        addAfter(union,lastVisible);
+        let union = newLayer(undefined, lastVisible.layerName);
+        addAfter(union, lastVisible);
 
         for (let layer of visibleLayers) {
             union.layerNode.prepend(layer.layerNode);
@@ -283,22 +308,22 @@ $(document).ready(function () {
     })
 
     $('#layerUp').click(function () {
-        let nextLayer = currentLayerNote.previousElementSibling;
-        if (currentLayerNote == null || nextLayer == null) return;
-        addAfter(currentLayerNote,nextLayer);
+        let nextLayer = currentLayer.previousElementSibling;
+        if (currentLayer == null || nextLayer == null) return;
+        addAfter(currentLayer, nextLayer);
     })
 
     $('#layerDown').click(function () {
-        let previousLayer = currentLayerNote.nextElementSibling;
-        if (currentLayerNote == null || previousLayer == null) return;
-        addAfter(previousLayer, currentLayerNote);
+        let previousLayer = currentLayer.nextElementSibling;
+        if (currentLayer == null || previousLayer == null) return;
+        addAfter(previousLayer, currentLayer);
     })
 
     $('#copyLayer').click(function () {
-        if (currentLayerNote == null) return;
-        let copyNode = currentLayerNote.layerNode.cloneNode(true);
-        let copyLayer = newLayer(copyNode, currentLayerNote.layerName);
-        addAfter(copyLayer,currentLayerNote);
+        if (currentLayer == null) return;
+        let copyNode = currentLayer.layerNode.cloneNode(true);
+        let copyLayer = newLayer(copyNode, currentLayer.layerName);
+        addAfter(copyLayer, currentLayer);
         selectLayer(copyLayer);
     })
 
@@ -316,7 +341,7 @@ $(document).ready(function () {
             visibleNodes.push(copy);
         }
         if (visibleNodes.length < 1) return;
-        let union = newLayer(undefined,"Visible");
+        let union = newLayer(undefined, "Visible");
 
         for (let layer of visibleNodes) {
             union.layerNode.prepend(layer);
@@ -342,8 +367,7 @@ $(document).ready(function () {
         this.querySelector('input').classList.remove('unactive');
         layerNote.classList.remove('hovered_top');
     })
-    $('#layer_panel').on("dragenter", ".bottom", function () 
-    {
+    $('#layer_panel').on("dragenter", ".bottom", function () {
         let layerNote = this.parentElement;
         layerNote.classList.add('hovered_bottom');
     })
@@ -358,15 +382,15 @@ $(document).ready(function () {
         console.log('dropTop');
         let layerNote = this.parentElement;
         $(this).trigger("dragleave");
-        layerNote.layerNode.after(currentLayerNote.layerNode);
-        layerNote.before(currentLayerNote);
+        layerNote.layerNode.after(currentLayer.layerNode);
+        layerNote.before(currentLayer);
     })
     $('#layer_panel').on("drop", ".bottom", function () {
         console.log('dropBottom');
         let layerNote = this.parentElement;
         $(this).trigger("dragleave");
-        layerNote.layerNode.before(currentLayerNote.layerNode);
-        layerNote.after(currentLayerNote);
+        layerNote.layerNode.before(currentLayer.layerNode);
+        layerNote.after(currentLayer);
     })
     $('#layer_panel').on("click", ".layer_note input", function () {
         let clicked = this.parentElement.parentElement.layerNode;
