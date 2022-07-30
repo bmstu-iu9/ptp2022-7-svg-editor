@@ -234,14 +234,7 @@ function pathMove(x, y) {
 
 // <=><=><=><=><=>	скрипт инструмента текст <=><=><=><=><=>
 function textDown(x, y) {
-	if (object == null) {
-		object = draw.rect(0, 0)
-			.move(x, y)
-			.fill('none')
-			.stroke({ width: widthValue, color: colorValue });
-		object.x0 = x;
-		object.y0 = y;
-	}
+	rectDown(x, y);
 }
 
 function textMove(x, y) {
@@ -255,8 +248,9 @@ function textUp(x, y) {
 				.font({size: object.height()})
 				.fill(fillValue ? colorValue : 'none')
 				.stroke({ width: widthValue, color: colorValue })
-				.x(object.x())
-				.y(object.y());
+				.move(object.x(), object.y());
+			while (draw.last().bbox().width > object.width())
+				draw.last().text(draw.last().text().slice(0, -1));
 		}
 		breakDrawing();
 	}
