@@ -168,7 +168,7 @@ $(document).ready(function () {
                 if (response.file_name.split('.').pop().toLowerCase() === 'svg') {
                     openAsSvg(response.svg, response.file_name);
                 } else {
-                    console.log(response.yml);
+                    openAsProject(response.yml);
                 }
             },
             error: function (response) {
