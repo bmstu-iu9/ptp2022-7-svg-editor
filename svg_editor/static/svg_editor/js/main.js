@@ -17,7 +17,7 @@ $(document).ready(function () {
             data: {
                 file_name: document.getElementById('fileNameInput').value,
                 save_as: false,
-                svg: getPictureAsSvg(),
+                svg: $('#save_file_type').value == 'svg' ? getPicture("svg") : getPicture("yml"),
                 type: document.getElementById('save_file_type').value,
             },
             type: 'POST',
@@ -39,7 +39,7 @@ $(document).ready(function () {
             data: {
                 file_name: document.getElementById('fileNameInput').value,
                 save_as: true,
-                svg: getPictureAsSvg(),
+                svg: $('#save_file_type').value == 'svg' ? getPicture("svg") : getPicture("yml"),
                 type: document.getElementById('save_file_type').value,
             },
             type: 'POST',
@@ -147,7 +147,7 @@ $(document).ready(function () {
                     deleteAllLayers();
                     openAsSvg(response.svg, response.file_name);
                 } else {
-                    console.log(response.yml);
+                    openAsProject(response.yml);
                 }
             },
             error: function (response) {
