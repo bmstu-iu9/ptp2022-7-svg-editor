@@ -16,9 +16,10 @@ const toolMethods = {
 	'ellipse': {'mousedown': ellipseDown, 'mousemove': ellipseMove, 'mouseup': ellipseUp},
 	'rect': {'mousedown': rectDown, 'mousemove': rectMove, 'mouseup': rectUp},
 	'fill': {'mouseup': fillUp},
-	'eraser': {'mouseup': eraserUp},
+	'eraser': {'mousedown': eraserDown, 'mousemove': eraserMove},
 	'move': {'mousedown': moveDown, 'mousemove': moveMove, 'mouseup': moveUp},
 	'rotate': {'mousedown': rotateDown, 'mousemove': rotateMove, 'mouseup': rotateUp},
+	'deform': {'mousedown': deformDown, 'mousemove': deformMove, 'mouseup': deformUp},
 };
 
 let	draw,
@@ -49,7 +50,7 @@ function stopDrawing() {
 }
 
 function historyNew() {
-	new_history = draw_history.h[draw_history.i].filter(obj => {
+	let new_history = draw_history.h[draw_history.i].filter(obj => {
 		return obj.root != draw || draw.has(obj);
 	});
 	for (const obj of draw.children()) {
@@ -121,8 +122,8 @@ function logMouseEvent(event) {
 
 	if ((event.which == 1 || mouseup && event.which == 0) && 
 			tool in toolMethods && event.type in toolMethods[tool]) {
-		x = event.clientX - canvasRect.left;
-		y = event.clientY - canvasRect.top;
+		let x = event.clientX - canvasRect.left,
+			y = event.clientY - canvasRect.top;
 		toolMethods[tool][event.type](x, y);
 	}
 }
@@ -181,7 +182,7 @@ function polygonDown(x, y) {
 function polygonMove(x, y) {
 	if (object != null)
 		if (mouseup) {
-			last_point = object.array().slice(-1)[0];
+			let last_point = object.array().slice(-1)[0];
 			if (distanceTo(last_point[0], last_point[1], x, y) > 10)
 				stopDrawing();
 		} else
@@ -195,8 +196,8 @@ function pathDown(x, y) {
 			.fill(fillValue ? colorValue : 'none')
 			.stroke({ width: widthValue, color: colorValue });;
 	} else {
-		first_line = object.array().slice(0, 2);
-		last_line = object.array().slice(-2);
+		let first_line = object.array().slice(0, 2),
+			last_line = object.array().slice(-2);
 		if (distanceTo(first_line[0][1], first_line[0][2], x, y) <= 10) {
 			last_line[1][5] = first_line[0][1];
 			last_line[1][6] = first_line[0][2];
@@ -213,8 +214,8 @@ function pathDown(x, y) {
 
 function pathMove(x, y) {
 	if (object !== null) {
-		last_line = object.array().slice(-1)[0];
-		prelast_line = object.array().slice(-2)[0];
+		let last_line = object.array().slice(-1)[0],
+			prelast_line = object.array().slice(-2)[0];
 		if (mouseup) {
 			last_line[3] = x;
 			last_line[4] = y;
@@ -314,8 +315,8 @@ function rectUp(x, y) {
 // <=><=><=><=><=>	скрипт инструмента заливка <=><=><=><=><=>
 function fillUp(x, y) {
 	for (const obj of [...draw.children()].reverse()) {
-		updateDetXY(obj);
-		if (obj.inside(obj.detX(x, y), obj.detY(x, y))) {
+		let selfCoords = absCoordsToSelf(obj, x, y);
+		if (obj.inside(selfCoords.x, selfCoords.y)) {
 			obj.clone()
 				.fill(fillValue ? colorValue : 'none')
 				.stroke({ width: widthValue, color: colorValue })
@@ -327,17 +328,27 @@ function fillUp(x, y) {
 	}
 }
 
-function updateDetXY(obj) {
-	tr = obj.transform();
-	obj.detX = ((x, y) => (x * tr.d - y * tr.c - tr.d * tr.e + tr.c * tr.f) / (tr.a * tr.d - tr.b * tr.c));
-	obj.detY = ((x, y) => (x * tr.b - y * tr.a - tr.b * tr.e + tr.a * tr.f) / (tr.b * tr.c - tr.a * tr.d));
+function selfCoordsToAbs(object, x, y) {
+	let tr = object.transform();
+	return {
+		x: x * tr.a + y * tr.c + tr.e,
+		y: x * tr.b + y * tr.d + tr.f
+	};
+}
+
+function absCoordsToSelf(object, x, y) {
+	let tr = object.transform();
+	return {
+		x: (x * tr.d - y * tr.c - tr.d * tr.e + tr.c * tr.f) / (tr.a * tr.d - tr.b * tr.c),
+		y: (x * tr.b - y * tr.a - tr.b * tr.e + tr.a * tr.f) / (tr.b * tr.c - tr.a * tr.d)
+	};
 }
 
 // <=><=><=><=><=>	скрипт инструмента ластик <=><=><=><=><=>
-function eraserUp(x, y) {
+function eraserDown(x, y) {
 	for (const obj of [...draw.children()].reverse()) {
-		updateDetXY(obj);
-		if (obj.inside(obj.detX(x, y), obj.detY(x, y))) {
+		let selfCoords = absCoordsToSelf(obj, x, y);
+		if (obj.inside(selfCoords.x, selfCoords.y)) {
 			obj.remove();
 			historyNew();
 			break;
@@ -345,18 +356,21 @@ function eraserUp(x, y) {
 	}
 }
 
+function eraserMove(x, y) {
+	if (!mouseup)
+		eraserDown(x, y);
+}
+
 // <=><=><=><=><=>	скрипт инструмента перемещение <=><=><=><=><=>
 function moveDown(x, y) {
 	if (object == null)
 		for (const obj of [...draw.children()].reverse()) {
-			updateDetXY(obj);
-			if (obj.inside(obj.detX(x, y), obj.detY(x, y))) {
+			let selfCoords = absCoordsToSelf(obj, x, y);
+			if (obj.inside(selfCoords.x, selfCoords.y)) {
 				object = obj.clone().insertAfter(obj);
-				object.detX = obj.detX;
-				object.detY = obj.detY;
 				obj.remove();
-				object.x0 = x;
-				object.y0 = y;
+				object.x0 = selfCoords.x;
+				object.y0 = selfCoords.y;
 				break;
 			}
 		}
@@ -364,10 +378,11 @@ function moveDown(x, y) {
 
 function moveMove(x, y) {
 	if (object != null) {
-		object.dx(object.detX(x, y) - object.detX(object.x0, object.y0));
-		object.dy(object.detY(x, y) - object.detY(object.x0, object.y0));
-		object.x0 = x;
-		object.y0 = y;
+		let selfCoords = absCoordsToSelf(object, x, y);
+		object.dx(selfCoords.x - object.x0);
+		object.dy(selfCoords.y - object.y0);
+		object.x0 = selfCoords.x;
+		object.y0 = selfCoords.y;
 	}
 }
 
@@ -379,16 +394,16 @@ function moveUp(x, y) {
 function rotateDown(x, y) {
 	if (object == null)
 		for (var obj of [...draw.children()].reverse()) {
-			updateDetXY(obj);
-			if (obj.inside(obj.detX(x, y), obj.detY(x, y))) {
+			let selfCoords = absCoordsToSelf(obj, x, y);
+			if (obj.inside(selfCoords.x, selfCoords.y)) {
 				object = obj.clone().insertAfter(obj);
-				object.detX = obj.detX;
-				object.detY = obj.detY;
 				obj.remove();
-				object.angle = Math.acos((object.detX(x, y) - object.cx()) / 
-							distanceTo(object.cx(), object.cy(), object.detX(x, y), object.detY(x, y)));
-				if (object.detY(x, y) > object.cy())
-					object.angle = 2 * Math.PI - object.angle;
+				let absCoords = selfCoordsToAbs(object, object.cx(), object.cy());
+				object.angle = Math.acos((x - absCoords.x) / 
+							distanceTo(x, y, absCoords.x, absCoords.y)) * 
+							180 / Math.PI;
+				if (y > absCoords.y)
+					object.angle = 360 - object.angle;
 				break;
 			}
 		}
@@ -396,12 +411,14 @@ function rotateDown(x, y) {
 
 function rotateMove(x, y) {
 	if (object != null) {
-		angle = Math.acos((object.detX(x, y) - object.cx()) / 
-					distanceTo(object.cx(), object.cy(), object.detX(x, y), object.detY(x, y)));
-		if (object.detY(x, y) > object.cy())
-			angle = 2 * Math.PI - angle;
-		object.rotate((object.angle - angle) * 180 / Math.PI);
-		object.angle = angle;
+		let absCorrds = selfCoordsToAbs(object, object.cx(), object.cy());
+		object.rotate(object.angle);
+		object.angle = Math.acos((x - absCorrds.x) / 
+					distanceTo(x, y, absCorrds.x, absCorrds.y)) * 
+					180 / Math.PI;
+		if (y > absCorrds.y)
+			object.angle = 360 - object.angle;
+		object.rotate(-object.angle);
 	}
 }
 
