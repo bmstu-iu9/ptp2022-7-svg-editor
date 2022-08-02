@@ -38,13 +38,16 @@ function layerUpdate(newDraw) {
 
 function breakDrawing() {
 	if (object != null) {
-		object.remove();
+		if ('select' in object)
+			selectionClear();
+		else
+			object.remove();
 		object = null;
-		historyNew();
 	}
 }
 
 function stopDrawing() {
+	selectionClear();
 	historyNew();
 	object = null;
 }
@@ -91,6 +94,7 @@ function historyUndo() {
 }
 
 function historyUpdate(last_index) {
+	breakDrawing();
 	draw_history.h[last_index].forEach(obj => obj.remove());
 	draw_history.h[draw_history.i].forEach(obj => obj.root.add(obj));
 }
@@ -425,6 +429,113 @@ function rotateMove(x, y) {
 function rotateUp(x, y) {
 	stopDrawing();
 }
+
+// <=><=><=><=><=>	скрипт инструмента деформация <=><=><=><=><=>
+
+
+function selectionMake(object) {
+	let draw_ellipse = (coords => draw.ellipse(10).move(coords.x - 5, coords.y - 5).fill("#0cf"));
+	selectionClear();
+	object.select = { lines: [], points: [] };
+	if (object.array != null)
+		if (object.type == 'path') {
+			let array = object.array(),
+				first = draw.rect(0, 0),
+				draw_line = ((...coords) => 
+					draw.line(...coords).stroke({width: 1, color: "#0ff"}).insertAfter(first));
+			object.select.lines.push(first);
+			for (let i = 0; i < array.length - 1; i++) {
+				object.select.points[i] = [null];
+				for (let j = 1; j < array[i].length; j += 2)
+					object.select.points[i] = object.select.points[i].concat([
+						draw_ellipse(
+							selfCoordsToAbs(object, array[i][j], array[i][j + 1])
+						),
+						null
+					]);
+				if (i != 0)
+					object.select.lines = object.select.lines.concat([
+						draw_line(
+							object.select.points[i][1].cx(),
+							object.select.points[i][1].cy(),
+							object.select.points[i - 1].slice(-2)[0].cx(),
+							object.select.points[i - 1].slice(-2)[0].cy()
+						),
+						draw_line(
+							object.select.points[i][3].cx(),
+							object.select.points[i][3].cy(),
+							object.select.points[i][5].cx(),
+							object.select.points[i][5].cy()
+						)
+					]);
+			}
+		}
+		else
+			for (const point of object.array())
+				object.select.points.push([
+					draw_ellipse(
+						selfCoordsToAbs(object, ...point)
+					)
+				]);
+}
+
+function selectionClear() {
+	for (var object of draw.children()) {
+		if ('select' in object) {
+			object.select.points.forEach(arr => arr.forEach(pnt => pnt != null ? pnt.remove() : null));
+			object.select.lines.forEach(line => line.remove());
+			delete object.select;
+		}
+	}
+}
+
+function deformDown(x, y) {
+	if (object == null)
+		for (const obj of [...draw.children()].reverse()) {
+			let selfCoords = absCoordsToSelf(obj, x, y);
+			if (obj.array != null && obj.inside(selfCoords.x, selfCoords.y)) {
+				object = obj;
+				selectionMake(obj);
+				break;
+			}
+		}
+	else
+		for (let i = 0; i < object.select.points.length; i++)
+			for (let j = 0; j < object.select.points[i].length; j++)
+				if (object.select.points[i][j] != null &&
+					distanceTo(object.select.points[i][j].cx(), object.select.points[i][j].cy(), x, y) <= 5) {
+					object.i = i;
+					object.j = j;
+				}
+}
+
+function deformMove(x, y) {
+	if (object != null && 'i' in object) {
+		let selfCoords = absCoordsToSelf(object, x, y),
+			array = object.array();
+		array[object.i][object.j] = selfCoords.x;
+		array[object.i][object.j + 1] = selfCoords.y;
+		let obj = object.clone().insertAfter(object);
+		object.remove();
+		obj.select = object.select;
+		obj.i = object.i;
+		obj.j = object.j;
+		object = obj;
+		object.plot(array);
+		selectionMake(object);
+	}
+}
+
+function deformUp(x, y) {
+	if (object != null && 'i' in object) {
+		selectionClear();
+		historyNew();
+		delete object.i,
+			object.j;
+		selectionMake(object);
+	}
+}
+
 
 
 $(document).ready(function () {
