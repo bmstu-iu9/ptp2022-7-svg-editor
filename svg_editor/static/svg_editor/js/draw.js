@@ -2,10 +2,10 @@
  * @author AngelicHedgehog  
  **/
 
-const fillInput = document.getElementById('fillChoice');
-const colorInput = document.getElementById('colorChoice');
-const widthInput = document.getElementById('widthChoice');
-const toolsInput = document.getElementsByName('toolChoice');
+const fillInput = document.getElementById('fillChoice'),
+	colorInput = document.getElementById('colorChoice'),
+	widthInput = document.getElementById('widthChoice'),
+	toolsInput = document.getElementsByName('toolChoice');
 
 const toolMethods = {
 	'pencil': {'mousedown': pencilDown, 'mousemove': pencilMove, 'mouseup': pencilUp},
@@ -20,6 +20,8 @@ const toolMethods = {
 	'move': {'mousedown': moveDown, 'mousemove': moveMove, 'mouseup': moveUp},
 	'rotate': {'mousedown': rotateDown, 'mousemove': rotateMove, 'mouseup': rotateUp},
 	'deform': {'mousedown': deformDown, 'mousemove': deformMove, 'mouseup': deformUp},
+	'scalе': {'mousedown': scaleDown, 'mousemove': scaleMove, 'mouseup': scaleUp},
+	
 };
 
 let	draw,
@@ -318,17 +320,21 @@ function rectUp(x, y) {
 
 // <=><=><=><=><=>	скрипт инструмента заливка <=><=><=><=><=>
 function fillUp(x, y) {
+	let obj = findTopOnCoords(x, y);
+	if (obj == null) return;
+	obj.clone()
+		.fill(fillValue ? colorValue : 'none')
+		.stroke({ width: widthValue, color: colorValue })
+		.insertAfter(obj);
+	obj.remove();
+	historyNew();
+}
+
+function findTopOnCoords(x, y) {
 	for (const obj of [...draw.children()].reverse()) {
 		let selfCoords = absCoordsToSelf(obj, x, y);
-		if (obj.inside(selfCoords.x, selfCoords.y)) {
-			obj.clone()
-				.fill(fillValue ? colorValue : 'none')
-				.stroke({ width: widthValue, color: colorValue })
-				.insertAfter(obj);
-			obj.remove();
-			historyNew();
-			break;
-		}
+		if (obj.inside(selfCoords.x, selfCoords.y))
+			return obj;
 	}
 }
 
@@ -350,14 +356,10 @@ function absCoordsToSelf(object, x, y) {
 
 // <=><=><=><=><=>	скрипт инструмента ластик <=><=><=><=><=>
 function eraserDown(x, y) {
-	for (const obj of [...draw.children()].reverse()) {
-		let selfCoords = absCoordsToSelf(obj, x, y);
-		if (obj.inside(selfCoords.x, selfCoords.y)) {
-			obj.remove();
-			historyNew();
-			break;
-		}
-	}
+	let obj = findTopOnCoords(x, y);
+	if (obj == null) return;
+	obj.remove();
+	historyNew();
 }
 
 function eraserMove(x, y) {
@@ -367,17 +369,15 @@ function eraserMove(x, y) {
 
 // <=><=><=><=><=>	скрипт инструмента перемещение <=><=><=><=><=>
 function moveDown(x, y) {
-	if (object == null)
-		for (const obj of [...draw.children()].reverse()) {
-			let selfCoords = absCoordsToSelf(obj, x, y);
-			if (obj.inside(selfCoords.x, selfCoords.y)) {
-				object = obj.clone().insertAfter(obj);
-				obj.remove();
-				object.x0 = selfCoords.x;
-				object.y0 = selfCoords.y;
-				break;
-			}
-		}
+	if (object == null) {
+		let obj = findTopOnCoords(x, y);
+		if (obj == null) return;
+		let selfCoords = absCoordsToSelf(obj, x, y);
+		object = obj.clone().insertAfter(obj);
+		obj.remove();
+		object.x0 = selfCoords.x;
+		object.y0 = selfCoords.y;
+	}
 }
 
 function moveMove(x, y) {
@@ -396,21 +396,18 @@ function moveUp(x, y) {
 
 // <=><=><=><=><=>	скрипт инструмента вращение <=><=><=><=><=>
 function rotateDown(x, y) {
-	if (object == null)
-		for (var obj of [...draw.children()].reverse()) {
-			let selfCoords = absCoordsToSelf(obj, x, y);
-			if (obj.inside(selfCoords.x, selfCoords.y)) {
-				object = obj.clone().insertAfter(obj);
-				obj.remove();
-				let absCoords = selfCoordsToAbs(object, object.cx(), object.cy());
-				object.angle = Math.acos((x - absCoords.x) / 
-							distanceTo(x, y, absCoords.x, absCoords.y)) * 
-							180 / Math.PI;
-				if (y > absCoords.y)
-					object.angle = 360 - object.angle;
-				break;
-			}
-		}
+	if (object == null) {
+		let obj = findTopOnCoords(x, y);
+		if (obj == null) return;
+		let absCoords = selfCoordsToAbs(obj, obj.cx(), obj.cy());
+		object = obj.clone().insertAfter(obj);
+		obj.remove();
+		object.angle = Math.acos((x - absCoords.x) / 
+					distanceTo(x, y, absCoords.x, absCoords.y)) * 
+					180 / Math.PI;
+		if (y > absCoords.y)
+			object.angle = 360 - object.angle;
+	}
 }
 
 function rotateMove(x, y) {
@@ -431,18 +428,16 @@ function rotateUp(x, y) {
 }
 
 // <=><=><=><=><=>	скрипт инструмента деформация <=><=><=><=><=>
-
-
-function selectionMake(object) {
-	let draw_ellipse = (coords => draw.ellipse(10).move(coords.x - 5, coords.y - 5).fill("#0cf"));
+function deformSelectionMake(object) {
 	selectionClear();
 	object.select = { lines: [], points: [] };
+	let draw_ellipse = (coords => draw.ellipse(10).move(coords.x - 5, coords.y - 5).fill("#0cf"));
 	if (object.array != null)
 		if (object.type == 'path') {
 			let array = object.array(),
 				first = draw.rect(0, 0),
 				draw_line = ((...coords) => 
-					draw.line(...coords).stroke({width: 1, color: "#0ff"}).insertAfter(first));
+					draw.line(coords).stroke({width: 1, color: "#0ff"}).insertAfter(first));
 			object.select.lines.push(first);
 			for (let i = 0; i < array.length - 1; i++) {
 				object.select.points[i] = [null];
@@ -490,20 +485,20 @@ function selectionClear() {
 }
 
 function deformDown(x, y) {
-	if (object == null)
-		for (const obj of [...draw.children()].reverse()) {
-			let selfCoords = absCoordsToSelf(obj, x, y);
-			if (obj.array != null && obj.inside(selfCoords.x, selfCoords.y)) {
-				object = obj;
-				selectionMake(obj);
-				break;
-			}
+	if (object == null) {
+		let obj = findTopOnCoords(x, y);
+		if (obj != null && obj.array != null) {
+			object = obj;
+			deformSelectionMake(obj);
 		}
-	else
+	} else
 		for (let i = 0; i < object.select.points.length; i++)
 			for (let j = 0; j < object.select.points[i].length; j++)
-				if (object.select.points[i][j] != null &&
-					distanceTo(object.select.points[i][j].cx(), object.select.points[i][j].cy(), x, y) <= 5) {
+				if (object.select.points[i][j] != null && object.select.points[i][j].inside(x, y)) {
+					let obj = object.clone().insertAfter(object);
+					object.remove();
+					obj.select = object.select;
+					object = obj;
 					object.i = i;
 					object.j = j;
 				}
@@ -515,14 +510,8 @@ function deformMove(x, y) {
 			array = object.array();
 		array[object.i][object.j] = selfCoords.x;
 		array[object.i][object.j + 1] = selfCoords.y;
-		let obj = object.clone().insertAfter(object);
-		object.remove();
-		obj.select = object.select;
-		obj.i = object.i;
-		obj.j = object.j;
-		object = obj;
 		object.plot(array);
-		selectionMake(object);
+		deformSelectionMake(object);
 	}
 }
 
@@ -532,10 +521,85 @@ function deformUp(x, y) {
 		historyNew();
 		delete object.i,
 			object.j;
-		selectionMake(object);
+		deformSelectionMake(object);
 	}
 }
 
+// <=><=><=><=><=>	скрипт инструмента масштабирование <=><=><=><=><=>
+function scaleSelectionMake(object) {
+	selectionClear();
+	object.select = { lines: [], points: [[]] };
+	let box = object.bbox(),
+		points = [
+			selfCoordsToAbs(object, box.x, box.y),
+			selfCoordsToAbs(object, box.x, box.y2),
+			selfCoordsToAbs(object, box.x2, box.y2),
+			selfCoordsToAbs(object, box.x2, box.y),
+		],
+		draw_line = ((p1, p2) => object.select.lines.push(
+				draw.line(p1.x, p1.y, p2.x, p2.y).stroke({width: 1, color: "#0ff"})
+			)),
+		draw_ellipse = (coords => object.select.points[0].push(
+				draw.ellipse(10).move(coords.x - 5, coords.y - 5).fill("#0cf")
+			));
+	for (let i = 0; i < 4; i++)
+		draw_line(points[i], points[(i + 1) % 4]);
+	for (let i = 0; i < 4; i++)
+		draw_ellipse(points[i]);
+	object.select.points = [[]].concat(object.select.points)
+	for (let i = 0; i < 4; i++)
+		draw_ellipse({
+			x: (points[i].x + points[(i + 1) % 4].x) / 2,
+			y: (points[i].y + points[(i + 1) % 4].y) / 2
+		});
+}
+
+function scaleDown(x, y) {
+	if (object == null) {
+		let obj = findTopOnCoords(x, y);
+		if (obj == null) return;
+		object = obj;
+		scaleSelectionMake(object);
+	} else {
+		for (let i = 0; i < 2; i++)
+			for (let j = 0; j < 4; j++)
+				if (object.select.points[i][j].inside(x, y)) {
+					let obj = object.clone().insertAfter(object);
+					object.remove();
+					obj.select = object.select;
+					object = obj;
+					object.i = i;
+					object.j = j;
+				}
+	}
+}
+
+function scaleMove(x, y) {
+	if (object != null && 'i' in object) {
+		let moving = object.select.points[object.i][object.j],
+			staying = object.select.points[object.i][(object.j + 2) % 4],
+			mv_pnt = { x: moving.cx(), y: moving.cy() },
+			st_pnt = { x: staying.cx(), y: staying.cy() },
+			st_pnt_self = absCoordsToSelf(object, st_pnt.x, st_pnt.y);
+			x_a = mv_pnt.x - st_pnt.x, y_a = mv_pnt.y - st_pnt.y,
+			x_b = x - st_pnt.x, y_b = y - st_pnt.y;
+			k = y_a == 0 ? 
+				x_b / x_a - (y_a * x_b / x_a - y_b) * y_a / (x_a ** 2 + y_a ** 2) :
+				k = y_b / y_a - (x_a * y_b / y_a - x_b) * x_a / (x_a ** 2 + y_a ** 2);
+		object.scale(k, st_pnt_self.x, st_pnt_self.y);
+		scaleSelectionMake(object);
+	}
+}
+
+function scaleUp(x, y) {
+	if (object != null && 'i' in object) {
+		selectionClear();
+		historyNew();
+		delete object.i,
+			object.j;
+		scaleSelectionMake(object);
+	}
+}
 
 
 $(document).ready(function () {
@@ -556,6 +620,11 @@ $(document).bind('keypress', function(event) {
 			historyBack();
 		}
     }
+});
+
+$(document).bind('keydown', function(event) {
+    if (event.key === 'Escape')
+		breakDrawing();
 });
 
 $(document).bind("DOMNodeRemoved", function(e) {
