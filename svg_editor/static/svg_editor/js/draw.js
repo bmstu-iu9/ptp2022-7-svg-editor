@@ -23,6 +23,7 @@ const toolMethods = {
 	'scalе': {'mousedown': scaleDown, 'mousemove': scaleMove, 'mouseup': scaleUp},
 	'split': {'mousedown': splitDown},
 	'skew': {'mousedown': skewDown, 'mousemove': skewMove, 'mouseup': skewUp},
+	'mirror': {'mousedown': mirrorDown, 'mousemove': mirrorMove, 'mouseup': mirrorUp},
 };
 
 let	draw,
@@ -40,15 +41,14 @@ function layerUpdate(newDraw) {
 //////////////////////////////////////////
 
 function breakDrawing() {
-	if (object != null) {
-		if ('select' in draw) {
-			selectionClear();
-			if (!mouseup)
-				object.remove();
-		} else
-			object.remove();
+	if ('select' in draw) {
+		if (!mouseup)
+			toolMethods[tool]['mouseup']();
+		selectionClear();
+	} else if (object != null)
+		object.remove();
+	if (object != null)
 		object = null;
-	}
 }
 
 function stopDrawing() {
@@ -57,6 +57,7 @@ function stopDrawing() {
 	object = null;
 }
 
+// <=><=><=><=><=> скрипт функционала истории рисования <=><=><=><=><=>
 function historyNew() {
 	let new_history = draw_history.h[draw_history.i].filter(obj => {
 		return obj.root != draw || draw.has(obj);
@@ -74,7 +75,7 @@ function historyNew() {
 	}
 }
 
-function historyOld(old_layer) {
+function historyСorrection(old_layer) {
 	for (i = draw_history.h.length - 1; i >= 0; i--) {
 		draw_history.h[i] = draw_history.h[i].filter(obj => {
 			return old_layer != obj.root.node;
@@ -89,21 +90,23 @@ function historyOld(old_layer) {
 }
 
 function historyBack() {
+	breakDrawing();
 	if (draw_history.i != 0)
 		historyUpdate(draw_history.i--);
 }
 
 function historyUndo() {
+	breakDrawing();
 	if (draw_history.i + 1 != draw_history.h.length)
 		historyUpdate(draw_history.i++);
 }
 
 function historyUpdate(last_index) {
-	breakDrawing();
 	draw_history.h[last_index].forEach(obj => obj.remove());
 	draw_history.h[draw_history.i].forEach(obj => obj.root.add(obj));
 }
 
+// <=><=><=><=><=> скрипты событий <=><=><=><=><=>
 function resizeWindowEvent() {
 	canvasRect = workspace.getBoundingClientRect();
 }
@@ -137,11 +140,7 @@ function logMouseEvent(event) {
 	}
 }
 
-function distanceTo(x1, y1, x2, y2) {
-	return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** .5;
-}
-
-// <=><=><=><=><=>	скрипт инструмента карандаш <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента карандаш <=><=><=><=><=>
 function pencilDown(x, y) {
 	object = draw.polyline([[x, y]])
 		.fill(fillValue ? colorValue : 'none')
@@ -162,7 +161,7 @@ function pencilUp(x, y) {
 	}
 }
 
-// <=><=><=><=><=>	скрипт инструмента линия <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента линия <=><=><=><=><=>
 function lineDown(x, y) {
 	object = draw.line(x, y, x + 1, y + 1)
 		.fill(fillValue ? colorValue : 'none')
@@ -178,7 +177,11 @@ function lineUp(x, y) {
 	stopDrawing();
 }
 
-// <=><=><=><=><=>	скрипт инструмента полигон <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента полигон <=><=><=><=><=>
+function distanceTo(x1, y1, x2, y2) {
+	return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** .5;
+}
+
 function polygonDown(x, y) {
 	if (object == null)
 		object = draw.polygon([[x, y], [x, y]])
@@ -198,7 +201,7 @@ function polygonMove(x, y) {
 			object.plot(object.array().slice(0, -1).concat([[x, y]]));
 }
 
-// <=><=><=><=><=>	скрипт инструмента контур <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента контур <=><=><=><=><=>
 function pathDown(x, y) {
 	if (object == null) {
 		object = draw.path([['M', x, y], ['C', x, y, x, y, x, y]])
@@ -214,9 +217,10 @@ function pathDown(x, y) {
 			last_line[1][4] = first_line[0][2] * 2 - first_line[1][2];
 			object.plot(object.array().slice(0, -2).concat(last_line, [['z']]));
 			stopDrawing();
-		} else if (last_line[0][5] == x && last_line[0][6] == y)
+		} else if (last_line[0][5] == x && last_line[0][6] == y) {
+			object.plot(object.array().slice(0, -1))
 			stopDrawing();
-		else
+		} else
 			object.plot(object.array().concat([['C', x, y, x, y, x, y]]));
 	}
 }
@@ -242,7 +246,7 @@ function pathMove(x, y) {
 	}
 }
 
-// <=><=><=><=><=>	скрипт инструмента текст <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента текст <=><=><=><=><=>
 function textDown(x, y) {
 	rectDown(x, y);
 }
@@ -266,7 +270,7 @@ function textUp(x, y) {
 	}
 }
 
-// <=><=><=><=><=>	скрипт инструмента эллипс <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента эллипс <=><=><=><=><=>
 function ellipseDown(x, y) {
 	if (object == null) {
 		object = draw.ellipse(0, 0)
@@ -286,7 +290,7 @@ function ellipseUp(x, y) {
 	stopDrawing();
 }
 
-// <=><=><=><=><=>	скрипт инструмента прямоугольник <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента прямоугольник <=><=><=><=><=>
 function rectDown(x, y) {
 	if (object == null) {
 		object = draw.rect(0, 0)
@@ -321,18 +325,7 @@ function rectUp(x, y) {
 	stopDrawing();
 }
 
-// <=><=><=><=><=>	скрипт инструмента заливка <=><=><=><=><=>
-function fillUp(x, y) {
-	let obj = findTopOnCoords(x, y);
-	if (obj == null) return;
-	obj.clone()
-		.fill(fillValue ? colorValue : 'none')
-		.stroke({ width: widthValue, color: colorValue })
-		.insertAfter(obj);
-	obj.remove();
-	historyNew();
-}
-
+// <=><=><=><=><=> скрипт инструмента заливка <=><=><=><=><=>
 function findTopOnCoords(x, y) {
 	for (const obj of [...draw.children()].reverse()) {
 		let selfCoords = absCoordsToSelf(obj, x, y);
@@ -357,7 +350,18 @@ function absCoordsToSelf(object, x, y) {
 	};
 }
 
-// <=><=><=><=><=>	скрипт инструмента ластик <=><=><=><=><=>
+function fillUp(x, y) {
+	let obj = findTopOnCoords(x, y);
+	if (obj == null) return;
+	obj.clone()
+		.fill(fillValue ? colorValue : 'none')
+		.stroke({ width: widthValue, color: colorValue })
+		.insertAfter(obj);
+	obj.remove();
+	historyNew();
+}
+
+// <=><=><=><=><=> скрипт инструмента ластик <=><=><=><=><=>
 function eraserDown(x, y) {
 	let obj = findTopOnCoords(x, y);
 	if (obj == null) return;
@@ -370,7 +374,7 @@ function eraserMove(x, y) {
 		eraserDown(x, y);
 }
 
-// <=><=><=><=><=>	скрипт инструмента перемещение <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента перемещение <=><=><=><=><=>
 function moveDown(x, y) {
 	if (object == null) {
 		let obj = findTopOnCoords(x, y);
@@ -397,7 +401,7 @@ function moveUp(x, y) {
 	stopDrawing();
 }
 
-// <=><=><=><=><=>	скрипт инструмента вращение <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента вращение <=><=><=><=><=>
 function angleFromTo(center, point) {
 	let angle = Math.acos((point.x - center.x) /
 			distanceTo(point.x, point.y, center.x, center.y)) *
@@ -435,7 +439,7 @@ function rotateUp(x, y) {
 	stopDrawing();
 }
 
-// <=><=><=><=><=>	скрипт инструмента деформация <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента деформация <=><=><=><=><=>
 function deformSelectionMake(object) {
 	selectionClear();
 	draw.select = { lines: [], points: [] };
@@ -446,9 +450,11 @@ function deformSelectionMake(object) {
 			let array = object.array(),
 				first = draw.rect(0, 0),
 				draw_line = ((...coords) => 
-					draw.line(coords).stroke({width: 1, color: "#0ff"}).insertAfter(first));
+					draw.line(coords).stroke({ width: 1, color: "#0ff" }).insertAfter(first));
 			draw.select.lines.push(first);
-			for (let i = 0; i < array.length - 1; i++) {
+			for (let i = 0; i < array.length; i++) {
+				if (array[i][0] == 'z')
+					break;
 				draw.select.points[i] = [null];
 				for (let j = 1; j < array[i].length; j += 2)
 					draw.select.points[i] = draw.select.points[i].concat([
@@ -531,7 +537,7 @@ function deformUp(x, y) {
 	}
 }
 
-// <=><=><=><=><=>	скрипт инструмента масштабирование <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента масштабирование <=><=><=><=><=>
 function scaleSelectionMake(object) {
 	selectionClear();
 	draw.select = { lines: [], points: [[]] };
@@ -543,7 +549,7 @@ function scaleSelectionMake(object) {
 			selfCoordsToAbs(object, box.x2, box.y),
 		],
 		draw_line = ((p1, p2) => draw.select.lines.push(
-				draw.line(p1.x, p1.y, p2.x, p2.y).stroke({width: 1, color: "#0ff"})
+				draw.line(p1.x, p1.y, p2.x, p2.y).stroke({ width: 1, color: "#0ff" })
 			)),
 		draw_ellipse = (coords => draw.select.points[0].push(
 				draw.ellipse(10).move(coords.x - 5, coords.y - 5).fill("#0cf")
@@ -605,7 +611,7 @@ function scaleUp(x, y) {
 	}
 }
 
-// <=><=><=><=><=>	скрипт инструмента разбиение <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента разбиение <=><=><=><=><=>
 function splitDown(x, y) {
 	let obj = findTopOnCoords(x, y);
 	if (obj == null || obj.type.indexOf('poly') == 0) return;
@@ -613,7 +619,7 @@ function splitDown(x, y) {
 	historyNew();
 }
 
-// <=><=><=><=><=>	скрипт инструмента масштабирование <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента скос <=><=><=><=><=>
 function skewDown(x, y) {
 	if (object == null) {
 		let obj = findTopOnCoords(x, y);
@@ -624,12 +630,9 @@ function skewDown(x, y) {
 		for (let i = 0; i < 2; i++)
 			for (let j = 0; j < 4; j++)
 				if (draw.select.points[i][j].inside(x, y)) {
-					let moving = draw.select.points[i][j],
-						staying = draw.select.points[i][(j + 2) % 4],
-						obj = object.clone().insertAfter(object);
+					let obj = object.clone().insertAfter(object);
 					object.remove();
 					object = Object.assign(obj, { i: i, j: j, angle: 0 });
-					console.log(i, j);
 				}
 }
 
@@ -640,8 +643,8 @@ function skewMove(x, y) {
 			st_pnt = absCoordsToSelf(object, staying.cx(), staying.cy()),
 			mv_pnt = absCoordsToSelf(object, moving.cx(), moving.cy()),
 			coords = absCoordsToSelf(object, x, y),
-			M = new SVG.Matrix(object.transform()),
-			m = new SVG.Matrix();
+			Matrix = new SVG.Matrix(object.transform()),
+			matrix;
 		if (object.i == 0) {
 			if (object.j % 2 == 0) {
 				if (Math.abs(coords.x - st_pnt.x) < 1) return;
@@ -649,28 +652,28 @@ function skewMove(x, y) {
 				if (Math.abs(coords.y - st_pnt.y) < 1) return;
 			switch (object.j) {
 				case 0:
-					m = new SVG.Matrix(
+					matrix = new SVG.Matrix(
 						(coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), (st_pnt.y - coords.y) / st_pnt.x,
 						0, 1,
 						st_pnt.x - st_pnt.x * (coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), coords.y - st_pnt.y
 					);
 					break;
 				case 1:
-					m = new SVG.Matrix(
+					matrix = new SVG.Matrix(
 						1, 0,
 						(coords.x - st_pnt.x) / st_pnt.y, (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y),
 						st_pnt.x - coords.x, st_pnt.y - st_pnt.y * (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y)
 					);
 					break;
 				case 2:
-					m = new SVG.Matrix(
+					matrix = new SVG.Matrix(
 						(coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), (coords.y - st_pnt.y) / st_pnt.x,
 						0, 1,
 						st_pnt.x - st_pnt.x * (coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), st_pnt.y - coords.y
 					);
 					break;
 				case 3:
-					m = new SVG.Matrix(
+					matrix = new SVG.Matrix(
 						1, 0,
 						(st_pnt.x - coords.x) / st_pnt.y, (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y),
 						coords.x - st_pnt.x, st_pnt.y - st_pnt.y * (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y)
@@ -681,28 +684,28 @@ function skewMove(x, y) {
 			if (Math.abs(coords.y - st_pnt.y) < 10 || Math.abs(coords.x - st_pnt.x) < 10) return;
 			switch (object.j) {
 				case 0:
-					m = new SVG.Matrix(
+					matrix = new SVG.Matrix(
 						1, (mv_pnt.y - coords.y) / st_pnt.x,
 						(mv_pnt.x - coords.x) / st_pnt.y, 1,
 						coords.x - mv_pnt.x, coords.y - mv_pnt.y
 					);
 					break;
 				case 1:
-					m = new SVG.Matrix(
+					matrix = new SVG.Matrix(
 						1, (mv_pnt.y - coords.y) / st_pnt.x,
 						(coords.x - mv_pnt.x) / st_pnt.y, 1,
 						mv_pnt.x - coords.x, coords.y - mv_pnt.y
 					);
 					break;
 				case 2:
-					m = new SVG.Matrix(
+					matrix = new SVG.Matrix(
 						1, (coords.y - mv_pnt.y) / st_pnt.x,
 						(coords.x - mv_pnt.x) / st_pnt.y, 1,
 						mv_pnt.x - coords.x, mv_pnt.y - coords.y
 					);
 					break;
 				case 3:
-					m = new SVG.Matrix(
+					matrix = new SVG.Matrix(
 						1, (coords.y - mv_pnt.y) / st_pnt.x,
 						(mv_pnt.x - coords.x) / st_pnt.y, 1,
 						coords.x - mv_pnt.x, mv_pnt.y - coords.y
@@ -710,7 +713,7 @@ function skewMove(x, y) {
 					break;
 			}
 		}
-		object.transform(M.multiply(m));
+		object.transform(Matrix.multiply(matrix));
 		scaleSelectionMake(object);
 	}
 }
@@ -718,6 +721,78 @@ function skewMove(x, y) {
 function skewUp(x, y) {
 	scaleUp(x, y);
 }
+
+// <=><=><=><=><=> скрипт инструмента отражение <=><=><=><=><=>
+function mirrorDown(x, y) {
+	if ('select' in draw) {
+		if (draw.select.points[0][0].inside(x, y)) {
+			draw.select.lines[0].plot(draw.select.lines[0].plot().reverse());
+			draw.select.points[0] = draw.select.points[0].reverse();
+			object = true;
+		} else if (draw.select.points[0][1].inside(x, y))
+			object = true;
+		else {
+			let select = draw.select;
+			selectionClear();
+			let obj = findTopOnCoords(x, y);
+			if (obj != null) {
+				object = obj.clone().insertAfter(obj);
+				obj.remove();
+				let point1 = absCoordsToSelf(object, select.points[0][0].cx(), select.points[0][0].cy()),
+					point2 = absCoordsToSelf(object, select.points[0][1].cx(), select.points[0][1].cy()),
+					n = { x: point1.y - point2.y, y: point2.x - point1.x },
+					i_ = {
+						x: (n.y ** 2 - n.x ** 2) / (n.x ** 2 + n.y ** 2),
+						y: -2 * n.x * n.y / (n.x ** 2 + n.y ** 2)
+					},
+					j_ = {
+						x: -2 * n.x * n.y / (n.x ** 2 + n.y ** 2),
+						y: (n.x ** 2 - n.y ** 2) / (n.x ** 2 + n.y ** 2)
+					},
+					O_ = {
+						x: point1.x - i_.x * point1.x - j_.x * point1.y,
+						y: point1.y - i_.y * point1.x - j_.y * point1.y
+					},
+					Matrix = new SVG.Matrix(object.transform()),
+					matrix = new SVG.Matrix(
+						i_.x, i_.y,
+						j_.x, j_.y,
+						O_.x, O_.y
+					);
+				object.transform(Matrix.multiply(matrix));
+				stopDrawing();
+			}
+			draw.add(select.lines[0]);
+			draw.add(select.points[0][0]);
+			draw.add(select.points[0][1]);
+			draw.select = select;
+		}
+	} else {
+		draw.select = { lines: [
+			draw.line(x, y, x, y).stroke({ width: 1, color: "#0ff" })
+		], points: [[
+			draw.ellipse(10).move(x - 5, y - 5).fill("#0cf"),
+			draw.ellipse(10).move(x - 5, y - 5).fill("#0cf")
+		]] };
+		object = true;
+	}
+}
+
+function mirrorMove(x, y) {
+	if (object != null) {
+		draw.select.lines[0].plot([draw.select.lines[0].plot()[0], [x, y]]);
+		draw.select.points[0][1].move(x - 5, y - 5);
+	}
+}
+
+function mirrorUp(x, y) {
+	if (object != null) {
+		if (distanceTo(...draw.select.lines[0].plot()[0], ...draw.select.lines[0].plot()[1]) == 0)
+			selectionClear();
+		object = null;
+	}
+}
+
 
 $(document).ready(function () {
 	changeToolEvent();
@@ -744,9 +819,9 @@ $(document).bind('keydown', function(event) {
 		breakDrawing();
 });
 
-$(document).bind("DOMNodeRemoved", function(e) {
-	if (e.target.nodeName == 'svg')
-		historyOld(e.target);
+$(document).bind("DOMNodeRemoved", function(event) {
+	if (event.target.nodeName == 'svg')
+		historyСorrection(event.target);
 });
 
 $(window)
