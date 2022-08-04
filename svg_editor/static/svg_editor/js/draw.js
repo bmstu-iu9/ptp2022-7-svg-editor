@@ -24,6 +24,7 @@ const toolMethods = {
 	'split': {'mousedown': splitDown},
 	'skew': {'mousedown': skewDown, 'mousemove': skewMove, 'mouseup': skewUp},
 	'mirror': {'mousedown': mirrorDown, 'mousemove': mirrorMove, 'mouseup': mirrorUp},
+	'tenscompress': {'mousedown': tenscompressDown, 'mousemove': tenscompressMove, 'mouseup': tenscompressUp},
 };
 
 let	draw,
@@ -791,6 +792,42 @@ function mirrorUp(x, y) {
 			selectionClear();
 		object = null;
 	}
+}
+
+// <=><=><=><=><=> скрипт инструмента растяжение/сжатие <=><=><=><=><=>
+function tenscompressDown(x, y) {
+	scaleDown(x, y);
+}
+
+function tenscompressMove(x, y) {
+	if (object != null && 'i' in object) {
+		let moving = draw.select.points[object.i][object.j],
+			staying = draw.select.points[object.i][(object.j + 2) % 4],
+			mv_pnt = absCoordsToSelf(object, moving.cx(), moving.cy()),
+			st_pnt = absCoordsToSelf(object, staying.cx(), staying.cy()),
+			coords = absCoordsToSelf(object, x, y),
+			Matrix = new SVG.Matrix(object.transform()),
+			matrix = new SVG.Matrix(
+				(coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), 0,
+				0, (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y),
+				st_pnt.x - st_pnt.x * (coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), 
+					st_pnt.y - st_pnt.y * (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y)
+			);
+		if (Math.abs(mv_pnt.x - st_pnt.x) < 1) {
+			matrix.a = 1;
+			matrix.e = 0;
+		}
+		if (Math.abs(mv_pnt.y - st_pnt.y) < 1) {
+			matrix.d = 1;
+			matrix.f = 0;
+		}
+		object.transform(Matrix.multiply(matrix));
+			scaleSelectionMake(object);
+	}
+}
+
+function tenscompressUp(x, y) {
+	scaleUp(x, y);
 }
 
 
