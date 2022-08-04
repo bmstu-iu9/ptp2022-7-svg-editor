@@ -21,7 +21,8 @@ const toolMethods = {
 	'rotate': {'mousedown': rotateDown, 'mousemove': rotateMove, 'mouseup': rotateUp},
 	'deform': {'mousedown': deformDown, 'mousemove': deformMove, 'mouseup': deformUp},
 	'scalе': {'mousedown': scaleDown, 'mousemove': scaleMove, 'mouseup': scaleUp},
-	
+	'split': {'mousedown': splitDown},
+	'skew': {'mousedown': skewDown, 'mousemove': skewMove, 'mouseup': skewUp},
 };
 
 let	draw,
@@ -40,9 +41,11 @@ function layerUpdate(newDraw) {
 
 function breakDrawing() {
 	if (object != null) {
-		if ('select' in object)
+		if ('select' in draw) {
 			selectionClear();
-		else
+			if (!mouseup)
+				object.remove();
+		} else
 			object.remove();
 		object = null;
 	}
@@ -395,30 +398,35 @@ function moveUp(x, y) {
 }
 
 // <=><=><=><=><=>	скрипт инструмента вращение <=><=><=><=><=>
+function angleFromTo(center, point) {
+	let angle = Math.acos((point.x - center.x) /
+			distanceTo(point.x, point.y, center.x, center.y)) *
+			180 / Math.PI;
+	if (point.y > center.y)
+		angle = 360 - angle;
+	return angle
+}
+
 function rotateDown(x, y) {
 	if (object == null) {
 		let obj = findTopOnCoords(x, y);
 		if (obj == null) return;
-		let absCoords = selfCoordsToAbs(obj, obj.cx(), obj.cy());
 		object = obj.clone().insertAfter(obj);
 		obj.remove();
-		object.angle = Math.acos((x - absCoords.x) / 
-					distanceTo(x, y, absCoords.x, absCoords.y)) * 
-					180 / Math.PI;
-		if (y > absCoords.y)
-			object.angle = 360 - object.angle;
+		object.angle = angleFromTo(
+			selfCoordsToAbs(object, object.cx(), object.cy()),
+			{ x: x, y: y }
+		);
 	}
 }
 
 function rotateMove(x, y) {
 	if (object != null) {
-		let absCorrds = selfCoordsToAbs(object, object.cx(), object.cy());
 		object.rotate(object.angle);
-		object.angle = Math.acos((x - absCorrds.x) / 
-					distanceTo(x, y, absCorrds.x, absCorrds.y)) * 
-					180 / Math.PI;
-		if (y > absCorrds.y)
-			object.angle = 360 - object.angle;
+		object.angle = angleFromTo(
+			selfCoordsToAbs(object, object.cx(), object.cy()),
+			{ x: x, y: y }
+		);
 		object.rotate(-object.angle);
 	}
 }
@@ -430,44 +438,45 @@ function rotateUp(x, y) {
 // <=><=><=><=><=>	скрипт инструмента деформация <=><=><=><=><=>
 function deformSelectionMake(object) {
 	selectionClear();
-	object.select = { lines: [], points: [] };
-	let draw_ellipse = (coords => draw.ellipse(10).move(coords.x - 5, coords.y - 5).fill("#0cf"));
+	draw.select = { lines: [], points: [] };
+	let draw_ellipse = (coords =>
+				draw.ellipse(10).move(coords.x - 5, coords.y - 5).fill("#0cf"));
 	if (object.array != null)
 		if (object.type == 'path') {
 			let array = object.array(),
 				first = draw.rect(0, 0),
 				draw_line = ((...coords) => 
 					draw.line(coords).stroke({width: 1, color: "#0ff"}).insertAfter(first));
-			object.select.lines.push(first);
+			draw.select.lines.push(first);
 			for (let i = 0; i < array.length - 1; i++) {
-				object.select.points[i] = [null];
+				draw.select.points[i] = [null];
 				for (let j = 1; j < array[i].length; j += 2)
-					object.select.points[i] = object.select.points[i].concat([
+					draw.select.points[i] = draw.select.points[i].concat([
 						draw_ellipse(
 							selfCoordsToAbs(object, array[i][j], array[i][j + 1])
 						),
 						null
 					]);
 				if (i != 0)
-					object.select.lines = object.select.lines.concat([
+					draw.select.lines = draw.select.lines.concat([
 						draw_line(
-							object.select.points[i][1].cx(),
-							object.select.points[i][1].cy(),
-							object.select.points[i - 1].slice(-2)[0].cx(),
-							object.select.points[i - 1].slice(-2)[0].cy()
+							draw.select.points[i][1].cx(),
+							draw.select.points[i][1].cy(),
+							draw.select.points[i - 1].slice(-2)[0].cx(),
+							draw.select.points[i - 1].slice(-2)[0].cy()
 						),
 						draw_line(
-							object.select.points[i][3].cx(),
-							object.select.points[i][3].cy(),
-							object.select.points[i][5].cx(),
-							object.select.points[i][5].cy()
+							draw.select.points[i][3].cx(),
+							draw.select.points[i][3].cy(),
+							draw.select.points[i][5].cx(),
+							draw.select.points[i][5].cy()
 						)
 					]);
 			}
 		}
 		else
 			for (const point of object.array())
-				object.select.points.push([
+				draw.select.points.push([
 					draw_ellipse(
 						selfCoordsToAbs(object, ...point)
 					)
@@ -475,12 +484,12 @@ function deformSelectionMake(object) {
 }
 
 function selectionClear() {
-	for (var object of draw.children()) {
-		if ('select' in object) {
-			object.select.points.forEach(arr => arr.forEach(pnt => pnt != null ? pnt.remove() : null));
-			object.select.lines.forEach(line => line.remove());
-			delete object.select;
-		}
+	if ('select' in draw) {
+		draw.select.points.forEach(
+			arr => arr.forEach( pnt => pnt != null ? pnt.remove() : null )
+		);
+		draw.select.lines.forEach(line => line.remove());
+		delete draw.select;
 	}
 }
 
@@ -492,15 +501,12 @@ function deformDown(x, y) {
 			deformSelectionMake(obj);
 		}
 	} else
-		for (let i = 0; i < object.select.points.length; i++)
-			for (let j = 0; j < object.select.points[i].length; j++)
-				if (object.select.points[i][j] != null && object.select.points[i][j].inside(x, y)) {
+		for (let i = 0; i < draw.select.points.length; i++)
+			for (let j = 0; j < draw.select.points[i].length; j++)
+				if (draw.select.points[i][j] != null && draw.select.points[i][j].inside(x, y)) {
 					let obj = object.clone().insertAfter(object);
 					object.remove();
-					obj.select = object.select;
-					object = obj;
-					object.i = i;
-					object.j = j;
+					object = Object.assign(obj, { i: i, j: j });
 				}
 }
 
@@ -528,7 +534,7 @@ function deformUp(x, y) {
 // <=><=><=><=><=>	скрипт инструмента масштабирование <=><=><=><=><=>
 function scaleSelectionMake(object) {
 	selectionClear();
-	object.select = { lines: [], points: [[]] };
+	draw.select = { lines: [], points: [[]] };
 	let box = object.bbox(),
 		points = [
 			selfCoordsToAbs(object, box.x, box.y),
@@ -536,17 +542,17 @@ function scaleSelectionMake(object) {
 			selfCoordsToAbs(object, box.x2, box.y2),
 			selfCoordsToAbs(object, box.x2, box.y),
 		],
-		draw_line = ((p1, p2) => object.select.lines.push(
+		draw_line = ((p1, p2) => draw.select.lines.push(
 				draw.line(p1.x, p1.y, p2.x, p2.y).stroke({width: 1, color: "#0ff"})
 			)),
-		draw_ellipse = (coords => object.select.points[0].push(
+		draw_ellipse = (coords => draw.select.points[0].push(
 				draw.ellipse(10).move(coords.x - 5, coords.y - 5).fill("#0cf")
 			));
 	for (let i = 0; i < 4; i++)
 		draw_line(points[i], points[(i + 1) % 4]);
 	for (let i = 0; i < 4; i++)
 		draw_ellipse(points[i]);
-	object.select.points = [[]].concat(object.select.points)
+	draw.select.points = [[]].concat(draw.select.points)
 	for (let i = 0; i < 4; i++)
 		draw_ellipse({
 			x: (points[i].x + points[(i + 1) % 4].x) / 2,
@@ -560,32 +566,30 @@ function scaleDown(x, y) {
 		if (obj == null) return;
 		object = obj;
 		scaleSelectionMake(object);
-	} else {
+	} else
 		for (let i = 0; i < 2; i++)
 			for (let j = 0; j < 4; j++)
-				if (object.select.points[i][j].inside(x, y)) {
+				if (draw.select.points[i][j].inside(x, y)) {
 					let obj = object.clone().insertAfter(object);
 					object.remove();
-					obj.select = object.select;
-					object = obj;
-					object.i = i;
-					object.j = j;
+					object = Object.assign(obj, { i: i, j: j });
 				}
-	}
 }
 
 function scaleMove(x, y) {
 	if (object != null && 'i' in object) {
-		let moving = object.select.points[object.i][object.j],
-			staying = object.select.points[object.i][(object.j + 2) % 4],
+		let moving = draw.select.points[object.i][object.j],
+			staying = draw.select.points[object.i][(object.j + 2) % 4],
 			mv_pnt = { x: moving.cx(), y: moving.cy() },
 			st_pnt = { x: staying.cx(), y: staying.cy() },
-			st_pnt_self = absCoordsToSelf(object, st_pnt.x, st_pnt.y);
+			st_pnt_self = absCoordsToSelf(object, st_pnt.x, st_pnt.y),
 			x_a = mv_pnt.x - st_pnt.x, y_a = mv_pnt.y - st_pnt.y,
-			x_b = x - st_pnt.x, y_b = y - st_pnt.y;
-			k = y_a == 0 ? 
+			x_b = x - st_pnt.x, y_b = y - st_pnt.y,
+			k = (
+				y_a == 0 ?
 				x_b / x_a - (y_a * x_b / x_a - y_b) * y_a / (x_a ** 2 + y_a ** 2) :
-				k = y_b / y_a - (x_a * y_b / y_a - x_b) * x_a / (x_a ** 2 + y_a ** 2);
+				y_b / y_a - (x_a * y_b / y_a - x_b) * x_a / (x_a ** 2 + y_a ** 2)
+			);
 		object.scale(k, st_pnt_self.x, st_pnt_self.y);
 		scaleSelectionMake(object);
 	}
@@ -601,6 +605,119 @@ function scaleUp(x, y) {
 	}
 }
 
+// <=><=><=><=><=>	скрипт инструмента разбиение <=><=><=><=><=>
+function splitDown(x, y) {
+	let obj = findTopOnCoords(x, y);
+	if (obj == null || obj.type.indexOf('poly') == 0) return;
+	obj = obj.toPath().toPoly(widthValue + 'px');
+	historyNew();
+}
+
+// <=><=><=><=><=>	скрипт инструмента масштабирование <=><=><=><=><=>
+function skewDown(x, y) {
+	if (object == null) {
+		let obj = findTopOnCoords(x, y);
+		if (obj == null) return;
+		object = obj;
+		scaleSelectionMake(object);
+	} else
+		for (let i = 0; i < 2; i++)
+			for (let j = 0; j < 4; j++)
+				if (draw.select.points[i][j].inside(x, y)) {
+					let moving = draw.select.points[i][j],
+						staying = draw.select.points[i][(j + 2) % 4],
+						obj = object.clone().insertAfter(object);
+					object.remove();
+					object = Object.assign(obj, { i: i, j: j, angle: 0 });
+					console.log(i, j);
+				}
+}
+
+function skewMove(x, y) {
+	if (object != null && 'i' in object) {
+		let moving = draw.select.points[object.i][object.j],
+			staying = draw.select.points[object.i][(object.j + 2) % 4],
+			st_pnt = absCoordsToSelf(object, staying.cx(), staying.cy()),
+			mv_pnt = absCoordsToSelf(object, moving.cx(), moving.cy()),
+			coords = absCoordsToSelf(object, x, y),
+			M = new SVG.Matrix(object.transform()),
+			m = new SVG.Matrix();
+		if (object.i == 0) {
+			if (object.j % 2 == 0) {
+				if (Math.abs(coords.x - st_pnt.x) < 1) return;
+			} else
+				if (Math.abs(coords.y - st_pnt.y) < 1) return;
+			switch (object.j) {
+				case 0:
+					m = new SVG.Matrix(
+						(coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), (st_pnt.y - coords.y) / st_pnt.x,
+						0, 1,
+						st_pnt.x - st_pnt.x * (coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), coords.y - st_pnt.y
+					);
+					break;
+				case 1:
+					m = new SVG.Matrix(
+						1, 0,
+						(coords.x - st_pnt.x) / st_pnt.y, (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y),
+						st_pnt.x - coords.x, st_pnt.y - st_pnt.y * (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y)
+					);
+					break;
+				case 2:
+					m = new SVG.Matrix(
+						(coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), (coords.y - st_pnt.y) / st_pnt.x,
+						0, 1,
+						st_pnt.x - st_pnt.x * (coords.x - st_pnt.x) / (mv_pnt.x - st_pnt.x), st_pnt.y - coords.y
+					);
+					break;
+				case 3:
+					m = new SVG.Matrix(
+						1, 0,
+						(st_pnt.x - coords.x) / st_pnt.y, (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y),
+						coords.x - st_pnt.x, st_pnt.y - st_pnt.y * (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y)
+					);
+					break;
+			}
+		} else {
+			if (Math.abs(coords.y - st_pnt.y) < 10 || Math.abs(coords.x - st_pnt.x) < 10) return;
+			switch (object.j) {
+				case 0:
+					m = new SVG.Matrix(
+						1, (mv_pnt.y - coords.y) / st_pnt.x,
+						(mv_pnt.x - coords.x) / st_pnt.y, 1,
+						coords.x - mv_pnt.x, coords.y - mv_pnt.y
+					);
+					break;
+				case 1:
+					m = new SVG.Matrix(
+						1, (mv_pnt.y - coords.y) / st_pnt.x,
+						(coords.x - mv_pnt.x) / st_pnt.y, 1,
+						mv_pnt.x - coords.x, coords.y - mv_pnt.y
+					);
+					break;
+				case 2:
+					m = new SVG.Matrix(
+						1, (coords.y - mv_pnt.y) / st_pnt.x,
+						(coords.x - mv_pnt.x) / st_pnt.y, 1,
+						mv_pnt.x - coords.x, mv_pnt.y - coords.y
+					);
+					break;
+				case 3:
+					m = new SVG.Matrix(
+						1, (coords.y - mv_pnt.y) / st_pnt.x,
+						(mv_pnt.x - coords.x) / st_pnt.y, 1,
+						coords.x - mv_pnt.x, mv_pnt.y - coords.y
+					);
+					break;
+			}
+		}
+		object.transform(M.multiply(m));
+		scaleSelectionMake(object);
+	}
+}
+
+function skewUp(x, y) {
+	scaleUp(x, y);
+}
 
 $(document).ready(function () {
 	changeToolEvent();

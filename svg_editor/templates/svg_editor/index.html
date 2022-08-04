@@ -65,6 +65,12 @@
 		<input type="radio" name="toolChoice" value="scalе">
 		<label>Масштабирование</label><br>
 
+		<input type="radio" name="toolChoice" value="split">
+		<label>Разбиение</label><br>
+
+		<input type="radio" name="toolChoice" value="skew">
+		<label>Скос</label><br>
+
 		<label>Цвет: </label>
 		<input id="colorChoice" type="color"><br>
 		<label>Заполнение фигур: </label>
@@ -104,6 +110,8 @@
 	<br>
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topath.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topoly.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 		const token = "{{csrf_token}}",
