@@ -124,20 +124,84 @@ $(document).ready(function () {
 
     $("#polygonTool").on("click", function () {
         $(this).toggleClass("tool-clicked");
+        const $lastPressed = $(".tool-button.tool-clicked").not(this);
+        if ($lastPressed.length) {
+            $lastPressed.css(
+                "background-image",
+                $lastPressed.css("background-image").replace("-active", "")
+            );
+            $lastPressed.removeClass("tool-clicked");
+        }
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
             $("#filling-type").css("display", "inline-block");
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/polygon-active.svg')"
+            );
             changeToolEvent();
         } else {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/polygon.svg')"
+            );
             $("#width-parameter").css("display", "none");
             $("#filling-type").css("display", "none");
         }
     });
 
-    $("#fillTool").on("click", function () {
-        $("#filling-type").css("display", "none");
-        $("#width-parameter").css("display", "none");
+    $("#pathTool").on("click", function () {
         $(this).toggleClass("tool-clicked");
+        const $lastPressed = $(".tool-button.tool-clicked").not(this);
+        if ($lastPressed.length) {
+            $lastPressed.css(
+                "background-image",
+                $lastPressed.css("background-image").replace("-active", "")
+            );
+            $lastPressed.removeClass("tool-clicked");
+        }
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+            $("#filling-type").css("display", "inline-block");
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/path-active.svg')"
+            );
+            changeToolEvent();
+        } else {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/path.svg')"
+            );
+            $("#width-parameter").css("display", "none");
+            $("#filling-type").css("display", "none");
+        }
+    });
+
+    $("#textTool").on("click", function () {
+        $(this).toggleClass("tool-clicked");
+        const $lastPressed = $(".tool-button.tool-clicked").not(this);
+        if ($lastPressed.length) {
+            $lastPressed.css(
+                "background-image",
+                $lastPressed.css("background-image").replace("-active", "")
+            );
+            $lastPressed.removeClass("tool-clicked");
+        }
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/text-active.svg')"
+            );
+            changeToolEvent();
+        } else {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/text.svg')"
+            );
+            $("#width-parameter").css("display", "none");
+        }
     });
 
     $("#clear-button").on("click", function () {

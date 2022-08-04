@@ -21,10 +21,10 @@ function getName() {
 function newLayerNote(relatedLayer, layerName) {
     let note = document.createElement('div');
     note.insertAdjacentHTML('beforeend', `
-    <div class="top" style="width: 100%; height: 10px;"><input type="checkbox" checked/><label>${layerName}</label></div>
-    <div class="bottom" style="width: 100%; height: 10px;"></div>
+    <div class="top" style="width: 99%; height: 20px; border: 1px solid;"><input type="checkbox" checked/><label>${layerName}</label></div>
+    <div class="bottom" style="width: 99%; height: 20px; border: 1px solid;"></div>
     `);
-    note.classList.add('layer_note');
+    note.classList.add('layer-note');
     note.setAttribute('draggable', 'true');
 
     note.layer = relatedLayer;
@@ -216,6 +216,8 @@ $(document).ready(function () {
     $("#createNewFileButton").click();
 
     $('#layers-panel-choosing').on("click", ".layer_note", function () {
+        $(".layer-note.active").not(this).removeClass("active");
+        $(this).toggleClass("active");
         selectLayer(this);
         console.log(currentLayerNote);
     })

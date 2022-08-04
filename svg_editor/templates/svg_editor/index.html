@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207260805">
 </head>
 <body>
-	<p style="font-size: 25px; font-weight: bold">
+	<!--<p style="font-size: 25px; font-weight: bold">
 		{% if user.is_authenticated %}
 		<a href="{% url 'account' %}">{{user.get_username}}</a>
 		{% else %}
@@ -29,36 +29,6 @@
 		</div>
 		<div id="account-panel">
 		</div>
-		<!--<div style="padding-top: 50px"><label>Name your file: </label>
-	<input type="text" id="fileNameInput" value="untitled" style="width: 300px">
-	<select id="save_file_type" size=1>
-		<option value="svg">.svg</option>
-		<option value="yml">.yml</option>
-	</select>
-		</div><p>
-	<button id="saveFileButton">Save it!</button>
-	<button id="saveAsFileButton">Save it as!</button>
-
-	<div class="panel">
-		<button id="target">Reload</button>
-		<button id="editButton">Edit</button>
-		<button id="downloadButton">Download</button>
-		<button id="deleteButton">Delete</button>
-		<input id="deleteAll" type="checkbox">Delete all
-		<p id="text">Click on the Reload button to get a list of saved files!<p>
-		<ul id="list_svg"></ul>
-	</div>
-
-	<br>
-	<input type="file" id="file" />
-	<br>
-	<p>
-		<label>Download file name: </label>
-		<input type="text" id="download_file_name" value="untitled" style="width: 300px">
-		<label>.svg</label>
-	</p>
-	<button id="downloadButton">Download it!</button>
--->
 		<div class="drop-list">
 			<div class="drop-button">Edit</div>
 			<div class="drop-content">
