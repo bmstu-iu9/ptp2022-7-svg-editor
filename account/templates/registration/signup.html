@@ -20,7 +20,7 @@
         <div class="wrapper-signup">
             <div class="form">
                 <div class="form-signup">
-                    <span class="title">Registration</span>
+                    <span class="title">Signup</span>
                     <form method="post">
                         {% csrf_token %}
                         <div class="form1">
@@ -28,7 +28,7 @@
                                 <input type="text" name="username" placeholder="Enter your username" required>
                                 <i class="uil uil-user icon"></i>
                             </div>
-                            <small class="instruction username">Required field. Maximum 150 characters. <br> The field
+                            <small class="instruction username">Required field. Maximum 150 characters <br> The field
                                 must only contain letters, numbers and @, ., +, -, _ characters</small>
                             <div class="input-field first_name">
                                 <input type="text" name="first_name" placeholder="Enter your first name" required>
@@ -56,16 +56,16 @@
                             <small class="instruction password1">
                                 <ul>
                                     <li>
-                                        The password must not be too similar to your other personal information.
+                                        The password must not be too similar to your other personal information
                                     </li>
                                     <li>
-                                        The password must be at leat 8 characters in length.
+                                        The password must be at leat 8 characters in length
                                     </li>
                                     <li>
-                                        The password must not be too simple and easy to guess.
+                                        The password must not be too simple and easy to guess
                                     </li>
                                     <li>
-                                        The password must not contain only numbers.
+                                        The password must not contain only numbers
                                     </li>
                                 </ul>
                             </small>

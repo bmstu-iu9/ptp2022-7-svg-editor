@@ -32,6 +32,42 @@ body {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
+.wrapper-email-complete {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-image: url("../icons/confetti-2596224.svg");
+    background-repeat: no-repeat;
+    background-position: 340px 10px;
+}
+
+.wrapper-email-done {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-image: url("../icons/watch.svg");
+    background-repeat: no-repeat;
+    background-position: 345px 10px;
+}
+
+.wrapper-email-incomplete {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-image: url("../icons/rain.svg");
+    background-repeat: no-repeat;
+    background-position: 345px 10px;
+}
+
 .wrapper-signup {
     position: relative;
     max-width: 900px;
@@ -106,11 +142,11 @@ body {
 }
 
 
-.form .check {
+.check {
     margin-top: 20px;
 }
 
-.form .signup {
+.signup {
     margin-top: 6px;
 }
 
