@@ -54,6 +54,12 @@
             </div>
         </div>
     </div>
+    <script>
+		const token = "{{ csrf_token }}",
+			usernameValidationURL = "{% url 'validate_username' %}",
+            emailValidationURL = "{% url 'validate_email' %}",
+            passwordValidationURL = "{% url 'validate_passwords' %}";
+	</script>
 </body>
 
 </html>
