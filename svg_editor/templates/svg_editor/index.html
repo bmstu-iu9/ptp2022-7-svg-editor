@@ -6,8 +6,9 @@
 	<meta charset="UTF-8" />
 	<title>СВГ-Редактор</title>
 	<!--    загружать статику нужно именно так-->
-    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207260805">
+	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207260805">
 </head>
+
 <body>
 	<!--<p style="font-size: 25px; font-weight: bold">
 		{% if user.is_authenticated %}
@@ -41,7 +42,7 @@
 		<div id="width-parameter">
 			<label for="stroke-width" id="stroke-width">Stroke width:</label>
 			<input id="width-slider" type="range" name="stroke-width" min="1" max="10" value="1" step="0.1">
-			<input id="width-slider-value" type="number" min="1" max="10" value="1" >
+			<input id="width-slider-value" type="number" min="1" max="10" value="1">
 		</div>
 	</div>
 	<div id="new-menu" class="file-menu-panel">
@@ -99,21 +100,25 @@
 				<div id="moveTool" class="tool-button" name="move"></div>
 				<div id="pencilTool" class="tool-button" name="pencil"></div>
 				<div id="lineTool" class="tool-button" name="line"></div>
+
 				<div id="polygonTool" class="tool-button" value="polygon"></div>
+				<div id="geometry" class="hiddenTools">
+					<div id="rectTool" class="tool-button" value="rect"></div>
+					<div id="ellipseTool" class="tool-button" value="ellipse"></div>
+				</div>
 				<div id="pathTool" class="tool-button" value="path"></div>
 				<div id="textTool" class="tool-button" value="text"></div>
-				<div id="ellipseTool" class="tool-button" value="ellipse"></div>
-				<div id="rectTool" class="tool-button" value="rect"></div>
 				<div id="fillTool" class="tool-button" value="fill"></div>
 				<div id="eraserTool" class="tool-button" value="eraser"></div>
-				<div id="rotateTool" class="tool-button" value="rotate"></div>
-				<div id="deformTool" class="tool-button" value="deform"></div>
-				<div id="scaleTool" class="tool-button" value="scalе"></div>
-				<div id="splitTool" class="tool-button" value="split"></div>
-				<div id="skewTool" class="tool-button" value="skew"></div>
-				<div id="mirrorTool" class="tool-button" value="mirror"></div>
-				<div id="tenscompressTool" class="tool-button" value="tenscompress"></div>
-				
+				<div id="rotateTool" class="tool-button" value="rotate">R</div>
+				<div id="manage" class="hiddenTools">
+					<div id="deformTool" class="tool-button" value="deform"></div>
+					<div id="scaleTool" class="tool-button" value="scalе"></div>
+					<div id="splitTool" class="tool-button" value="split"></div>
+					<div id="skewTool" class="tool-button" value="skew"></div>
+					<div id="mirrorTool" class="tool-button" value="mirror"></div>
+					<div id="tenscompressTool" class="tool-button" value="tenscompress"></div>
+				</div>
 				<div class="vertical-divider"></div>
 				<div id="color-choosing">
 					<div id="color-choosing-box-main">
@@ -127,26 +132,26 @@
 					<input id="fillbox" name="fill" type="checkbox" checked>
 					<label for="fill">No fill</label>
 				</div>
-			</div>
 		</div>
-		<svg id="workspace" version="1.1" xmlns="http://www.w3.org/2000/svg"
-			xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
-		<div id="addition-panel">
-			<div id="layers-panel-list">
-				<div id="layers-panel-button" class="tool-button"></div>
-				<div id="layers-panel-content">
-					<div id="layers-panel-control">
-						<div id="createLayerButton" class="layers-panel-control-button"></div>
-						<div id="deleteLayerButton" class="layers-panel-control-button"></div>
-						<div id="createNewFileButton" class="layers-panel-control-button"></div>
-						<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
-						<div>Layers</div>
-					</div>
-					<div id="layers-panel-choosing">
-					</div>
+	</div>
+	<svg id="workspace" version="1.1" xmlns="http://www.w3.org/2000/svg"
+		xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
+	<div id="addition-panel">
+		<div id="layers-panel-list">
+			<div id="layers-panel-button" class="tool-button"></div>
+			<div id="layers-panel-content">
+				<div id="layers-panel-control">
+					<div id="createLayerButton" class="layers-panel-control-button"></div>
+					<div id="deleteLayerButton" class="layers-panel-control-button"></div>
+					<div id="createNewFileButton" class="layers-panel-control-button"></div>
+					<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
+					<div>Layers</div>
+				</div>
+				<div id="layers-panel-choosing">
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>

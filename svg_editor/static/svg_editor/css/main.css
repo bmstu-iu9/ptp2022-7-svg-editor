@@ -308,10 +308,12 @@ td {
     background-color: white;
     transition: background-color 0.2s ease-out;
     border-radius: 15%;
+    display: flex;
+    border: 1px solid;
 }
 
 #moveTool {
-    background-image: url("/static/svg_editor/icons/move.svg");
+    background-image: url("/static/svg_editor/icons/cursor.svg");
 }
 
 #pencilTool {
@@ -357,6 +359,41 @@ td {
 .tool-clicked {
     background-color: #0c76da;
     transition: background-color 0.2s ease-out;
+}
+
+.hiddenTools {
+    width: 125px;
+    border: 1px solid;
+    margin-left: 38px;
+    position: absolute;
+    background-color: white;
+    z-index: 10;
+    transform: scale(0.01);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease,
+        box-shadow 0.3s ease 0.15s;
+    transform-origin: left top;
+}
+
+.hiddenTools.open {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#geometry.hiddenTools {
+    height: 36px;
+    margin-top: -40px;
+}
+
+#manage.hiddenTools {
+    margin-top: -40px;
+    height: 79px;
+}
+
+.hiddenTools .tool-button {
+    display: inline-block;
+    margin-left: 5px;
+    margin-top: 2px;
 }
 
 #color-choosing {
