@@ -14,6 +14,10 @@ function getNode() {
     return this.layer.node;
 }
 
+function getName() {
+    return this.children[0].lastChild.innerText;
+}
+
 function newLayerNote(relatedLayer, layerName) {
     let note = document.createElement('div');
     note.insertAdjacentHTML('beforeend', `
@@ -27,13 +31,23 @@ function newLayerNote(relatedLayer, layerName) {
     return note;
 };
 
-function createLayer(baseElement) {
+function createLayer(baseElement, layerName) {
     let newLayer = (baseElement === undefined) ? SVG() : SVG(baseElement);
+    console.log(newLayer);
     newLayer.addTo(workspace).size(workspace.clientWidth, workspace.clientHeight);  
 
-    let layerName = prompt('Enter layer name', 'Layer ' + i++);
+    console.log(layerName);
+    if (layerName === undefined) {
+        layerName = prompt('Enter layer name', 'Layer ' + i++);
+    }
+
     let newNote = newLayerNote(newLayer, layerName);
-    newNote.getNode = getNode;
+    newNote.getNode = function() {
+        return this.layer.node;
+    };
+    newNote.getName = function() {
+        return this.children[0].lastChild.innerText;
+    };
     layerControlPanel.prepend(newNote);
 
     newNote.getNode().classList.add('layer');
@@ -85,18 +99,14 @@ function getPictureAsSvg() {
                          `height="${workspace.clientWidth}">\n`;
 
     for (let layer of workspace.childNodes) {
-        if (layer.nodeName == 'svg') {
-            svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
+        svgString += `\t<svg height="${layer.getAttribute('height')}" ` +
                                 `width="${layer.getAttribute('width')}"` +
                                 `${getOpacity(layer)}` +
                                 `${getViewBox(layer)}>\n`;
             for (let elem of layer.children) {
                 svgString += `\t\t${elem.outerHTML}\n`;
             }
-            svgString += '\t</svg>\n';
-        } else {
-            svgString += layer.outerHTML;
-        }
+            svgString += '\t</svg>\n';   
     }
     svgString += '</svg>\n';
     console.log(svgString);
@@ -111,7 +121,7 @@ function getPictureAsProject() {
                          `height="${workspace.clientWidth}"`]};
     projectData.layers = [];
 
-    for (let layer of document.getElementById('workspace').childNodes) {
+    for (let layer of workspace.childNodes) {
         let layerData = {attributes: [`height="${layer.getAttribute('height')}"`,
                             `width="${layer.getAttribute('width')}"`,
                             `${getOpacity(layer)}`,
@@ -122,6 +132,7 @@ function getPictureAsProject() {
         }
         projectData.layers.push(layerData);
     }
+    console.log(projectData);
     return projectData;
 }
 
@@ -139,7 +150,52 @@ function openAsSvg(svgString) {
     let oParser = new DOMParser();
     let oDOM = oParser.parseFromString(svgString,"application/xml");
     deleteAllLayers();
+    console.log(oDOM.documentElement);
     createLayer(oDOM.documentElement);
+}
+
+function openAsProject(yml) {
+    deleteAllLayers();
+    console.log(yml);
+    let svgLayer;
+    const taskStack = [];
+    let i = 0;
+    for (let layer of yml.layers) {
+        svgLayer = document.createElement("svg");
+        svgLayer.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        svgLayer.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        svgLayer.setAttribute('version','1.1');
+        taskStack.push({node: svgLayer, obj: layer});
+
+        while (taskStack.length > 0) {
+            const task = taskStack.pop();
+            for (let attr of task.obj.attributes) {
+                let attrName = Object.keys(attr)[0];
+                task.node.setAttribute(attrName, attr[attrName]);
+            }
+            for (let child of task.obj.outers) {
+                if (typeof(child) != 'object') {
+                    task.node.textContent = child;
+                    continue;
+                }
+                console.log(typeof(child));
+                let childName = Object.keys(child)[0];
+                let childNode = document.createElement(childName);
+                task.node.append(childNode);
+                taskStack.push({node: childNode, obj: child[childName]});
+            }
+        }
+        // console.log(svgLayer);
+        // createLayer(svgLayer,'Layer ' + i++);
+
+        let oParser = new DOMParser();
+        let oDOM = oParser.parseFromString(svgLayer.outerHTML,"application/xml");
+        svgLayer = oDOM.documentElement;
+        createLayer(svgLayer,'Layer ' + i++);
+        console.log(svgLayer);
+
+        // Парсинг происходит по сути дважды, иначе добавленные слои почему-то не отображаются на странице
+    }
 }
 
 $(document).ready(function () {

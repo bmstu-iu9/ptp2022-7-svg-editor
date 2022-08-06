@@ -1,6 +1,7 @@
 import itertools
 import os
 from pathlib import Path
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, FileResponse
 from django.shortcuts import render
 from illustrator.settings import BASE_DIR
@@ -9,6 +10,7 @@ from . import illustration
 
 
 # Rendering the editor's page
+@login_required
 def index(request):
     return render(request, 'svg_editor/index.html')
 

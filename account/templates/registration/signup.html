@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{% static 'account/js/main.js' %}? 202207292007"></script>
 </head>
 
 <body>
@@ -25,7 +24,7 @@
                         {% csrf_token %}
                         <div class="form1">
                             <div class="input-field username">
-                                <input type="text" name="username" placeholder="Enter your username" required>
+                                <input type="text" name="username" id="id_username" placeholder="Enter your username" required>
                                 <i class="uil uil-user icon"></i>
                             </div>
                             <small class="instruction username">Required field. Maximum 150 characters <br> The field
@@ -41,14 +40,14 @@
                             </div>
                             <small class="instruction last_name">Required field</small>
                             <div class="input-field email">
-                                <input type="text" name="email" placeholder="Enter your email" required>
+                                <input type="text" name="email" id="id_email" placeholder="Enter your email" required>
                                 <i class="uil uil-envelope-alt icon"></i>
                             </div>
                             <small class="instruction email">Required field</small>
                         </div>
                         <div class="form2">
                             <div class="input-field password1">
-                                <input class="password" type="password" name="password1"
+                                <input class="password" type="password" name="password1" id="id_password1"
                                     placeholder="Enter your password" required>
                                 <i class="uil uil-lock icon"></i>
                                 <i id="showHidePassword" class="fi fi-rr-eye"></i>
@@ -70,7 +69,7 @@
                                 </ul>
                             </small>
                             <div class="input-field password2">
-                                <input class="password" type="password" name="password2"
+                                <input class="password" type="password" name="password2" id="id_password2"
                                     placeholder="Confirm your password" required>
                                 <i class="uil uil-lock icon"></i>
                             </div>
@@ -94,6 +93,16 @@
             </div>
         </div>
     </div>
+    {% block javascript %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		const token = "{{ csrf_token }}",
+			usernameValidationURL = "{% url 'validate_username' %}",
+            emailValidationURL = "{% url 'validate_email' %}",
+            passwordValidationURL = "{% url 'validate_passwords' %}";
+	</script>
+	<script src="{% static 'account/js/main.js' %}? 20220714154345"></script>
+	{% endblock javascript %}
 </body>
 
 </html>
