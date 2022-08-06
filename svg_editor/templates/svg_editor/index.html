@@ -61,6 +61,7 @@
 			<input name="height" type="number" value="0">
 		</div>
 		<button class="ok-button">OK</button>
+
 	</div>
 	<div id="save-menu" class="file-menu-panel">
 		<div class="moveable-part-file-menu">
@@ -95,12 +96,24 @@
 	<div id="container">
 		<div id="tools-panel">
 			<div id="tools-choosing">
-				<div id="cursorTool" class="tool-button" name="cursor"></div>
+				<div id="moveTool" class="tool-button" name="move"></div>
 				<div id="pencilTool" class="tool-button" name="pencil"></div>
 				<div id="lineTool" class="tool-button" name="line"></div>
 				<div id="polygonTool" class="tool-button" value="polygon"></div>
 				<div id="pathTool" class="tool-button" value="path"></div>
 				<div id="textTool" class="tool-button" value="text"></div>
+				<div id="ellipseTool" class="tool-button" value="ellipse"></div>
+				<div id="rectTool" class="tool-button" value="rect"></div>
+				<div id="fillTool" class="tool-button" value="fill"></div>
+				<div id="eraserTool" class="tool-button" value="eraser"></div>
+				<div id="rotateTool" class="tool-button" value="rotate"></div>
+				<div id="deformTool" class="tool-button" value="deform"></div>
+				<div id="scaleTool" class="tool-button" value="scalе"></div>
+				<div id="splitTool" class="tool-button" value="split"></div>
+				<div id="skewTool" class="tool-button" value="skew"></div>
+				<div id="mirrorTool" class="tool-button" value="mirror"></div>
+				<div id="tenscompressTool" class="tool-button" value="tenscompress"></div>
+				
 				<div class="vertical-divider"></div>
 				<div id="color-choosing">
 					<div id="color-choosing-box-main">
@@ -143,6 +156,8 @@
 	<script src="{% static 'svg_editor/js/layers.js' %}? 202207232241"></script>
 	<script src="{% static 'svg_editor/js/draw.js' %}? 20220714154345"></script>
 	-->
+	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topath.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topoly.js"></script>
 	<script src="{% static 'svg_editor/js/design.js' %}"></script>
 	<script src="{% static 'svg_editor/js/main.js' %}?"></script>
 	<script src="{% static 'svg_editor/js/layers.js' %}?"></script>

@@ -310,8 +310,8 @@ td {
     border-radius: 15%;
 }
 
-#cursorTool {
-    background-image: url("/static/svg_editor/icons/cursor.svg");
+#moveTool {
+    background-image: url("/static/svg_editor/icons/move.svg");
 }
 
 #pencilTool {
