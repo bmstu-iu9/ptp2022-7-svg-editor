@@ -53,6 +53,10 @@
 		<div class="file-menu-form">
 			<label for="filename">Name:</label>
 			<input name="new-filename" type="text" value="untitled">
+			<select id="save_file_type" size=1>
+    			<option value="svg">.svg</option>
+				<option value="yml">.yml</option>
+			</select>
 		</div>
 		<div class="file-menu-form">
 			<label for="width">Width:</label>
@@ -153,6 +157,10 @@
 	</div>
 	<div id="easel">
 
+	</div>
+	<div id="pages-panel">
+		<div id="pages-choosing">
+		</div>
 	</div>
 	</div>
 	{% block javascript %}

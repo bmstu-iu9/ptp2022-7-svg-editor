@@ -3,16 +3,21 @@ class Easel {
     currentPage;
     constructor(usedPages) {
         this.usedPages = usedPages;
-        this.turnTo(this.usedPages[0].name)
+        this.turnTo(this.usedPages[0].fullName)
     }
-    turnTo(pageName){
+    add(page){
+        this.usedPages.push(page);
+        this.turnTo(page.fullName)
+    }
+    turnTo(pageFullName){
+        let tag = document.getElementById('easel'),
+            newPage = this.usedPages.find(page => page.fullName === pageFullName);
         if (this.currentPage){
-            this.currentPage.classList.remove('public');
-            this.currentPage.classList.add('private');
+            tag.replaceChild(newPage.tag, this.currentPage.tag);
+        } else {
+            tag.appendChild(newPage.tag)
         }
-        this.currentPage = this.usedPages.find(page => page.name === pageName);
-        this.currentPage.tag.classList.remove('private');
-        this.currentPage.tag.classList.add('public')
+        this.currentPage = newPage;
     }
     save(saveAs=false, fileName=this.currentPage.name, type=this.currentPage.type){
         $.ajax({
@@ -33,7 +38,7 @@ class Easel {
         });
         return false;
     }
-    edit(fileName=this.currentPage.name+'.'+this.currentPage.type){
+    edit(fileName=this.fullName){
         $.ajax({
             url: loadURL,
             type: 'GET',
