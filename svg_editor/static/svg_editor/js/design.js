@@ -58,13 +58,13 @@ $(document).ready(function () {
         if ($(this).hasClass("tool-clicked")) {
             $(this).css(
                 "background-image",
-                "url('/static/svg_editor/icons/cursor-active.svg')"
+                "url('/static/svg_editor/icons/move-active.svg')"
             );
             changeToolEvent();
         } else {
             $(this).css(
                 "background-image",
-                "url('/static/svg_editor/icons/cursor.svg')"
+                "url('/static/svg_editor/icons/move.svg')"
             );
         }
     });
@@ -300,6 +300,31 @@ $(document).ready(function () {
             );
         }
     });
+
+    $("#cursorTool").on("click", function () {
+        $(this).toggleClass("tool-clicked");
+        const $lastPressed = $(".tool-button.tool-clicked").not(this);
+        if ($lastPressed.length) {
+            $lastPressed.css(
+                "background-image",
+                $lastPressed.css("background-image").replace("-active", "")
+            );
+            $lastPressed.removeClass("tool-clicked");
+        }
+        if ($(this).hasClass("tool-clicked")) {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/cursor-active.svg')"
+            );
+            changeToolEvent();
+        } else {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/cursor.svg')"
+            );
+        }
+    });
+
     $("#rotateTool").on("click", function () {
         $(this).toggleClass("tool-clicked");
         const $lastPressed = $(".tool-button.tool-clicked").not(this);
@@ -445,7 +470,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#tenscompressTool").on("click", function () {
+    $("#compressTool").on("click", function () {
         $(this).toggleClass("tool-clicked");
         const $lastPressed = $(".tool-button.tool-clicked").not(this);
         if ($lastPressed.length) {
@@ -458,13 +483,13 @@ $(document).ready(function () {
         if ($(this).hasClass("tool-clicked")) {
             $(this).css(
                 "background-image",
-                "url('/static/svg_editor/icons/tenscompress-active.svg')"
+                "url('/static/svg_editor/icons/compress-active.svg')"
             );
             changeToolEvent();
         } else {
             $(this).css(
                 "background-image",
-                "url('/static/svg_editor/icons/tenscompress.svg')"
+                "url('/static/svg_editor/icons/compress.svg')"
             );
         }
     });

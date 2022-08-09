@@ -72,6 +72,7 @@ function deleteLayer() {
     currentLayerNote.getNode().remove();
     currentLayerNote.remove();
     currentLayerNote = null;
+    historyСorrection();
     i--;
 }
 
@@ -79,6 +80,7 @@ function deleteAllLayers() {
     workspace.innerHTML = "";
     layerControlPanel.innerHTML = "";
 
+    historyСorrection();
     currentLayerNote = null;
     i = 0;
 }
