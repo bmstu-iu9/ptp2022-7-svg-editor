@@ -10,7 +10,9 @@
 </head>
 
 <body>
-	<div id="preloader"></div>
+	<div id="preloader">
+		<div id="spinner"></div>
+	</div>
 	<!--<p style="font-size: 25px; font-weight: bold">
 		{% if user.is_authenticated %}
 		<a href="{% url 'account' %}">{{user.get_username}}</a>
@@ -104,8 +106,8 @@
 
 				<div id="polygonTool" class="tool-button" name="polygon"></div>
 				<div id="geometry" class="hiddenTools">
-					<div id="rectTool" class="tool-button" name="rect">прямоугольник</div>
-					<div id="ellipseTool" class="tool-button" name="ellipse">эллипс</div>
+					<div id="rectTool" class="tool-button" name="rect"></div>
+					<div id="ellipseTool" class="tool-button" name="ellipse"></div>
 				</div>
 				<div id="pathTool" class="tool-button" name="path"></div>
 				<div id="textTool" class="tool-button" name="text"></div>

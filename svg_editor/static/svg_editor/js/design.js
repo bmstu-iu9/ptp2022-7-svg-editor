@@ -1,4 +1,9 @@
+$(window).on('load', function() {
+    $('#preloader').fadeOut("slow");
+  });
+
 $(document).ready(function () {
+    $('#preloader').fadeOut("slow");
     const disableSelect = (e) => {
         return false;
     };
