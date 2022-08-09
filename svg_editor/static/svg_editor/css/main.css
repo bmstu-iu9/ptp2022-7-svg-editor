@@ -440,14 +440,19 @@ td {
     opacity: 0.5;
 }
 
-#workspace {
+#easel {
     width: 900px;
     height: 600px;
-    margin: 10px 100px 0 100px;
     border: 1px solid #3e3e3e;
     position: relative;
-    background: white;
+    margin: 10px 100px 0 100px;
     z-index: 0;
+}
+
+#workspace {
+    width: 100%;
+    height: 100%;
+    background: white;
 }
 
 #addition-panel {

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -19,7 +20,18 @@
 <a href="{% url 'logout' %}">Logout!</a>
 </p>
 <p style="font-size: 25px; font-weight: bold">
-<a href="{% url 'index' %}">To editor!</a>
+New
+<div style="padding-top: 50px"><label>Name your file: </label>
+<input type="text" id="fileNameInput" value="untitled" style="width: 300px">
+<select id="save_file_type" size=1>
+    <option value="svg">.svg</option>
+    <option value="yml">.yml</option>
+</select>
+</div>
+<button id="create_file_button">Create</button>
 </p>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+<script src="{% static 'account/js/projectManager.js' %}? 20220714154345"></script>
 </body>
 </html>

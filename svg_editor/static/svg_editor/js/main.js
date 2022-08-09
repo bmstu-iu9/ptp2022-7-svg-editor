@@ -12,24 +12,8 @@ $(document).ready(function () {
     });
 
     // Send svg to the server to save it
-    $('#saveFileButton').click(function () {
-        $.ajax({
-            data: {
-                file_name: document.getElementById('fileNameInput').value,
-                save_as: false,
-                svg: getPictureAsSvg(),
-                type: document.getElementById('save_file_type').value,
-            },
-            type: 'POST',
-            url: saveURL,
-            success: function (response) {
-                alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно сохранен!');
-                document.getElementById('fileNameInput').value = response.file_name.slice(0, -4);
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            }
-        });
+    $('#save-button').click(function (){
+        easel.save();
         return false;
     });
 
@@ -135,25 +119,10 @@ $(document).ready(function () {
     })
 
     // Edit file from server
-    $("#editButton").click(function () {
-        $.ajax({
-            url: loadURL,
-            type: 'GET',
-            data: {
-                file_name: currentFileName,
-            },
-            success: function (response) {
-                if (response.file_name.split('.').pop().toLowerCase() === 'svg') {
-                    openAsSvg(response.svg);
-                } else {
-                    openAsProject(response.yml);
-                }
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            },
-        })
-    })
+    $("#editButton").click(function (){
+        easel.edit(currentFileName)
+        return false;
+    });
 
     // Choosing a current svg
     $('#list_svg').on("click", ".inner_list_svg", function () {

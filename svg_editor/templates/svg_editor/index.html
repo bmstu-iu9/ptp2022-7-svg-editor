@@ -29,6 +29,7 @@
 			</div>
 		</div>
 		<div id="account-panel">
+			<a style="text-decoration: none; color: black;" href="{% url 'account' %}">{{user.get_username}}</a>
 		</div>
 		<div class="drop-list">
 			<div class="drop-button">Edit</div>
@@ -134,8 +135,6 @@
 				</div>
 		</div>
 	</div>
-	<svg id="workspace" version="1.1" xmlns="http://www.w3.org/2000/svg"
-		xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
 	<div id="addition-panel">
 		<div id="layers-panel-list">
 			<div id="layers-panel-button" class="tool-button"></div>
@@ -152,6 +151,9 @@
 			</div>
 		</div>
 	</div>
+	<div id="easel">
+
+	</div>
 	</div>
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
@@ -167,6 +169,8 @@
 	<script src="{% static 'svg_editor/js/main.js' %}?"></script>
 	<script src="{% static 'svg_editor/js/layers.js' %}?"></script>
 	<script src="{% static 'svg_editor/js/draw.js' %}?"></script>
+	<script src="{% static 'svg_editor/js/page.js' %}?"></script>
+	<script src="{% static 'svg_editor/js/easel.js' %}?"></script>
 	<script>
 		const token = "{{csrf_token}}",
 			saveURL = "{% url 'files_save' %}",
@@ -174,9 +178,12 @@
 			downloadURL = "{% url 'files_download' %}",
 			viewURL = "{% url 'files_view' %}",
 			loadURL = "{% url 'files_get' %}",
-			deleteURL = "{% url 'files_delete' %}";
-
-		const workspace = document.querySelector('#workspace');
+			deleteURL = "{% url 'files_delete' %}",
+			file_name = JSON.parse("{{file_name | escapejs}}"),
+			type = JSON.parse("{{type | escapejs}}"),
+			method = JSON.parse("{{method | escapejs}}"),
+			easel = new Easel([new Page(file_name[0], type[0])]);
+		const workspace = easel.currentPage.tag;
 	</script>
 	{% endblock javascript %}
 </body>
