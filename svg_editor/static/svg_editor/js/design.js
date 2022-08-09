@@ -553,31 +553,6 @@ $(document).ready(function () {
         });
     });
 
-    $("#save-button").click(function () {
-        $.ajax({
-            data: {
-                svg: draw.svg(),
-                file_name: document.getElementById("file_name").value,
-                csrfmiddlewaretoken: "{{csrf_token}}",
-            },
-            type: "POST",
-            url: "{% url 'files_save' %}",
-            success: function (response) {
-                alert(
-                    "Поздравляем! Файл с названием " +
-                        response.file_name +
-                        " успешно создан!"
-                );
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
-                console.log(response.responseJSON.errors);
-            },
-        });
-        clearInputForm();
-        return false;
-    });
-
     $(".drop-moving-button[name='download-file']").on("click", function () {
         $("#download-menu").css({
             display: "block",

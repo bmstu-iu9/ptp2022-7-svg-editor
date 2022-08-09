@@ -19,6 +19,8 @@ body {
     user-select: none;
 }
 
+
+
 #account-panel {
     display: flex;
     float: right;
@@ -337,6 +339,50 @@ td {
 #textTool {
     background-image: url("/static/svg_editor/icons/text.svg");
     background-size: 20px;
+}
+
+#rectTool {
+    background-image: url("/static/svg_editor/icons/rectangle.svg");
+}
+
+#ellipseTool {
+    background-image: url("/static/svg_editor/icons/ellipse.svg");
+}
+
+#fillTool {
+    background-image: url("/static/svg_editor/icons/fill.svg");
+}
+
+#eraserTool {
+    background-image: url("/static/svg_editor/icons/eraser.svg");
+}
+
+#rotateTool {
+    background-image: url("/static/svg_editor/icons/rotate.svg");
+}
+
+#deformTool {
+    background-image: url("/static/svg_editor/icons/deform.svg");
+}
+
+#scaleTool {
+    background-image: url("/static/svg_editor/icons/scale.svg");
+}
+
+#splitTool {
+    background-image: url("/static/svg_editor/icons/split.svg");
+}
+
+#skewTool {
+    background-image: url("/static/svg_editor/icons/skew.svg");
+}
+
+#mirrorTool {
+    background-image: url("/static/svg_editor/icons/reflect.svg");
+}
+
+#tenscompressTool {
+    background-image: url("/static/svg_editor/icons/compress.svg");
 }
 
 #tools-panel {
