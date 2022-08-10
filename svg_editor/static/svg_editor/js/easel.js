@@ -14,9 +14,11 @@ class Easel {
             newPage = this.usedPages.find(page => page.fullName === pageFullName);
         if (this.currentPage){
             tag.replaceChild(newPage.tag, this.currentPage.tag);
+            this.currentPage.node.classList.remove('active');
         } else {
-            tag.appendChild(newPage.tag)
+            tag.appendChild(newPage.tag);
         }
+        newPage.node.classList.add('active');
         this.currentPage = newPage;
     }
     save(saveAs=false, fileName=this.currentPage.name, type=this.currentPage.type){

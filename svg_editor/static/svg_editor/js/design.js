@@ -538,6 +538,7 @@ $(document).ready(function () {
         let newPageName = document.getElementsByName('new-filename')[0].value,
             newPageType = document.getElementById('save_file_type').value;
         easel.add(new Page(newPageName, newPageType));
+        workspace = easel.currentPage.tag;
         clearInputForm();
     });
 
@@ -613,5 +614,6 @@ $(document).ready(function () {
 
     $('#pages-choosing').on("click", ".page-node",function (){
         easel.turnTo($(this).find("label").text());
+        workspace = easel.currentPage.tag;
     });
 });

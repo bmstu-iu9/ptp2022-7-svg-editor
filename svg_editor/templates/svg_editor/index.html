@@ -191,7 +191,7 @@
 			type = JSON.parse("{{type | escapejs}}"),
 			method = JSON.parse("{{method | escapejs}}"),
 			easel = new Easel([new Page(file_name[0], type[0])]);
-		const workspace = easel.currentPage.tag;
+		var workspace = easel.currentPage.tag;
 	</script>
 	{% endblock javascript %}
 </body>

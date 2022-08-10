@@ -312,6 +312,10 @@ td {
     border: 1px solid;
 }
 
+.active{
+    border: 8px solid #885f01!important;
+}
+
 #moveTool {
     background-image: url("/static/svg_editor/icons/cursor.svg");
 }
@@ -596,7 +600,7 @@ td {
     height: 50px;
     float: left;
     text-align: center;
-    margin: 49px;
+    margin: 15px;
     background-size: 25px 25px;
     background-repeat: no-repeat;
     background-position: center;

@@ -23,6 +23,5 @@ class Page{
         label.innerText = this.name+"."+this.type;
         this.node.appendChild(label);
         choosingPanel.appendChild(this.node);
-
     }
 }

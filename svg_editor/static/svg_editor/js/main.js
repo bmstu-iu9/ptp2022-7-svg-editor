@@ -128,4 +128,13 @@ $(document).ready(function () {
     $('#list_svg').on("click", ".inner_list_svg", function () {
         currentFileName = this.nextSibling.textContent;
     })
+
+    $(document).bind("keydown", function(event) {
+        if (event.ctrlKey || event.metaKey) {
+            switch (String.fromCharCode(event.which).toLowerCase()) {
+                case 'x':
+                    easel.save();
+            }
+        }
+    });
 })
