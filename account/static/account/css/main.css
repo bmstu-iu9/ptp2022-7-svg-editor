@@ -216,3 +216,88 @@ body {
     margin-left: -17px;
     margin-bottom: 1px;
 }
+
+.form-account {
+    max-width: 900px;
+}
+
+.block {
+    text-align: center;
+    padding: 25px;
+    margin-top: 40px;
+    margin-bottom:40px;
+    font-size: 17px;
+}
+
+.block span, 
+.block .icons {
+    cursor: pointer;
+    -moz-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+}
+
+.block .icons {
+    position: relative;
+    display: block;
+    justify-content: center;
+    align-items: center;
+
+    margin: 10px;
+    width: 137px;
+    height: 110px;
+}
+
+.icons i {
+    position: absolute;
+    font-size: 70px;
+    
+}
+
+.icon-default {
+    transition: opacity .3s, transform .3s;
+}
+
+.icon-hover {
+    transition: opacity .3s, transform .3s;
+    transform: rotate(-180deg) scale(.5);
+    opacity: 0;
+}
+
+.block .wrapper-block {
+    transform: scale(1.2);
+}
+
+.block .wrapper-block:hover .icon-default {
+    transform: rotate(180deg) scale(.5);
+    opacity: 0;
+}
+
+.block .wrapper-block:hover .icon-hover {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+}
+
+.form-account .blocks .block.ch-pw {
+    float: left;
+    width: 33%;
+    
+}
+
+.form-account .blocks .block.logout {
+    float: left;
+    width: 33%;
+}
+
+.form-account .blocks .block.back {
+    float: right;
+    width: 33%;
+}
+
+.wrapper-block a {
+    text-decoration: none;
+}
+
+.wrapper-block a:hover {
+    text-decoration: underline;
+    color: #767D87;
+}
