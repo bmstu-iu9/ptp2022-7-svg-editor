@@ -1,13 +1,12 @@
 /**
  * @author Kabane-UN
- * @author vyydra
  **/
 
 $(document).ready(function () {
 
     // Get csrf_token
     $.ajaxSetup({
-        headers: {"X-CSRFToken": token}
+        headers: { "X-CSRFToken": token }
     });
 
     // Send username to server to validate it
@@ -68,16 +67,5 @@ $(document).ready(function () {
             }
         });
         return false;
-    });
-
-    // Show/hide password
-    $("#showHidePassword").on("click", function () {
-        if ($(".password").attr("type") === "password") {
-            $(".password").attr("type", "text");
-            $("#showHidePassword").toggleClass("fi-rr-eye fi-rr-eye-crossed");
-        } else {
-            $(".password").attr("type", "password");
-            $("#showHidePassword").toggleClass("fi-rr-eye fi-rr-eye-crossed");
-        }
     });
 })
