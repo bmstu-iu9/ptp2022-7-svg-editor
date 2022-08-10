@@ -336,7 +336,7 @@ td {
     border: 1px solid;
 }
 
-#moveTool {
+#cursorTool {
     background-image: url("/static/svg_editor/icons/cursor.svg");
 }
 
@@ -404,7 +404,7 @@ td {
     background-image: url("/static/svg_editor/icons/reflect.svg");
 }
 
-#tenscompressTool {
+#compressTool {
     background-image: url("/static/svg_editor/icons/compress.svg");
 }
 

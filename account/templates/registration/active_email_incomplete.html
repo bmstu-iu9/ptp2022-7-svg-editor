@@ -1,10 +1,34 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email activation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'account/css/main.css' %}? 202207271056">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static 'account/js/main.js' %}? 202207292007"></script>
 </head>
+
 <body>
-<p style="color: red">Activation link is invalid</p>
+    <div class="parent-wrapper">
+        <div class="wrapper-email-incomplete">
+            <div class="form">
+                <span class="title">Unfortunately,</span>
+                <div class="signup">
+                    <span class="check-text">
+                        Your activation link is invalid. Don't<br>
+                        worry and try again!
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
