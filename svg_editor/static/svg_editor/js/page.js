@@ -22,6 +22,13 @@ class Page{
         let label = document.createElement('label');
         label.innerText = this.name+"."+this.type;
         this.node.appendChild(label);
+        let deletePageButton = document.createElement('div');
+        deletePageButton.setAttribute("class", "delete-page-button");
+        this.node.appendChild(deletePageButton);
         choosingPanel.appendChild(this.node);
+    }
+    deactivateNode(){
+        let choosingPanel = document.getElementById('pages-choosing');
+        choosingPanel.removeChild(this.node);
     }
 }

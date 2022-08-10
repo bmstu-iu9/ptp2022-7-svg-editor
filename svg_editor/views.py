@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, FileResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from illustrator.settings import BASE_DIR
 import yaml
 from . import illustration
@@ -14,9 +14,12 @@ from . import illustration
 @login_required
 def index(request):
     request_dict = dict(request.GET)
-    return render(request, 'svg_editor/index.html', {'file_name': json.dumps(request_dict.get('file_name', None)),
-                                                     'type': json.dumps(request_dict.get('type', None)),
-                                                     'method': json.dumps(request_dict.get('method', None))})
+    if 'file_name' in request_dict and 'type' in request_dict and 'method' in request_dict:
+        return render(request, 'svg_editor/index.html', {'file_name': json.dumps(request_dict['file_name']),
+                                                         'type': json.dumps(request_dict['type']),
+                                                         'method': json.dumps(request_dict['method'])})
+    else:
+        return redirect('account')
 
 
 # Script for viewing the list of svg and project files

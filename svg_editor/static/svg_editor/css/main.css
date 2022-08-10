@@ -316,6 +316,17 @@ td {
     border: 8px solid #885f01!important;
 }
 
+.delete-page-button{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    margin-top: 30px;
+    margin-left: 50px;
+    background-color: salmon;
+    border: 2px solid black;
+}
+
 #moveTool {
     background-image: url("/static/svg_editor/icons/cursor.svg");
 }

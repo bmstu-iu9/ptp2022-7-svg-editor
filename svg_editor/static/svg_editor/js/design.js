@@ -611,9 +611,12 @@ $(document).ready(function () {
         });
         clearInputForm();
     });
-
     $('#pages-choosing').on("click", ".page-node",function (){
         easel.turnTo($(this).find("label").text());
+        workspace = easel.currentPage.tag;
+    });
+    $('#pages-choosing').on("click", ".delete-page-button",function (){
+        easel.delete($(this).parent().find("label").text());
         workspace = easel.currentPage.tag;
     });
 });

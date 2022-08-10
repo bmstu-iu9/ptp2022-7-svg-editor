@@ -9,6 +9,19 @@ class Easel {
         this.usedPages.push(page);
         this.turnTo(page.fullName)
     }
+    delete(pageFullName){
+       this.usedPages.splice(
+            this.usedPages.findIndex(page => page.fullName === pageFullName), 1);
+       this.currentPage.deactivateNode();
+       if (this.usedPages.length > 0) {
+           this.turnTo(this.usedPages[0].fullName);
+       } else {
+           let a = document.createElement("a");
+           a.href = "/account";
+           a.click();
+       }
+
+    }
     turnTo(pageFullName){
         let tag = document.getElementById('easel'),
             newPage = this.usedPages.find(page => page.fullName === pageFullName);

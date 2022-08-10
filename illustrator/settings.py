@@ -92,7 +92,7 @@ DATABASES = {
 
 # Registration basic urls
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/account'
 
 LOGOUT_REDIRECT_URL = '/'
 
