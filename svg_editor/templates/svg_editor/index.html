@@ -192,6 +192,9 @@
 			method = JSON.parse("{{method | escapejs}}"),
 			easel = new Easel([new Page(file_name[0], type[0])]);
 		var workspace = easel.currentPage.tag;
+		if (method[0] === "open"){
+			easel.edit();
+		}
 	</script>
 	{% endblock javascript %}
 </body>

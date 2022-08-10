@@ -30,8 +30,19 @@ New
 </div>
 <button id="create_file_button">Create</button>
 </p>
+<div class="panel">
+		<button id="target">Reload</button>
+		<button id="openButton">Open</button>
+		<p id="text">Click on the Reload button to get a list of saved files!<p>
+		<ul id="list_svg"></ul>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 <script src="{% static 'account/js/projectManager.js' %}? 20220714154345"></script>
+<script src="{% static 'svg_editor/js/main.js' %}"></script>
+<script>
+const token = "{{csrf_token}}",
+			viewURL = "{% url 'files_view' %}";
+</script>
 </body>
 </html>

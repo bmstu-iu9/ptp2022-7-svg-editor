@@ -53,7 +53,7 @@ class Easel {
         });
         return false;
     }
-    edit(fileName=this.fullName){
+    edit(fileName=this.currentPage.fullName){
         $.ajax({
             url: loadURL,
             type: 'GET',
