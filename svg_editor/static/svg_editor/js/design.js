@@ -148,6 +148,31 @@ $(document).ready(function () {
     $("#eraserTool").on("click", function () {
         clickTool("eraser");
     });
+
+    $("#cursorTool").on("click", function () {
+        $(this).toggleClass("tool-clicked");
+        const $lastPressed = $(".tool-button.tool-clicked").not(this);
+        if ($lastPressed.length) {
+            $lastPressed.css(
+                "background-image",
+                $lastPressed.css("background-image").replace("-active", "")
+            );
+            $lastPressed.removeClass("tool-clicked");
+        }
+        if ($(this).hasClass("tool-clicked")) {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/cursor-active.svg')"
+            );
+            changeToolEvent();
+        } else {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/cursor.svg')"
+            );
+        }
+    });
+
     $("#rotateTool").on("click", function () {
         clickTool("rotate");
         $("#manage").toggleClass("open");
@@ -172,7 +197,6 @@ $(document).ready(function () {
     $("#mirrorTool").on("click", function () {
         clickTool("mirror"); 
     });
-
     $("#tenscompressTool").on("click", function () {
         clickTool("tenscompress");
     });    

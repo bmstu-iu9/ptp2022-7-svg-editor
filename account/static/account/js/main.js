@@ -6,7 +6,7 @@ $(document).ready(function () {
 
     // Get csrf_token
     $.ajaxSetup({
-        headers: {"X-CSRFToken": token}
+        headers: { "X-CSRFToken": token }
     });
 
     // Send username to server to validate it
