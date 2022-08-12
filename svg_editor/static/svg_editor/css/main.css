@@ -21,9 +21,9 @@ body {
 #preloader {
     display: inline-block;
     top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 #spinner {
     content: " ";
@@ -39,6 +39,9 @@ body {
     animation: preloader 1.2s infinite linear;
 }
 @keyframes preloader {
+    0% {
+        transform: rotate(0deg);
+    }
     100% {
         transform: rotate(360deg);
     }
@@ -364,11 +367,13 @@ td {
 }
 
 #rectTool {
-    background-image: url("/static/svg_editor/icons/rectangle.svg");
+    background-image: url("/static/svg_editor/icons/rect.svg");
+    background-size: 30px;
 }
 
 #ellipseTool {
     background-image: url("/static/svg_editor/icons/ellipse.svg");
+    background-size: 30px;
 }
 
 #fillTool {
@@ -401,11 +406,11 @@ td {
 }
 
 #mirrorTool {
-    background-image: url("/static/svg_editor/icons/reflect.svg");
+    background-image: url("/static/svg_editor/icons/mirror.svg");
 }
 
-#compressTool {
-    background-image: url("/static/svg_editor/icons/compress.svg");
+#tenscompressTool {
+    background-image: url("/static/svg_editor/icons/tenscompress.svg");
 }
 
 #tools-panel {
