@@ -307,8 +307,8 @@ function pathMove(x, y) {
 }
 
 // <=><=><=><=><=> скрипт инструмента текст <=><=><=><=><=>
-function getText(messege) {
-    return prompt(messege) || '';
+function getText(messege, _default) {
+    return prompt(messege) || _default;
 }
 
 function textDown(x, y) {
@@ -324,7 +324,7 @@ function textUp(x, y) {
         let rect = object;
         rect.remove();
         if (rect.height() != 0 && rect.width() != 0) {
-            object = draw.text(getText('Введите содержимое текста'))
+            object = draw.text(getText('Input text:', ''))
                 .font({ size: rect.height() })
                 .fill(color_fill)
                 .stroke({ width: width_value, color: color_stroke })
