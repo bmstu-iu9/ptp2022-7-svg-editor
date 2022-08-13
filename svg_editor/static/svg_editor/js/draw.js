@@ -29,6 +29,7 @@ const toolMethods = {
         mouseup: compressUp,
     },
     cursor: { mousedown: cursorDown, mousemove: cursorMove, mouseup: cursorUp },
+    star: { mousedown: starDown, mousemove: starMove, mouseup: starUp },
 };
 
 let draw,
@@ -306,6 +307,10 @@ function pathMove(x, y) {
 }
 
 // <=><=><=><=><=> скрипт инструмента текст <=><=><=><=><=>
+function getText(messege) {
+    return prompt(messege) || '';
+}
+
 function textDown(x, y) {
     rectDown(x, y);
 }
@@ -319,7 +324,7 @@ function textUp(x, y) {
         let rect = object;
         rect.remove();
         if (rect.height() != 0 && rect.width() != 0) {
-            object = draw.text(prompt('Введите желаемый текст'))
+            object = draw.text(getText('Введите содержимое текста'))
                 .font({ size: rect.height() })
                 .fill(color_fill)
                 .stroke({ width: width_value, color: color_stroke })
@@ -679,7 +684,7 @@ function scaleMove(x, y) {
                       (((y_a * x_b) / x_a - y_b) * y_a) / (x_a ** 2 + y_a ** 2)
                     : y_b / y_a -
                       (((x_a * y_b) / y_a - x_b) * x_a) / (x_a ** 2 + y_a ** 2);
-        object.scale(k, st_pnt_self.x, st_pnt_self.y);
+        if (k) object.scale(k, st_pnt_self.x, st_pnt_self.y);
         scaleSelectionMake(object);
     }
 }
@@ -926,8 +931,7 @@ function mirrorUp(x, y) {
                 ...draw.select.lines[0].plot()[0],
                 ...draw.select.lines[0].plot()[1]
             ) == 0
-        )
-            selectionClear();
+        ) selectionClear();
         object = null;
     }
 }
@@ -976,11 +980,11 @@ function compressUp(x, y) {
 function canvasUpsize(x, y) {
     let width = $('#workspace').css('width').slice(0, -2) * 1 + x,
         height = $('#workspace').css('height').slice(0, -2) * 1 + y;
-    if (width < 0) {
+    if (width <= 0) {
         draw.X *= -1;
         return;
     }
-    if (height < 0) {
+    if (height <= 0) {
         draw.Y *= -1;
         return;
     }
@@ -1013,7 +1017,18 @@ function cursorMove(x, y) {
             if (draw.X == -1) {
                 canvasUpsize(draw.xy.x - x, 0);
                 canvasMove(x - draw.xy.x, 0);
-                draw_history.h.forEach(hist => hist.forEach(obj => obj.dx(draw.xy.x - x)))
+                for (const hist of draw_history.h)
+                    for (const obj of hist)
+                        if (!('used' in obj)) {
+                            let selfCoords = absCoordsToSelf(obj, draw.xy.x, 0),
+                                selfCoords_ = absCoordsToSelf(obj, x, 0);
+                            obj.dx(selfCoords.x - selfCoords_.x);
+                            obj.dy(selfCoords.y - selfCoords_.y);
+                            obj.used = null;
+                        }
+                for (const hist of draw_history.h)
+                    for (const obj of hist)
+                        delete obj.used;
             } else if (draw.X == 1) {
                 canvasUpsize(x - draw.xy.x, 0);
                 draw.xy.x = x;
@@ -1021,7 +1036,18 @@ function cursorMove(x, y) {
             if (draw.Y == -1) {
                 canvasUpsize(0, draw.xy.y - y);
                 canvasMove(0, y - draw.xy.y);
-                draw_history.h.forEach(hist => hist.forEach(obj => obj.dy(draw.xy.y - y)))
+                for (const hist of draw_history.h)
+                    for (const obj of hist)
+                        if (!('used' in obj)) {
+                            let selfCoords = absCoordsToSelf(obj, 0, draw.xy.y),
+                                selfCoords_ = absCoordsToSelf(obj, 0, y);
+                            obj.dx(selfCoords.x - selfCoords_.x);
+                            obj.dy(selfCoords.y - selfCoords_.y);
+                            obj.used = null;
+                        }
+                for (const hist of draw_history.h)
+                    for (const obj of hist)
+                        delete obj.used;
             } else if (draw.Y == 1) {
                 canvasUpsize(0, y - draw.xy.y);
                 draw.xy.y = y;
@@ -1035,6 +1061,50 @@ function cursorUp(x, y) {
         draw.Y,
         draw.xy;
 }
+
+// <=><=><=><=><=> скрипт инструмента курсор <=><=><=><=><=>
+function starDown(x, y) {
+    if (object == null) {
+        object = draw
+            .polygon(new Array(5).fill([0, 0]))
+            .move(x, y)
+            .fill(color_fill)
+            .stroke({ width: width_value, color: color_stroke });
+        object.x0 = x;
+        object.y0 = y;
+    }
+}
+
+function starMove(x, y) {
+    if (object != null) {
+        if (object.x0 == x || object.y0 == y) return;
+        let w = x - object.x0,
+            h = y - object.y0,
+            R_y = h / (1 - Math.sin(1.3 * Math.PI)),
+            r_y = R_y * Math.cos(Math.PI * .4) / Math.cos(Math.PI * .2),
+            R_x = R_y * w / h,
+            r_x = r_y * w / h,
+            k1 = Math.cos(Math.PI * Math.sqrt(2) / 10),
+            k2 = Math.cos(Math.PI / 10),
+            plot = [];
+        for (let i = 0; i < 10; i++)
+            if (i % 2 == 0) plot.push([
+                object.x0 + R_x * k1 + R_x * Math.cos(Math.PI * (i * .2 + .1)) * k2,
+                object.y0 + R_y - R_y * Math.sin(Math.PI * (i * .2 + .1))
+            ]);
+            else plot.push([
+                object.x0 + R_x * k1 + r_x * Math.cos(Math.PI * (i * .2 + .1)) * k2,
+                object.y0 + R_y - r_y * Math.sin(Math.PI * (i * .2 + .1))
+            ]);
+        object.plot(plot);
+        commonSelectionMake();
+    }
+}
+
+function starUp(x, y) {
+    stopDrawing();
+}
+
 
 // <=><=><=><=><=> скрипт перехвата событий документа и окна <=><=><=><=><=>
 $(document)
@@ -1050,25 +1120,21 @@ $(document)
 
     /* перезват нажания сочитаний клавиш ctrl-z и ctrl-shift-z
     для передвиженя по истории рисования */
-    .bind('keypress', function (event) {
+    .keypress(function (event) {
         if (event.which === 26 && event.ctrlKey) {
-            if (event.shiftKey) {
-                historyUndo();
-            } else {
-                historyBack();
-            }
+            if (event.shiftKey) historyUndo();
+            else historyBack();
         }
     })
 
     // выход из режима рисования путём нажатия клавишы escape
-    .bind('keydown', function (event) {
+    .keydown(function (event) {
         if (event.key === 'Escape') breakDrawing();
     });
 
 // перехват событий окна, влияющих на рисование
 $(window)
     .mousedown(logMouseEvent)
-    .mouseup(logMouseEvent)
     .mousemove(logMouseEvent)
-    .on('resize', resizeWindowEvent)
-    .on('scroll', resizeWindowEvent);
+    .mouseup(logMouseEvent)
+    .resize(resizeWindowEvent);
