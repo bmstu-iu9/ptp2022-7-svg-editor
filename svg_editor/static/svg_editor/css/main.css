@@ -418,6 +418,10 @@ td {
     background-image: url("/static/svg_editor/icons/tenscompress.svg");
 }
 
+#starTool {
+    background-image: url("/static/svg_editor/icons/star.svg");
+}
+
 #tools-panel {
     background-color: white;
     width: 40px;

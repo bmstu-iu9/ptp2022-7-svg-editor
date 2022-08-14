@@ -127,6 +127,17 @@ $(document).ready(function () {
         }
     });
 
+    $("#starTool").on("click", function () {
+        clickTool("star");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+            $("#filling-type").css("display", "inline-block");
+        } else {
+            $("#width-parameter").css("display", "none");
+            $("#filling-type").css("display", "none");
+        }
+    });
+
     $("#pathTool").on("click", function () {
         clickTool("path");
         if ($(this).hasClass("tool-clicked")) {
