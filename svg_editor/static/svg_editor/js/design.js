@@ -46,6 +46,11 @@ $(document).ready(function () {
     }
     $(".moveable-part-file-menu").mousedown(handle_mousedown);
 
+    function clearInputForm(obj) {
+        obj.find("input[type='text']").val('untitled');
+        obj.find("input[type='number']").val('0');
+    }
+
     function clickTool(name) {
         const $this = $(`#${name}Tool`);
         const $lastPressed = $(".tool-button.tool-clicked").not($this);
@@ -239,6 +244,7 @@ $(document).ready(function () {
 
     // Обработка меню нового файла
     $(".drop-moving-button[name='new-file']").on("click", function () {
+        clearInputForm($("#new-menu"));
         $("#new-menu").css({
             display: "block",
             "z-index": "100",
@@ -250,7 +256,6 @@ $(document).ready(function () {
             display: "none",
             "z-index": "0",
         });
-        clearInputForm();
     });
 
     $(".close-menu-button").on("click", function () {
@@ -258,10 +263,10 @@ $(document).ready(function () {
             display: "none",
             "z-index": "0",
         });
-        clearInputForm();
     });
 
     $(".drop-moving-button[name='save-file']").on("click", function () {
+        clearInputForm($("#save-menu"));
         $("#save-menu").css({
             display: "block",
             "z-index": "100",
@@ -269,6 +274,7 @@ $(document).ready(function () {
     });
 
     $(".drop-moving-button[name='download-file']").on("click", function () {
+        clearInputForm($("#download-menu"));
         $("#download-menu").css({
             display: "block",
             "z-index": "100",
@@ -280,10 +286,10 @@ $(document).ready(function () {
             display: "none",
             "z-index": "0",
         });
-        clearInputForm();
     });
 
     $(".drop-moving-button[name='open-file']").on("click", function () {
+        clearInputForm($("#open-menu"));
         $("#open-menu").css({
             display: "block",
             "z-index": "100",
@@ -295,6 +301,5 @@ $(document).ready(function () {
             display: "none",
             "z-index": "0",
         });
-        clearInputForm();
     });
 });
