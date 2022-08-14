@@ -15,6 +15,6 @@ $(document).ready(function () {
     $("#uploadButton").change(function (){
         let data = new FormData();
         data.append('file', $(this)[0].files[0]);
-        Easel.upload(data);
+        FileManager.upload(data);
     })
 });

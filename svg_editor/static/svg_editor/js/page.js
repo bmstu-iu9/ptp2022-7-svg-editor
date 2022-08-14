@@ -1,34 +1,15 @@
-class Page{
-    name;
-    tag;
-    type;
+class Page extends BaseSvgElement{
+    fileName;
+    fileType;
     node;
-    fullName;
     constructor(name, type) {
-        this.name = name;
-        this.type = type;
-        this.fullName = name + "." + type;
-        let itsSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        itsSvg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-        itsSvg.setAttribute('version','1.1');
-        itsSvg.setAttribute("id", "workspace");
-        itsSvg.setAttribute("name", name);
-        itsSvg.setAttribute('version','1.1');
-        this.tag = itsSvg;
-        let choosingPanel = document.getElementById('pages-choosing');
-        this.node = document.createElement('div');
-        this.node.setAttribute("class", "page-node");
-        this.node.setAttribute("draggable", "true");
-        let label = document.createElement('label');
-        label.innerText = this.name+"."+this.type;
-        this.node.appendChild(label);
-        let deletePageButton = document.createElement('div');
-        deletePageButton.setAttribute("class", "delete-page-button");
-        this.node.appendChild(deletePageButton);
-        choosingPanel.appendChild(this.node);
+        super(name + "." + type);
+        this.fileName = name;
+        this.fileType = type;
+        this.tag.setAttribute('id','workspace');
+        this.node = new PageNode(this.name);
     }
     deactivateNode(){
-        let choosingPanel = document.getElementById('pages-choosing');
-        choosingPanel.removeChild(this.node);
+        this.node.deactivate();
     }
 }

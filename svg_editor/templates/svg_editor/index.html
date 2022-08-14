@@ -177,12 +177,16 @@
 	-->
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topath.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topoly.js"></script>
+	<script src="{% static 'svg_editor/js/main.js' %}"></script>
 	<script src="{% static 'svg_editor/js/design.js' %}"></script>
-	<script src="{% static 'svg_editor/js/main.js' %}?"></script>
-	<script src="{% static 'svg_editor/js/layers.js' %}?"></script>
-	<script src="{% static 'svg_editor/js/draw.js' %}?"></script>
-	<script src="{% static 'svg_editor/js/page.js' %}?"></script>
-	<script src="{% static 'svg_editor/js/easel.js' %}?"></script>
+	<script src="{% static 'svg_editor/js/layers.js' %}"></script>
+	<script src="{% static 'svg_editor/js/baseFactory.js' %}"></script>
+	<script src="{% static 'svg_editor/js/baseNode.js' %}"></script>
+	<script src="{% static 'svg_editor/js/baseSvgElement.js' %}"></script>
+	<script src="{% static 'svg_editor/js/page.js' %}"></script>
+	<script src="{% static 'svg_editor/js/easel.js' %}"></script>
+	<script src="{% static 'svg_editor/js/pageNode.js' %}"></script>
+	<script src="{% static 'svg_editor/js/draw.js' %}"></script>
 	<script>
 		const token = "{{csrf_token}}",
 			saveURL = "{% url 'files_save' %}",
@@ -193,8 +197,8 @@
 			deleteURL = "{% url 'files_delete' %}",
 			file_name = JSON.parse("{{file_name | escapejs}}"),
 			type = JSON.parse("{{type | escapejs}}"),
-			method = JSON.parse("{{method | escapejs}}"),
-			easel = new Easel([new Page(file_name[0], type[0])]);
+			method = JSON.parse("{{method | escapejs}}");
+		const easel = new Easel(file_name[0], type[0]);
 		var workspace = easel.currentPage.tag;
 		if (method[0] === "open"){
 			easel.edit();

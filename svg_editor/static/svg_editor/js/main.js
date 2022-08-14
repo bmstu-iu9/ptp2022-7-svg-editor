@@ -27,22 +27,22 @@ $(document).ready(function () {
     $('#file').change(function () {
         let data = new FormData();
         data.append('file', $("#file")[0].files[0]);
-        Easel.upload(data);
+        FileManager.upload(data);
     });
 
     // Download file from server
     $('#downloadButton').click(function () {
-        Easel.download(currentFileName);
+        FileManager.download(currentFileName);
     });
 
     // Get list of user files at server
     $('#target').click(function () {
-        Easel.view();
+        FileManager.view();
     });
 
     // Delete users files from server
     $("#deleteButton").click(function () {
-        Easel.delete(currentFileName, document.getElementById("deleteAll").checked);
+        FileManager.delete(currentFileName, document.getElementById("deleteAll").checked);
     })
 
     // Edit file from server
