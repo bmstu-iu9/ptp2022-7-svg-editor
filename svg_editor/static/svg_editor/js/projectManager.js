@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("#create_file_button").click(function () {
+    $("#createFileButton").click(function () {
         let a = document.createElement("a");
         a.href = "../?file_name=" + document.getElementById("fileNameInput")
             .value + "&type=" + document.getElementById("save_file_type").value+ "&method=create";
@@ -12,4 +12,9 @@ $(document).ready(function () {
              + "&type=" + currentFileName.slice(-3) + "&method=open";
         a.click();
     });
+    $("#uploadButton").change(function (){
+        let data = new FormData();
+        data.append('file', $(this)[0].files[0]);
+        Easel.upload(data);
+    })
 });
