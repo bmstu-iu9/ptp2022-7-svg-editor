@@ -337,7 +337,7 @@ td {
 }
 
 .active{
-    border: 8px solid #885f01!important;
+    border: 3px solid #0d93db !important;
 }
 
 .delete-page-button{
@@ -426,7 +426,7 @@ td {
 #tools-panel {
     background-color: white;
     width: 40px;
-    height: 100%;
+    height: 75%;
     align-content: center;
     float: left;
     border-right: 1px solid #3e3e3e;
@@ -542,7 +542,7 @@ td {
 #addition-panel {
     background: white;
     width: 40px;
-    height: 100%;
+    height: 75%;
     position: flex;
     float: right;
     align-content: center;
@@ -655,11 +655,12 @@ td {
 }
 
 #pages-panel{
-    margin-top: 10px;
+    margin-bottom: 75px;
     background: white;
     width: 100%;
     height: 100px;
-    position: flex;
+    position: absolute;
+    bottom: 0;
     float: bottom;
     align-content: center;
     justify-content: center;

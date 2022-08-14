@@ -616,12 +616,13 @@ $(document).ready(function () {
         });
         clearInputForm();
     });
-    $('#pages-choosing').on("click", ".page-node",function (){
+    let $pagesChoosing = $('#pages-choosing');
+    $pagesChoosing.on("click", ".page-node",function (){
         easel.turnTo($(this).find("label").text());
         workspace = easel.currentPage.tag;
     });
-    $('#pages-choosing').on("click", ".delete-page-button",function (){
-        easel.delete($(this).parent().find("label").text());
+    $pagesChoosing.on("click", ".delete-page-button",function (){
+        easel.remove($(this).parent().find("label").text());
         workspace = easel.currentPage.tag;
     });
 });
