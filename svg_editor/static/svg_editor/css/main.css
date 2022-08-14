@@ -49,6 +49,7 @@ body {
 
 #account-panel {
     display: flex;
+    position: relative;
     float: right;
     width: 200px;
     height: 100%;
@@ -152,6 +153,8 @@ header {
     background: white;
     width: 100%;
     height: 40px;
+    position: relative;
+    z-index: 10;
 }
 
 td {
@@ -285,6 +288,8 @@ td {
     border: 1px solid black;
     border-left: 0;
     border-right: 0;
+    position: absolute;
+    z-index: 10;
 }
 
 #stroke-width {
@@ -413,13 +418,20 @@ td {
     background-image: url("/static/svg_editor/icons/tenscompress.svg");
 }
 
+#starTool {
+    background-image: url("/static/svg_editor/icons/star.svg");
+}
+
 #tools-panel {
     background-color: white;
     width: 40px;
     height: 100%;
     align-content: center;
-    float: left;
+    top: 31px;
+    position: absolute;
+    z-index:10;
     border-right: 1px solid #3e3e3e;
+    border-top: 1px solid #3e3e3e;
 }
 
 #tools-choosing {
@@ -444,8 +456,7 @@ td {
     z-index: 10;
     transform: scale(0.01);
     opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease,
-        box-shadow 0.3s ease 0.15s;
+    transition: transform 0.3s ease, opacity 0.3s ease;
     transform-origin: left top;
 }
 
@@ -519,21 +530,24 @@ td {
     height: 600px;
     margin: 10px 100px 0 100px;
     border: 1px solid #3e3e3e;
-    position: relative;
-    background: white;
+    position: absolute;
     z-index: 0;
+    top: 70px;
+    background: white;
 }
 
 #addition-panel {
     background: white;
     width: 40px;
     height: 100%;
-    position: flex;
-    float: right;
+    position: absolute;
+    top: 71px;
+    right: 0;
+    z-index:10;
     align-content: center;
     justify-content: center;
     border: 1px solid #3e3e3e;
-    border-top: 0;
+    border-right: 0px;
 }
 
 #layers-panel-content {

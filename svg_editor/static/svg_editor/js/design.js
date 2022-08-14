@@ -1,6 +1,5 @@
 $(window).on('load', function() {
     $('#preloader').fadeOut("slow");
-    $("body").addClass("loaded");
   });
 
 $(document).ready(function () {
@@ -128,6 +127,17 @@ $(document).ready(function () {
         }
     });
 
+    $("#starTool").on("click", function () {
+        clickTool("star");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+            $("#filling-type").css("display", "inline-block");
+        } else {
+            $("#width-parameter").css("display", "none");
+            $("#filling-type").css("display", "none");
+        }
+    });
+
     $("#pathTool").on("click", function () {
         clickTool("path");
         if ($(this).hasClass("tool-clicked")) {
@@ -147,30 +157,6 @@ $(document).ready(function () {
 
     $("#eraserTool").on("click", function () {
         clickTool("eraser");
-    });
-
-    $("#cursorTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/cursor-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/cursor.svg')"
-            );
-        }
     });
 
     $("#rotateTool").on("click", function () {

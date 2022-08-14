@@ -100,17 +100,14 @@
 	<div id="container">
 		<div id="tools-panel">
 			<div id="tools-choosing">
-				<div title="Cursor" id="cursorTool" class="tool-button" name="move"></div>
-				<div title="Pencil"id="pencilTool" class="tool-button" name="pencil"></div>
+				<div title="Cursor" id="cursorTool" class="tool-button" name="cursor"></div>
+				<div title="Pencil" id="pencilTool" class="tool-button" name="pencil"></div>
 				<div title="Line" id="lineTool" class="tool-button" name="line"></div>
 				<div title="Polygon" id="polygonTool" class="tool-button" name="polygon"></div>
-				<div id="cursorTool" class="tool-button" name="cursor"></div>
-				<div id="pencilTool" class="tool-button" name="pencil"></div>
-				<div id="lineTool" class="tool-button" name="line"></div>
-				<div id="polygonTool" class="tool-button" name="polygon"></div>
 				<div id="geometry" class="hiddenTools">
 					<div title="Rectangle" id="rectTool" class="tool-button" name="rect"></div>
 					<div title="Ellipse" id="ellipseTool" class="tool-button" name="ellipse"></div>
+					<div title="Star" id="starTool" class="tool-button" name="star"></div>
 				</div>
 				<div title="Path" id="pathTool" class="tool-button" name="path"></div>
 				<div title="Text" id="textTool" class="tool-button" name="text"></div>
@@ -124,19 +121,6 @@
 					<div title="Skew" id="skewTool" class="tool-button" name="skew"></div>
 					<div title="Reflect" id="mirrorTool" class="tool-button" name="mirror"></div>
 					<div title="Compress" id="tenscompressTool" class="tool-button" name="tenscompress"></div>
-				<div id="pathTool" class="tool-button" name="path"></div>
-				<div id="textTool" class="tool-button" name="text"></div>
-				<div id="fillTool" class="tool-button" name="fill"></div>
-				<div id="eraserTool" class="tool-button" name="eraser"></div>
-				<div id="moveTool" class="tool-button" name="move">перемешение</div>
-				<div id="rotateTool" class="tool-button" name="rotate"></div>
-				<div id="manage" class="hiddenTools">
-					<div id="deformTool" class="tool-button" name="deform"></div>
-					<div id="scaleTool" class="tool-button" name="scalе"></div>
-					<div id="splitTool" class="tool-button" name="split"></div>
-					<div id="skewTool" class="tool-button" name="skew"></div>
-					<div id="mirrorTool" class="tool-button" name="mirror"></div>
-					<div id="compressTool" class="tool-button" name="compress"></div>
 				</div>
 				<div class="vertical-divider"></div>
 				<div id="color-choosing">
@@ -151,7 +135,9 @@
 					<input id="fillbox" name="fill" type="checkbox" checked>
 					<label for="fill">No fill</label>
 				</div>
+			</div>
 		</div>
+	</div>
 	</div>
 	<svg id="workspace" version="1.1" xmlns="http://www.w3.org/2000/svg"
 		xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
