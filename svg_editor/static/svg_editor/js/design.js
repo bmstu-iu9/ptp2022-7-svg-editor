@@ -1,4 +1,9 @@
+$(window).on('load', function() {
+    $('#preloader').fadeOut("slow");
+  });
+
 $(document).ready(function () {
+    $('#preloader').fadeOut("slow");
     const disableSelect = (e) => {
         return false;
     };
@@ -58,13 +63,13 @@ $(document).ready(function () {
         if ($(this).hasClass("tool-clicked")) {
             $(this).css(
                 "background-image",
-                "url('/static/svg_editor/icons/cursor-active.svg')"
+                "url('/static/svg_editor/icons/move-active.svg')"
             );
             changeToolEvent();
         } else {
             $(this).css(
                 "background-image",
-                "url('/static/svg_editor/icons/cursor.svg')"
+                "url('/static/svg_editor/icons/move.svg')"
             );
         }
     });
@@ -300,6 +305,31 @@ $(document).ready(function () {
             );
         }
     });
+
+    $("#cursorTool").on("click", function () {
+        $(this).toggleClass("tool-clicked");
+        const $lastPressed = $(".tool-button.tool-clicked").not(this);
+        if ($lastPressed.length) {
+            $lastPressed.css(
+                "background-image",
+                $lastPressed.css("background-image").replace("-active", "")
+            );
+            $lastPressed.removeClass("tool-clicked");
+        }
+        if ($(this).hasClass("tool-clicked")) {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/cursor-active.svg')"
+            );
+            changeToolEvent();
+        } else {
+            $(this).css(
+                "background-image",
+                "url('/static/svg_editor/icons/cursor.svg')"
+            );
+        }
+    });
+
     $("#rotateTool").on("click", function () {
         $(this).toggleClass("tool-clicked");
         const $lastPressed = $(".tool-button.tool-clicked").not(this);
@@ -445,7 +475,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#tenscompressTool").on("click", function () {
+    $("#compressTool").on("click", function () {
         $(this).toggleClass("tool-clicked");
         const $lastPressed = $(".tool-button.tool-clicked").not(this);
         if ($lastPressed.length) {
@@ -458,13 +488,13 @@ $(document).ready(function () {
         if ($(this).hasClass("tool-clicked")) {
             $(this).css(
                 "background-image",
-                "url('/static/svg_editor/icons/tenscompress-active.svg')"
+                "url('/static/svg_editor/icons/compress-active.svg')"
             );
             changeToolEvent();
         } else {
             $(this).css(
                 "background-image",
-                "url('/static/svg_editor/icons/tenscompress.svg')"
+                "url('/static/svg_editor/icons/compress.svg')"
             );
         }
     });
@@ -556,31 +586,6 @@ $(document).ready(function () {
             "z-index": "100",
         });
     });
-
-    // $("#save-button").click(function () {
-    //     $.ajax({
-    //         data: {
-    //             svg: draw.svg(),
-    //             file_name: document.getElementById("file_name").value,
-    //             csrfmiddlewaretoken: "{{csrf_token}}",
-    //         },
-    //         type: "POST",
-    //         url: "{% url 'files_save' %}",
-    //         success: function (response) {
-    //             alert(
-    //                 "Поздравляем! Файл с названием " +
-    //                     response.file_name +
-    //                     " успешно создан!"
-    //             );
-    //         },
-    //         error: function (response) {
-    //             alert(response.responseJSON.errors);
-    //             console.log(response.responseJSON.errors);
-    //         },
-    //     });
-    //     clearInputForm();
-    //     return false;
-    // });
 
     $(".drop-moving-button[name='download-file']").on("click", function () {
         $("#download-menu").css({
