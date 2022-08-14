@@ -1062,7 +1062,7 @@ function cursorUp(x, y) {
         draw.xy;
 }
 
-// <=><=><=><=><=> скрипт инструмента курсор <=><=><=><=><=>
+// <=><=><=><=><=> скрипт инструмента звезда <=><=><=><=><=>
 function starDown(x, y) {
     if (object == null) {
         object = draw
