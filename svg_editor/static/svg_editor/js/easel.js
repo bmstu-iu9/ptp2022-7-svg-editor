@@ -10,12 +10,14 @@ class Easel {
         this.turnTo(page.fullName)
     }
     delete(pageFullName){
+       let indexToDelete = this.usedPages.findIndex(page => page.fullName === pageFullName),
+           deletedPage = this.usedPages[indexToDelete];
        this.usedPages.splice(
-            this.usedPages.findIndex(page => page.fullName === pageFullName), 1);
-       this.currentPage.deactivateNode();
-       if (this.usedPages.length > 0) {
+            indexToDelete, 1);
+       deletedPage.deactivateNode();
+       if (this.usedPages.length > 0 && pageFullName === this.currentPage.fullName) {
            this.turnTo(this.usedPages[0].fullName);
-       } else {
+       } else if (this.usedPages.length <= 0) {
            let a = document.createElement("a");
            a.href = "/account";
            a.click();

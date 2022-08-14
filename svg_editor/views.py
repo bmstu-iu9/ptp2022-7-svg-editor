@@ -22,6 +22,10 @@ def index(request):
         return redirect('account')
 
 
+@login_required
+def start(request):
+    return render(request, 'svg_editor/start.html')
+
 # Script for viewing the list of svg and project files
 def files_view(request):
     if request.user.is_authenticated:
