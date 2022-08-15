@@ -8,4 +8,13 @@ class BaseNode{
         this.container = container;
         this.container.appendChild(this.tag);
     }
+    getName(){
+        return this.name;
+    }
+    deactivate(){
+
+    }
+    activate(){
+
+    }
 }

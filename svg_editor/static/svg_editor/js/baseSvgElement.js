@@ -7,4 +7,10 @@ class BaseSvgElement{
         this.tag.setAttribute('version', '1.1');
         this.name = name;
     }
+    getName(){
+        return this.name;
+    }
+    getWorkplace(){
+        return this.tag;
+    }
 }

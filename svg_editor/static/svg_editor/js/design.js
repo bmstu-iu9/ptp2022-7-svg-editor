@@ -567,8 +567,8 @@ $(document).ready(function () {
         });
         let newPageName = document.getElementsByName('new-filename')[0].value,
             newPageType = document.getElementById('save_file_type').value;
-        easel.add(new Page(newPageName, newPageType));
-        workspace = easel.currentPage.tag;
+        easel.createPage(newPageName, newPageType)
+        workspace = easel.currentPage.getWorkplace();
         clearInputForm();
     });
 
@@ -617,12 +617,12 @@ $(document).ready(function () {
         clearInputForm();
     });
     let $pagesChoosing = $('#pages-choosing');
-    $pagesChoosing.on("click", ".page-node",function (){
-        easel.turnTo($(this).find("label").text());
-        workspace = easel.currentPage.tag;
+    $pagesChoosing.on("click", "label",function (){
+        easel.turnTo($(this).text());
+        workspace = easel.currentPage.getWorkplace();
     });
     $pagesChoosing.on("click", ".delete-page-button",function (){
         easel.remove($(this).parent().find("label").text());
-        workspace = easel.currentPage.tag;
+        workspace = easel.currentPage.getWorkplace();
     });
 });

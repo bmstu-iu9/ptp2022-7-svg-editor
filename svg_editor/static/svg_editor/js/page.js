@@ -9,7 +9,20 @@ class Page extends BaseSvgElement{
         this.tag.setAttribute('id','workspace');
         this.node = new PageNode(this.name);
     }
+    removeNode(){
+        this.node.remove();
+    }
     deactivateNode(){
         this.node.deactivate();
     }
+    getFileName(){
+        return this.fileName;
+    }
+    getFileType(){
+        return this.fileType;
+    }
+    activateNode(){
+        this.node.activate();
+    }
+
 }

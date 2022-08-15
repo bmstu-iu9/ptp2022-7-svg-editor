@@ -11,6 +11,12 @@ class PageNode extends BaseNode{
         this.tag.appendChild(deletePageButton);
     }
     deactivate(){
+        this.tag.classList.remove('active');
+    }
+    activate(){
+        this.tag.classList.add('active');
+    }
+    remove(){
         this.container.removeChild(this.tag);
     }
 }

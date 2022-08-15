@@ -9,15 +9,15 @@ class Easel extends BaseFactory{
     createPage(fileName, fileType){
         let newPage = new Page(fileName, fileType);
         this.usedPages.push(newPage);
-        this.turnTo(newPage.name);
+        this.turnTo(newPage.getName());
     }
     remove(pageName){
-       let indexToDelete = this.usedPages.findIndex(page => page.name === pageName),
+       let indexToDelete = this.usedPages.findIndex(page => page.getName() === pageName),
            deletedPage = this.usedPages[indexToDelete];
        this.usedPages.splice(indexToDelete, 1);
-       deletedPage.deactivateNode();
-       if (this.usedPages.length > 0 && pageName === this.currentPage.name) {
-           this.turnTo(this.usedPages[0].name);
+       deletedPage.removeNode();
+       if (this.usedPages.length > 0 && pageName === this.currentPage.getName()) {
+           this.turnTo(this.usedPages[0].getName());
        } else if (this.usedPages.length <= 0) {
            let a = document.createElement("a");
            a.href = "/account";
@@ -25,17 +25,17 @@ class Easel extends BaseFactory{
        }
     }
     turnTo(pageName){
-        let newPage = this.usedPages.find(page => page.name === pageName);
+        let newPage = this.usedPages.find(page => page.getName() === pageName);
         if (this.currentPage){
-            this.factoryContainer.replaceChild(newPage.tag, this.currentPage.tag);
-            this.currentPage.node.tag.classList.remove('active');
+            this.factoryContainer.replaceChild(newPage.getWorkplace(), this.currentPage.getWorkplace());
+            this.currentPage.deactivateNode();
         } else {
-            this.factoryContainer.appendChild(newPage.tag);
+            this.factoryContainer.appendChild(newPage.getWorkplace());
         }
-        newPage.node.tag.classList.add('active');
+        newPage.activateNode();
         this.currentPage = newPage;
     }
-    save(saveAs=false, fileName=this.currentPage.fileName, type=this.currentPage.fileType){
+    save(saveAs=false, fileName=this.currentPage.getFileName(), type=this.currentPage.getFileType()){
         $.ajax({
             data: {
                 file_name: fileName,
@@ -53,7 +53,7 @@ class Easel extends BaseFactory{
             }
         });
     }
-    edit(fileName=this.currentPage.name){
+    edit(fileName=this.currentPage.getName()){
         $.ajax({
             url: loadURL,
             type: 'GET',
