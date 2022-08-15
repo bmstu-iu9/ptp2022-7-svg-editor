@@ -525,8 +525,8 @@ td {
 }
 
 #easel {
-    width: 900px;
-    height: 600px;
+    width: 1700px;
+    height: 75%;
     border: 1px solid #3e3e3e;
     position: relative;
     margin: 10px 100px 0 100px;
