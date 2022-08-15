@@ -31,7 +31,7 @@ def signup(request):
             path = f'{BASE_DIR}/svg_editor/media/svg_editor/{str(user)}/svg'
             os.makedirs(path)
             current_site = get_current_site(request)
-            mail_subject = 'Activation link has been sent to your email address'
+            mail_subject = render_to_string('registration/active_email_subject.txt')
             message = render_to_string('registration/active_email.html', {
                 'user': user,
                 'domain': current_site.domain,

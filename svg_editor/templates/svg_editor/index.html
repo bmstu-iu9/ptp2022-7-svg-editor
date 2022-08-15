@@ -1,96 +1,182 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" />
 	<title>СВГ-Редактор</title>
 	<!--    загружать статику нужно именно так-->
-    <link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207260805">
-    <link rel="stylesheet" href="../../static/svg_editor/css/main.css">
+	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207260805">
 </head>
+
 <body>
-	<p style="font-size: 25px; font-weight: bold">
+	<div id="preloader">
+		<div id="spinner"></div>
+	</div>
+	<!--<p style="font-size: 25px; font-weight: bold">
 		{% if user.is_authenticated %}
 		<a href="{% url 'account' %}">{{user.get_username}}</a>
 		{% else %}
 		<a href="{% url 'login' %}">Login!</a>
 		{% endif %}
 	</p>
-	<h1>СВГ Редактор</h1>
-
-	<div style="display: flex; width: 100%; margin: auto">
-		<svg id="workspace"
-			 version="1.1"
-     		 xmlns="http://www.w3.org/2000/svg"
-			 xmlns:xlink="http://www.w3.org/1999/xlink"/>
-		<div id="layer_panel"></div>
-	</div>
-	<div id="controls" onchange="changeToolEvent()">
-		<input type="radio" name="toolChoice" value="pencil" checked>
-		<label>Карандаш</label><br>		
-
-		<input type="radio" name="toolChoice" value="line">
-		<label>Линия</label><br>
-
-		<input type="radio" name="toolChoice" value="polygon">
-		<label>Полигон</label><br>
-
-		<input type="radio" name="toolChoice" value="path">
-		<label>Контур</label><br>
-
-		<input type="radio" name="toolChoice" value="text">
-		<label>Текст</label><br>
-
-		<label>Цвет: </label>
-		<input id="colorChoice" type="color"><br>
-		<label>Заполнение фигур: </label>
-		<input id="fillChoice" type="checkbox"><br>
-		<label>Толщина линий: </label>
-		<input id="widthChoice" type="number" min=1 value=3><p>
-		<button id="clearWorkspaceButton">Очистить холст</button>
-
-		<div class="layer-controls">		
-			<button id="createLayerButton">new layer</button>
-			<button id="deleteLayerButton">delete layer</button>
-			<button id="createNewFileButton">new file</button>
-			<button id="mergeWithPrevious">merge with previous</button>
-			<button id="mergeVisible">merge visible</button>
-			<button id="createFromVisible">create layer from visible</button>
-			<button id="copyLayer">copy</button>
-			<button id="layerUp">up</button>
-			<button id="layerDown">down</button>
+	<h1>СВГ Редактор</h1>-->
+	<header>
+		<div class="drop-list">
+			<div class="drop-button">File</div>
+			<div class="drop-content">
+				<div name="new-file" class="drop-moving-button">New</div>
+				<div name="save-file" class="drop-moving-button">Save</div>
+				<div name="download-file" class="drop-moving-button">Download</div>
+				<div name="open-file" class="drop-moving-button">Open</div>
+			</div>
 		</div>
-
-		<input id="opacity_slider" onchange="changeOpacity()" type="range" min="0" max="1" step="0.01" value="1">
+		<div id="account-panel">
+		</div>
+		<div class="drop-list">
+			<div class="drop-button">Edit</div>
+			<div class="drop-content">
+				<div name="undo" class="drop-moving-button">Undo</div>
+				<div name="redo" class="drop-moving-button">Redo</div>
+			</div>
+		</div>
+	</header>
+	<div id="control-panel">
+		<div id="width-parameter">
+			<label for="stroke-width" id="stroke-width">Stroke width:</label>
+			<input id="width-slider" type="range" name="stroke-width" min="1" max="10" value="1" step="0.1">
+			<input id="width-slider-value" type="number" min="1" max="10" value="1">
+		</div>
 	</div>
+	<div id="new-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<label for="filename">Name:</label>
+			<input name="new-filename" type="text" value="untitled">
+		</div>
+		<div class="file-menu-form">
+			<label for="width">Width:</label>
+			<input name="width" type="number" value="0">
+		</div>
+		<div class="file-menu-form">
+			<label for="height">Height:</label>
+			<input name="height" type="number" value="0">
+		</div>
+		<button class="ok-button">OK</button>
 
-	<div style="padding-top: 50px"><label>Name your file: </label>
-	<input type="text" id="fileNameInput" value="untitled" style="width: 300px">
-	<select id="save_file_type" size=1>
-		<option value="svg">.svg</option>
-		<option value="yml">.yml</option>
-	</select>
-		</div><p>
-	<button id="saveFileButton">Save it!</button>
-	<button id="saveAsFileButton">Save it as!</button>
-
-	<div class="panel">
-		<button id="target">Reload</button>
-		<button id="editButton">Edit</button>
-		<button id="addToNewLayer">New layer</button>
-		<button id="downloadButton">Download</button>
-		<button id="deleteButton">Delete</button>
-		<input id="deleteAll" type="checkbox">Delete all
-		<p id="text">Click on the Reload button to get a list of saved files!<p>
-		<ul id="list_svg"></ul>
 	</div>
+	<div id="save-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<label>Name your file:</label>
+			<input id="file_name" type="text" value="untitled">
+			<label>.svg</label>
+		</div>
+		<button id="save-button">Save it!</button>
+	</div>
+	<div id="download-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<label>Download file name:</label>
+			<input type="text" id="download_file_name" value="untitled">
+			<label>.svg</label>
+		</div>
+		<button id="download-button">Download it!</button>
+	</div>
+	<div id="open-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<input type="file" id="file" />
+		</div>
+	</div>
+	<div id="container">
+		<div id="tools-panel">
+			<div id="tools-choosing">
+				<div id="cursorTool" class="tool-button" name="cursor"></div>
+				<div id="pencilTool" class="tool-button" name="pencil"></div>
+				<div id="lineTool" class="tool-button" name="line"></div>
 
-	<br>
-	<input type="file" id="file" />
-	<br>
+				<div id="polygonTool" class="tool-button" name="polygon"></div>
+				<div id="geometry" class="hiddenTools">
+					<div id="rectTool" class="tool-button" name="rect"></div>
+					<div id="ellipseTool" class="tool-button" name="ellipse"></div>
+				</div>
+				<div id="pathTool" class="tool-button" name="path"></div>
+				<div id="textTool" class="tool-button" name="text"></div>
+				<div id="fillTool" class="tool-button" name="fill"></div>
+				<div id="eraserTool" class="tool-button" name="eraser"></div>
+				<div id="moveTool" class="tool-button" name="move">перемешение</div>
+				<div id="rotateTool" class="tool-button" name="rotate"></div>
+				<div id="manage" class="hiddenTools">
+					<div id="deformTool" class="tool-button" name="deform"></div>
+					<div id="scaleTool" class="tool-button" name="scalе"></div>
+					<div id="splitTool" class="tool-button" name="split"></div>
+					<div id="skewTool" class="tool-button" name="skew"></div>
+					<div id="mirrorTool" class="tool-button" name="mirror"></div>
+					<div id="compressTool" class="tool-button" name="compress"></div>
+				</div>
+				<div class="vertical-divider"></div>
+				<div id="color-choosing">
+					<div id="color-choosing-box-main">
+						<input id="color-main" class="box" type="color">
+					</div>
+					<div id="color-choosing-box-sub">
+						<input id="color-sub" class="box" type="color">
+					</div>
+				</div>
+				<div id="filling-type">
+					<input id="fillbox" name="fill" type="checkbox" checked>
+					<label for="fill">No fill</label>
+				</div>
+		</div>
+	</div>
+	<svg id="workspace" version="1.1" xmlns="http://www.w3.org/2000/svg"
+		xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
+	<div id="addition-panel">
+		<div id="layers-panel-list">
+			<div id="layers-panel-button" class="tool-button"></div>
+			<div id="layers-panel-content">
+				<div id="layers-panel-control">
+					<button id="createLayerButton" class="layers-panel-control-button">new layer</button>
+					<button id="deleteLayerButton" class="layers-panel-control-button">delete layer</button>
+					<button id="createNewFileButton" class="layers-panel-control-button">new file</button>
+					<button id="mergeWithPrevious" class="layers-panel-control-button">merge with previous</button>
+					<button id="mergeVisible" class="layers-panel-control-button">merge visible</button>
+					<button id="createFromVisible" class="layers-panel-control-button">create layer from visible</button>
+					<button id="copyLayer" class="layers-panel-control-button">copy</button>
+					<button id="layerUp" class="layers-panel-control-button">up</button>
+					<button id="layerDown" class="layers-panel-control-button">down</button>
+					<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
+					<div>Layers</div>
+				</div>
+				<div id="layers-panel-choosing">
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<!--<script src="{% static 'svg_editor/js/design.js' %} 20220714154345"></script>
+	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
+	<script src="{% static 'svg_editor/js/layers.js' %}? 202207232241"></script>
+	<script src="{% static 'svg_editor/js/draw.js' %}? 20220714154345"></script>
+	-->
+	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topath.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topoly.js"></script>
+	<script src="{% static 'svg_editor/js/design.js' %}"></script>
+	<script src="{% static 'svg_editor/js/main.js' %}?"></script>
+	<script src="{% static 'svg_editor/js/layers.js' %}?"></script>
+	<script src="{% static 'svg_editor/js/draw.js' %}?"></script>
 	<script>
 		const token = "{{csrf_token}}",
 			saveURL = "{% url 'files_save' %}",
@@ -102,9 +188,7 @@
 
 		const workspace = document.querySelector('#workspace');
 	</script>
-	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
-	<script src="{% static 'svg_editor/js/layers.js' %}? 202207232241"></script>
-	<script src="{% static 'svg_editor/js/draw.js' %}? 20220714154345"></script>
 	{% endblock javascript %}
 </body>
+
 </html>

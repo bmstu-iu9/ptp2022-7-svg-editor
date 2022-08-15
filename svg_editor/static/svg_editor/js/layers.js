@@ -8,7 +8,7 @@
 'use strict'
 
 const opacitySlider = document.querySelector('#opacity_slider');
-const layerControlPanel = document.querySelector('#layer_panel');
+const layerControlPanel = document.querySelector('#layers-panel-choosing');
 
 let currentLayer,
     i;
@@ -49,23 +49,17 @@ function newLayer(baseElement, layerName) {
     };
 }
 
-/**
- * Добавляет переданный слой в редактор
- * (по умолчанию над остальными)
- * @param {} layer - вставляемый слой
- * @param {string} place - если 'end', слой вставляется под остальные
- */
-function addToPanel(layer, place) {
-    layer.layerNode.setAttribute("width", workspace.clientWidth);
-    layer.layerNode.setAttribute("height", workspace.clientHeight);
-    if (place == 'end') {
-        workspace.prepend(layer.layerNode);
-        layerControlPanel.append(layer);
-    } else {
-        workspace.append(layer.layerNode);
-        layerControlPanel.prepend(layer);
-    }
-    selectLayer(layer);
+    let newNote = newLayerNote(newLayer, layerName);
+    newNote.getNode = function() {
+        return this.layer.node;
+    };
+    newNote.getName = function() {
+        return this.children[0].lastChild.innerText;
+    };
+    layerControlPanel.prepend(newNote);
+
+    newNote.getNode().classList.add('layer');
+    selectLayer(newNote);
 }
 
 /**
@@ -90,6 +84,7 @@ function deleteLayer() {
     currentLayer.layerNode.remove();
     currentLayer.remove();
     currentLayer = null;
+    historyСorrection();
     i--;
 }
 
@@ -97,6 +92,7 @@ function deleteAllLayers() {
     workspace.innerHTML = "";
     layerControlPanel.innerHTML = "";
 
+    historyСorrection();
     currentLayer = null;
     i = 0;
 }
@@ -349,50 +345,56 @@ $(document).ready(function () {
         addToPanel(union);
     })
 
+    $("#opacity_slider").on("change", changeOpacity);
+
     $("#createNewFileButton").click();
 
-    $('#layer_panel').on("click", ".layer_note", function () {
+    $('#layers-panel-choosing').on("click", ".layer_note", function () {
+        $(".layer-note.active").not(this).removeClass("active");
+        $(this).toggleClass("active");
+        selectLayer(this);
+        console.log(currentLayerNote);
+    })
+    $('#layers-panel-choosing').on("dragstart", ".layer-note", function () {
         selectLayer(this);
     })
-    $('#layer_panel').on("dragstart", ".layer_note", function () {
-        selectLayer(this);
-    })
-    $('#layer_panel').on("dragenter", ".top", function () {
+    $('#layers-panel-choosing').on("dragenter", ".top", function () {
         let layerNote = this.parentElement;
         this.querySelector('input').classList.add('unactive');
         layerNote.classList.add('hovered_top');
     })
-    $('#layer_panel').on("dragleave", ".top", function () {
+    $('#layers-panel-choosing').on("dragleave", ".top", function () {
         let layerNote = this.parentElement;
         this.querySelector('input').classList.remove('unactive');
         layerNote.classList.remove('hovered_top');
     })
-    $('#layer_panel').on("dragenter", ".bottom", function () {
+    $('#layers-panel-choosing').on("dragenter", ".bottom", function () 
+    {
         let layerNote = this.parentElement;
         layerNote.classList.add('hovered_bottom');
     })
-    $('#layer_panel').on("dragleave", ".bottom", function () {
+    $('#layers-panel-choosing').on("dragleave", ".bottom", function () {
         let layerNote = this.parentElement;
         layerNote.classList.remove('hovered_bottom');
     })
-    $('#layer_panel').on("dragover", ".top, .bottom", function (e) {
+    $('#layers-panel-choosing').on("dragover", ".top, .bottom", function (e) {
         e.preventDefault();
     })
-    $('#layer_panel').on("drop", ".top", function () {
+    $('#layers-panel-choosing').on("drop", ".top", function () {
         console.log('dropTop');
         let layerNote = this.parentElement;
         $(this).trigger("dragleave");
         layerNote.layerNode.after(currentLayer.layerNode);
         layerNote.before(currentLayer);
     })
-    $('#layer_panel').on("drop", ".bottom", function () {
+    $('#layers-panel-choosing').on("drop", ".bottom", function () {
         console.log('dropBottom');
         let layerNote = this.parentElement;
         $(this).trigger("dragleave");
         layerNote.layerNode.before(currentLayer.layerNode);
         layerNote.after(currentLayer);
     })
-    $('#layer_panel').on("click", ".layer_note input", function () {
+    $('#layers-panel-choosing').on("click", ".layer_note input", function () {
         let clicked = this.parentElement.parentElement.layerNode;
         if (this.checked) {
             clicked.setAttribute('display', '');

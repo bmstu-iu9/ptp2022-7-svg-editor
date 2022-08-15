@@ -1,3 +1,8 @@
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
+
 html,
 body {
     background: white;
@@ -18,7 +23,7 @@ body {
     background: #CCD7E4;
 }
 
-.wrapper {
+.wrapper-login {
     position: relative;
     max-width: 430px;
     width: 100%;
@@ -27,38 +32,71 @@ body {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-.wrapper .form {
+.wrapper-email-complete {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-image: url("../icons/confetti-2596224.svg");
+    background-repeat: no-repeat;
+    background-position: 340px 10px;
+}
+
+.wrapper-email-done {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-image: url("../icons/watch.svg");
+    background-repeat: no-repeat;
+    background-position: 345px 10px;
+}
+
+.wrapper-email-incomplete {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-image: url("../icons/rain.svg");
+    background-repeat: no-repeat;
+    background-position: 345px 10px;
+}
+
+.wrapper-signup {
+    position: relative;
+    max-width: 900px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-signup form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.form1 {
+    grid-column: 1;
+}
+
+.form {
     padding: 30px;
 }
 
 
-.wrapper .form .title {
+.form .title {
     position: relative;
     font-size: 27px;
     font-weight: 600;
 }
-
-.form-signup {
-    float: left;
-    width: 50%;
-  }
-  
-  /* Clear floats after the columns */
-  .forms:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
-/*.form .title {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px;
-    width: 30px;
-    background-color: #828A95;
-}*/
 
 .form .input-field {
     margin-top: 30px;
@@ -90,7 +128,6 @@ body {
 .input-field i {
     position: absolute;
     top: 50%;
-    left: 0;
     transform: translateY(-50%);
     font-size: 23px;
 }
@@ -99,7 +136,7 @@ body {
     border-color: #828A95;
 }
 
-.input-field input:is(:focus, :valid)  ~ i {
+.input-field input:is(:focus, :valid)~i {
     color: #828A95;
 }
 
@@ -107,11 +144,18 @@ body {
     margin-left: 5px;
 }
 
-.form .check {
+.input-field #showHidePassword {
+    right: 14px;
+    bottom: 0;
+    cursor: pointer;
+}
+
+
+.check {
     margin-top: 20px;
 }
 
-.form .signup {
+.signup {
     margin-top: 6px;
 }
 
@@ -158,7 +202,7 @@ body {
     font-size: 70%;
     font-weight: 600;
     color: #828A95;
-    display:grid;
+    display: grid;
     margin-bottom: -5px;
 }
 
@@ -171,4 +215,89 @@ body {
 .instruction ul {
     margin-left: -17px;
     margin-bottom: 1px;
+}
+
+.form-account {
+    max-width: 900px;
+}
+
+.block {
+    text-align: center;
+    padding: 25px;
+    margin-top: 40px;
+    margin-bottom:40px;
+    font-size: 17px;
+}
+
+.block span, 
+.block .icons {
+    cursor: pointer;
+    -moz-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+}
+
+.block .icons {
+    position: relative;
+    display: block;
+    justify-content: center;
+    align-items: center;
+
+    margin: 10px;
+    width: 137px;
+    height: 110px;
+}
+
+.icons i {
+    position: absolute;
+    font-size: 70px;
+    
+}
+
+.icon-default {
+    transition: opacity .3s, transform .3s;
+}
+
+.icon-hover {
+    transition: opacity .3s, transform .3s;
+    transform: rotate(-180deg) scale(.5);
+    opacity: 0;
+}
+
+.block .wrapper-block {
+    transform: scale(1.2);
+}
+
+.block .wrapper-block:hover .icon-default {
+    transform: rotate(180deg) scale(.5);
+    opacity: 0;
+}
+
+.block .wrapper-block:hover .icon-hover {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+}
+
+.form-account .blocks .block.ch-pw {
+    float: left;
+    width: 33%;
+    
+}
+
+.form-account .blocks .block.logout {
+    float: left;
+    width: 33%;
+}
+
+.form-account .blocks .block.back {
+    float: right;
+    width: 33%;
+}
+
+.wrapper-block a {
+    text-decoration: none;
+}
+
+.wrapper-block a:hover {
+    text-decoration: underline;
+    color: #767D87;
 }
