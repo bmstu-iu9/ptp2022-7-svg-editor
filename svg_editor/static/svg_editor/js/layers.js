@@ -25,21 +25,21 @@ let currentLayer,
 function newLayer(baseElement, layerName) {
     let newSVG = (baseElement === undefined) ? SVG() : SVG(baseElement);
 
-    let newLayer = newLayerNote(layerName);
+    let newLayer = newLayerNote(newSVG, layerName);
     newLayer.svg = newSVG;
-    newLayer.layerNode = newNote.svg.node;
+    newLayer.layerNode = newLayer.svg.node;
     newLayer.layerName = layerName;
     newLayer.layerNode.classList.add('layer');
     return newLayer;
 
-    function newLayerNote(layerName) {
+    function newLayerNote(relatedLayerSVG, layerName) {
         let note = document.createElement('div');
         note.insertAdjacentHTML('beforeend', `
-        <div class="top" style="width: 100%; height: 10px;">
+        <div class="top" style="width: 100%; height: 20px;">
         <input type="checkbox" checked/>
         <label>${layerName}</label>
         </div>
-        <div class="bottom" style="width: 100%; height: 10px;"></div>
+        <div class="bottom" style="width: 100%; height: 20px;"></div>
         `);
         note.classList.add('layer_note');
         note.setAttribute('draggable', 'true');
@@ -49,17 +49,24 @@ function newLayer(baseElement, layerName) {
     };
 }
 
-    let newNote = newLayerNote(newLayer, layerName);
-    newNote.getNode = function() {
-        return this.layer.node;
-    };
-    newNote.getName = function() {
-        return this.children[0].lastChild.innerText;
-    };
-    layerControlPanel.prepend(newNote);
+/**
+ * Добавляет переданный слой в редактор
+ * (по умолчанию над остальными)
+ * @param {} layer - вставляемый слой
+ * @param {string} place - если 'end', слой вставляется под остальные
+ */
 
-    newNote.getNode().classList.add('layer');
-    selectLayer(newNote);
+ function addToPanel(layer, place) {
+    layer.layerNode.setAttribute("width", workspace.clientWidth);
+    layer.layerNode.setAttribute("height", workspace.clientHeight);
+    if (place == 'end') {
+        workspace.prepend(layer.layerNode);
+        layerControlPanel.append(layer);
+    } else {
+        workspace.append(layer.layerNode);
+        layerControlPanel.prepend(layer);
+    }
+    selectLayer(layer);
 }
 
 /**
@@ -67,6 +74,7 @@ function newLayer(baseElement, layerName) {
  * @param {} layer - выбираемый слой
  */
 function selectLayer(layer) {
+    console.log(layer.layerName)
     if (currentLayer !== null) {
         currentLayer.setAttribute('checked', '');
     }
@@ -355,7 +363,7 @@ $(document).ready(function () {
         selectLayer(this);
         console.log(currentLayerNote);
     })
-    $('#layers-panel-choosing').on("dragstart", ".layer-note", function () {
+    $('#layers-panel-choosing').on("dragstart", ".layer_note", function () {
         selectLayer(this);
     })
     $('#layers-panel-choosing').on("dragenter", ".top", function () {
