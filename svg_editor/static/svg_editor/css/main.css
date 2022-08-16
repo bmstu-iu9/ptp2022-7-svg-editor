@@ -532,8 +532,8 @@ td {
 }
 
 #layers-panel-content {
-    width: 300px;
-    height: 200px;
+    width: 18%;
+    height: 100%;
     display: inline-block;
     position: absolute;
     border: 1px solid #3e3e3e;
@@ -608,8 +608,12 @@ td {
     width: 100%;
     height: 20%;
     align-items: center;
-    display: flex;
+    display: flex; 
     border-bottom: 1px solid black;
+}
+
+#workspace .non_displayable{
+    display: none; 
 }
 
 .layer-button {
@@ -621,15 +625,14 @@ td {
 
 .layer_note {
     width: 100%;
-    height: 40px;
-    border-bottom: 1px solid #3e3e3e;
-    border-right: 1px solid #3e3e3e;
+    height: 35px;
+    border: 1px solid #3e3e3e;
     background: linear-gradient(to left, white 50%, #ffc673 50%) right;
     background-size: 200%;
     transition: 0.3s ease;
+    transition-property: background;
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
 .layer_note[checked='true'] {
@@ -638,7 +641,6 @@ td {
 }
 
 .layer_note label {
-	margin: auto; 
 	user-select: none;
 	pointer-events: none;
 }
@@ -648,11 +650,11 @@ td {
 }
 
 .hovered_top{
-	border-top-width: 5px;
+	border-top-width: 3px;
 	border-top-color: black;
 }
 
 .hovered_bottom{
-	border-bottom-width: 5px;
+	border-bottom-width: 3px;
 	border-bottom-color: black;
 }

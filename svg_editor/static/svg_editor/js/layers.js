@@ -13,15 +13,6 @@ const layerControlPanel = document.querySelector('#layers-panel-choosing');
 let currentLayer,
     i;
 
-/**
- * Создаёт и возвращает новый слой
- * (на самом деле в роли слоя выступает div-запись о нём в layerControlPanel,
- * которая содержит ссылку на слой как на html-узел (.layerNode) 
- * и как на элемент библиотеки svgjs (.svg))
- * @param {Element} baseElement - html-узел, который будет преобразован в слой
- * @param {string} layerName - имя создаваемого слоя
- * @returns новый слой
- */
 function newLayer(baseElement, layerName) {
     let newSVG = (baseElement === undefined) ? SVG() : SVG(baseElement);
 
@@ -49,13 +40,6 @@ function newLayer(baseElement, layerName) {
     };
 }
 
-/**
- * Добавляет переданный слой в редактор
- * (по умолчанию над остальными)
- * @param {} layer - вставляемый слой
- * @param {string} place - если 'end', слой вставляется под остальные
- */
-
  function addToPanel(layer, place) {
     layer.layerNode.setAttribute("width", workspace.clientWidth);
     layer.layerNode.setAttribute("height", workspace.clientHeight);
@@ -69,12 +53,7 @@ function newLayer(baseElement, layerName) {
     selectLayer(layer);
 }
 
-/**
- * Выбирает переданный слой как текущий активный
- * @param {} layer - выбираемый слой
- */
 function selectLayer(layer) {
-    console.log(layer.layerName)
     if (currentLayer !== null) {
         currentLayer.setAttribute('checked', '');
     }
@@ -87,11 +66,11 @@ function selectLayer(layer) {
     layerUpdate(layer.svg);
 }
 
-function deleteLayer() {
-    if (currentLayer === null) return;
-    currentLayer.layerNode.remove();
-    currentLayer.remove();
-    currentLayer = null;
+function deleteLayer(layer) {
+    if (layer === null) return;
+    layer.layerNode.remove();
+    layer.remove();
+    layer = null;
     historyСorrection();
     i--;
 }
@@ -255,7 +234,11 @@ $(document).ready(function () {
     })
 
     $("#deleteLayerButton").click(function () {
-        deleteLayer();
+        let nextLayer = currentLayer.nextElementSibling;
+        deleteLayer(currentLayer);
+        if (nextLayer != null) {
+            selectLayer(nextLayer);
+        }
     })
 
     $("#createNewFileButton").click(function () {
@@ -291,7 +274,7 @@ $(document).ready(function () {
     $("#mergeVisible").click(function () {
         let visibleLayers = [];
         for (let layer of layerControlPanel.childNodes) {
-            if (layer.layerNode.getAttribute('display') == 'none') continue;
+            if ($(layer.layerNode).hasClass("non_displayable")) continue;
             layer.layerNode.removeAttribute("xmlns:xlink");
             layer.layerNode.removeAttribute("xmlns:svgjs");
             layer.layerNode.removeAttribute("xmlns");
@@ -309,6 +292,7 @@ $(document).ready(function () {
             union.layerNode.prepend(layer.layerNode);
             layer.remove();
         }
+        selectLayer(union);
     })
 
     $('#layerUp').click(function () {
@@ -361,8 +345,8 @@ $(document).ready(function () {
         $(".layer-note.active").not(this).removeClass("active");
         $(this).toggleClass("active");
         selectLayer(this);
-        console.log(currentLayerNote);
     })
+
     $('#layers-panel-choosing').on("dragstart", ".layer_note", function () {
         selectLayer(this);
     })
@@ -402,12 +386,9 @@ $(document).ready(function () {
         layerNote.layerNode.before(currentLayer.layerNode);
         layerNote.after(currentLayer);
     })
-    $('#layers-panel-choosing').on("click", ".layer_note input", function () {
+    $('#layers-panel-choosing').on("click", ".layer_note input", function (e) {
         let clicked = this.parentElement.parentElement.layerNode;
-        if (this.checked) {
-            clicked.setAttribute('display', '');
-            return;
-        }
-        clicked.setAttribute('display', 'none');
+        $(clicked).toggleClass('non_displayable');
+        e.stopPropagation();
     })
 })
