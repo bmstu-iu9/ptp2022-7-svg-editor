@@ -1,9 +1,10 @@
 import itertools
+import json
 import os
 from pathlib import Path
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, FileResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from illustrator.settings import BASE_DIR
 import yaml
 from . import illustration
@@ -12,8 +13,18 @@ from . import illustration
 # Rendering the editor's page
 @login_required
 def index(request):
-    return render(request, 'svg_editor/index.html')
+    request_dict = dict(request.GET)
+    if 'file_name' in request_dict and 'type' in request_dict and 'method' in request_dict:
+        return render(request, 'svg_editor/index.html', {'file_name': json.dumps(request_dict['file_name']),
+                                                         'type': json.dumps(request_dict['type']),
+                                                         'method': json.dumps(request_dict['method'])})
+    else:
+        return redirect('account')
 
+
+@login_required
+def start(request):
+    return render(request, 'svg_editor/start.html')
 
 # Script for viewing the list of svg and project files
 def files_view(request):
@@ -91,12 +102,13 @@ def files_download(request):
         request_dict = dict(request.GET)
         if request.method == 'GET' and 'file_name' in request_dict:
             file_name = request_dict['file_name'][0]
-            path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'+'/'+file_name))
+            path = Path(
+                os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg' + '/' + file_name))
             if path.exists():
                 file = open(path, 'rb')
                 response = FileResponse(file)
                 response['Content-Type'] = 'application/octet-stream'
-                response['Content-Disposition'] = 'attachment;filename="{}"'\
+                response['Content-Disposition'] = 'attachment;filename="{}"' \
                     .format(file_name.encode('utf-8').decode('ISO-8859-1'))
                 return response
         return JsonResponse({'errors': 'File not found'}, status=400)
@@ -108,7 +120,8 @@ def files_upload(request):
     if request.user.is_authenticated:
         if request.method == 'POST' and 'file' in request.FILES:
             file = request.FILES['file']
-            path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'+'/'+str(file)))
+            path = Path(
+                os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg' + '/' + str(file)))
             if str(path.suffix) in ('.svg', '.yml'):
                 if path.exists():
                     for num in itertools.count(1):
@@ -135,11 +148,11 @@ def files_delete(request):
                 svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
                 for file in svgs_lists:
                     count += 1
-                    os.remove(path+'/'+file)
+                    os.remove(path + '/' + file)
                 return JsonResponse({'num_of_del': count}, status=200)
-            elif os.path.exists(path+'/'+request_dict['file_name'][0]):
+            elif os.path.exists(path + '/' + request_dict['file_name'][0]):
                 count += 1
-                os.remove(path+'/'+request_dict['file_name'][0])
+                os.remove(path + '/' + request_dict['file_name'][0])
                 return JsonResponse({'num_of_del': count}, status=200)
         return JsonResponse({'errors': 'File not found'}, status=400)
     return JsonResponse({'errors': 'Permission denied'}, status=403)

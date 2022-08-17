@@ -336,6 +336,21 @@ td {
     border: 1px solid;
 }
 
+.active{
+    border: 3px solid #0d93db !important;
+}
+
+.delete-page-button{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    margin-top: 30px;
+    margin-left: 50px;
+    background-color: salmon;
+    border: 2px solid black;
+}
+
 #cursorTool {
     background-image: url("/static/svg_editor/icons/cursor.svg");
 }
@@ -411,7 +426,7 @@ td {
 #tools-panel {
     background-color: white;
     width: 40px;
-    height: 100%;
+    height: 75%;
     align-content: center;
     float: left;
     border-right: 1px solid #3e3e3e;
@@ -509,20 +524,25 @@ td {
     opacity: 0.5;
 }
 
-#workspace {
-    width: 900px;
-    height: 600px;
-    margin: 10px 100px 0 100px;
+#easel {
+    width: 1450px;
+    height: 75%;
     border: 1px solid #3e3e3e;
     position: relative;
-    background: white;
+    margin: 10px 100px 0 100px;
     z-index: 0;
+}
+
+#workspace {
+    width: 100%;
+    height: 100%;
+    background: white;
 }
 
 #addition-panel {
     background: white;
     width: 40px;
-    height: 100%;
+    height: 75%;
     position: flex;
     float: right;
     align-content: center;
@@ -657,4 +677,44 @@ td {
 .hovered_bottom{
 	border-bottom-width: 3px;
 	border-bottom-color: black;
+}
+
+#pages-panel{
+    margin-bottom: 75px;
+    background: white;
+    width: 100%;
+    height: 100px;
+    position: absolute;
+    bottom: 0;
+    float: bottom;
+    align-content: center;
+    justify-content: center;
+    border: 1px solid #3e3e3e;
+}
+
+#pages-choosing{
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+    margin-top: 5px;
+    position: relative;
+}
+
+.page-node{
+    position: relative;
+    width: 70px;
+    height: 50px;
+    float: left;
+    text-align: center;
+    margin: 15px;
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    transition: background-color 0.2s ease-out;
+    border-radius: 15%;
+    display: flex;
+    border: 1px solid;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
