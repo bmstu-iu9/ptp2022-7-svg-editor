@@ -26,11 +26,11 @@ function newLayer(baseElement, layerName) {
     function newLayerNote(relatedLayerSVG, layerName) {
         let note = document.createElement('div');
         note.insertAdjacentHTML('beforeend', `
-        <div class="top" style="width: 100%; height: 20px;">
+        <div class="note_top">
         <input type="checkbox" checked/>
         <label>${layerName}</label>
         </div>
-        <div class="bottom" style="width: 100%; height: 20px;"></div>
+        <div class="note_bottom"></div>
         `);
         note.classList.add('layer_note');
         note.setAttribute('draggable', 'true');
