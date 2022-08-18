@@ -57,7 +57,7 @@
 			<label for="filename">Name:</label>
 			<input name="new-filename" type="text" value="untitled">
 			<select id="save_file_type" size=1>
-    			<option value="svg">.svg</option>
+				<option value="svg">.svg</option>
 				<option value="yml">.yml</option>
 			</select>
 		</div>
@@ -108,7 +108,7 @@
 		</div>
 		<div class="file-menu-form">
 			<label for="text-tool-input"></label>
-			<input type="text" id="text-tool-input"/>
+			<input type="text" id="text-tool-input" />
 		</div>
 		<button id="confirm-text-input" class="ok-button">Enter</button>
 	</div>
@@ -116,6 +116,7 @@
 		<div id="tools-panel">
 			<div id="tools-choosing">
 				<div title="Cursor" id="cursorTool" class="tool-button" name="cursor"></div>
+				<div title="Move" id="moveTool" class="tool-button" name="move"></div>
 				<div title="Pencil" id="pencilTool" class="tool-button" name="pencil"></div>
 				<div title="Line" id="lineTool" class="tool-button" name="line"></div>
 				<div title="Polygon" id="polygonTool" class="tool-button addition-open" name="polygon"></div>
@@ -152,31 +153,29 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div id="addition-panel">
-		<div id="layers-panel-list">
-			<div id="layers-panel-button" class="tool-button"></div>
-			<div id="layers-panel-content">
-				<div id="layers-panel-control">
-					<div id="createLayerButton" class="layers-panel-control-button"></div>
-					<div id="deleteLayerButton" class="layers-panel-control-button"></div>
-					<div id="createNewFileButton" class="layers-panel-control-button"></div>
-					<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
-					<div>Layers</div>
-				</div>
-				<div id="layers-panel-choosing">
+		<div id="easel"></div>
+		<div id="addition-panel">
+			<div id="layers-panel-list">
+				<div id="layers-panel-button" class="tool-button"></div>
+				<div id="layers-panel-content">
+					<div id="layers-panel-control">
+						<div id="createLayerButton" class="layers-panel-control-button"></div>
+						<div id="deleteLayerButton" class="layers-panel-control-button"></div>
+						<div id="createNewFileButton" class="layers-panel-control-button"></div>
+						<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
+						<div>Layers</div>
+					</div>
+					<div id="layers-panel-choosing">
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div id="easel">
-
-	</div>
-	<div id="pages-panel">
-		<div id="pages-choosing">
+	<footer>
+		<div id="pages-panel">
+			<div id="pages-choosing"></div>
 		</div>
-	</div>
-	</div>
+	</footer>
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -210,7 +209,7 @@
 			method = JSON.parse("{{method | escapejs}}");
 		const easel = new Easel(file_name[0], type[0]);
 		var workspace = easel.currentPage.tag;
-		if (method[0] === "open"){
+		if (method[0] === "open") {
 			easel.edit();
 		}
 	</script>

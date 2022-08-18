@@ -80,9 +80,10 @@ $(document).ready(function () {
     }
     // Инструменты
     $("#cursorTool").on("click", function () {
-        $("#filling-type").css("display", "none");
-        $("#width-parameter").css("display", "none");
         clickTool("cursor");
+    });
+    $("#moveTool").on("click", function () {
+        clickTool("move");
     });
 
     $("#pencilTool").on("click", function () {
@@ -97,8 +98,14 @@ $(document).ready(function () {
     });
 
     $("#lineTool").on("click", function () {
-        $("#filling-type").css("display", "none");
         clickTool("line");
+        $("#filling-type").css("display", "none");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+        } else {
+            $("#width-parameter").css("display", "none");
+        }
+        
     });
 
     $("#polygonTool").on("click", function () {
