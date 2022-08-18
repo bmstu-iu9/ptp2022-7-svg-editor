@@ -53,8 +53,11 @@ $(document).ready(function () {
 
     function clickTool(name) {
         const $this = $(`#${name}Tool`);
-        const $lastPressed = $(".tool-button.tool-clicked").not($this);
+        const $lastPressed = $(".tool-button.tool-clicked").not($this).not($("#layers-panel-button"));
         $this.toggleClass("tool-clicked");
+        if (!$this.hasClass("addition-open")) {
+        $(".hiddenTools").removeClass("open");
+        }
         if ($lastPressed.length) {
             $lastPressed.css(
                 "background-image",
@@ -188,14 +191,9 @@ $(document).ready(function () {
     $("#mirrorTool").on("click", function () {
         clickTool("mirror"); 
     });
-    $("#tenscompressTool").on("click", function () {
-        clickTool("tenscompress");
+    $("#compressTool").on("click", function () {
+        clickTool("compress");
     });    
-
-    $("#clear-button").on("click", function () {
-        draw.clear();
-        object = null;
-    });
     // Слайдер ширины
     $(document).on("input", "#width-slider", function () {
         $("#width-slider-value").val($(this).val());
@@ -208,7 +206,6 @@ $(document).ready(function () {
     $(".drop-button").on("click", function () {
         $(".drop-button").not(this).removeClass("selected");
         let currentDropdown = $(this).parent().find(".drop-content");
-        //buttonClick($(this), $(".drop-button"));
         $(this).toggleClass("selected");
         currentDropdown.toggleClass("open");
         $(".drop-content").not(currentDropdown).removeClass("open");
@@ -222,7 +219,6 @@ $(document).ready(function () {
                 "background-image",
                 "url('/static/svg_editor/icons/layers-active.svg')"
             );
-            changeToolEvent();
         } else {
             $(this).css(
                 "background-image",

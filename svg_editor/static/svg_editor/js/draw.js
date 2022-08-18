@@ -334,7 +334,7 @@ function textMove(x, y) {
 }
 
 async function textUp(x, y) {
-    if (object != null && $("#text-input-menu").css("display") == "none") {
+    if (object != null && $("#text-input-menu").css("display") == "none"){
         let rect = object;
         rect.remove();
         if (rect.height() != 0 && rect.width() != 0) {
