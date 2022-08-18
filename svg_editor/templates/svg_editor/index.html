@@ -13,14 +13,6 @@
 	<div id="preloader">
 		<div id="spinner"></div>
 	</div>
-	<!--<p style="font-size: 25px; font-weight: bold">
-		{% if user.is_authenticated %}
-		<a href="{% url 'account' %}">{{user.get_username}}</a>
-		{% else %}
-		<a href="{% url 'login' %}">Login!</a>
-		{% endif %}
-	</p>
-	<h1>СВГ Редактор</h1>-->
 	<header>
 		<div class="drop-list">
 			<div class="drop-button">File</div>
@@ -32,7 +24,13 @@
 			</div>
 		</div>
 		<div id="account-panel">
-			<a style="text-decoration: none; color: black;" href="{% url 'account' %}">{{user.get_username}}</a>
+			<a style="text-decoration: none; color: black;" href="{% url 'account' %}">{{user.get_username}}
+			</a>
+			{% if user.is_authenticated %}
+			<a href="{% url 'account' %}">{{user.get_username}}</a>
+			{% else %}
+			<a href="{% url 'login' %}">Login</a>
+			{% endif %}
 		</div>
 		<div class="drop-list">
 			<div class="drop-button">Edit</div>
@@ -47,6 +45,10 @@
 			<label for="stroke-width" id="stroke-width">Stroke width:</label>
 			<input id="width-slider" type="range" name="stroke-width" min="1" max="10" value="1" step="0.1">
 			<input id="width-slider-value" type="number" min="1" max="10" value="1">
+		</div>
+		<div id="filling-type">
+			<input id="fillbox" name="fill" type="checkbox" checked>
+			<label for="fill">No fill</label>
 		</div>
 	</div>
 	<div id="new-menu" class="file-menu-panel">
@@ -146,10 +148,6 @@
 					<div id="color-choosing-box-sub">
 						<input id="color-sub" class="box" type="color">
 					</div>
-				</div>
-				<div id="filling-type">
-					<input id="fillbox" name="fill" type="checkbox" checked>
-					<label for="fill">No fill</label>
 				</div>
 			</div>
 		</div>

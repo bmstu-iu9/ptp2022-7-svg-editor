@@ -21,10 +21,13 @@ body {
 
 #preloader {
     display: inline-block;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background-color: #d9d9d9;
+    z-index: 100;
 }
 #spinner {
     content: " ";
@@ -48,6 +51,7 @@ body {
     }
 }
 
+
 #account-panel {
     display: flex;
     position: relative;
@@ -55,6 +59,8 @@ body {
     width: 200px;
     height: 100%;
     border-left: 1px solid;
+    justify-content: center;
+    align-items: center;
 }
 
 header {
@@ -191,7 +197,7 @@ td {
 
 #control-panel {
     width: 100%;
-    height: 30px;
+    height: 32px;
     background-color: white;
     border: 1px solid black;
     border-left: 0;
@@ -258,13 +264,21 @@ td {
 
 .delete-page-button{
     position: absolute;
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
     border-radius: 100%;
-    margin-top: 30px;
-    margin-left: 50px;
-    background-color: salmon;
-    border: 2px solid black;
+    top: 30px;
+    left: 50px;
+    background-image: url("/static/svg_editor/icons/x.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px 20px;
+    transition: background-color 0.3s;
+}
+
+.delete-page-button:hover {
+    background-color: rgba(249, 200, 158, 0.522);
+    transition: background-color 0.3s;
 }
 
 #cursorTool {
@@ -352,9 +366,9 @@ td {
 #tools-panel {
     background-color: white;
     width: 40px;
-    height: calc(100% - 100px);
+    height: 100%;
     align-content: center;
-    top: 21px;
+    top: 23.5px;
     position: absolute;
     z-index:10;
     border-right: 1px solid #3e3e3e;
@@ -436,12 +450,12 @@ td {
 }
 
 #filling-type {
-    height: 50%;
-    width: 100%;
-    position: relative;
-    margin-top: 10%;
-    margin-left: 10%;
+    height: 20px;
+    width: 100px;
+    position: absolute;
     display: none;
+    top: 50%;
+    transform: translateY(-50%);
     vertical-align: middle;
 }
 
@@ -473,9 +487,10 @@ td {
 #addition-panel {
     background: white;
     width: 40px;
-    height: 75%;
-    position: flex;
-    float: right;
+    height: 100%;
+    position: absolute;
+    top: 23px;
+    right: 0px;
     align-content: center;
     justify-content: center;
     border: 1px solid #3e3e3e;
@@ -571,10 +586,7 @@ td {
     width: 100%;
     height: 80px;
     position: absolute;
-    display: flex;
-    bottom: 20px;
-    align-content: center;
-    justify-content: center;
+    bottom: 0px;
     border-top: 1px solid #3e3e3e;
     z-index: 11;
 }
@@ -591,19 +603,21 @@ td {
     position: relative;
     width: 70px;
     height: 50px;
-    float: left;
     text-align: center;
-    margin: 15px;
+    display: flex;
+    float: left;
+    margin-left: 10px;
     background-size: 25px 25px;
     background-repeat: no-repeat;
     background-position: center;
     background-color: white;
     transition: background-color 0.2s ease-out;
     border-radius: 15%;
-    display: flex;
     border: 1px solid;
     overflow: hidden;
     text-overflow: ellipsis;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 
