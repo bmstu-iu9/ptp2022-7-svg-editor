@@ -252,6 +252,11 @@ $(document).ready(function () {
             display: "none",
             "z-index": "0",
         });
+        let newPageName = document.getElementsByName('new-filename')[0].value,
+            newPageType = document.getElementById('save_file_type').value;
+        easel.createPage(newPageName, newPageType)
+        workspace = easel.currentPage.getWorkplace();
+        clearInputForm();
     });
 
     $(".close-menu-button").on("click", function () {
@@ -297,5 +302,14 @@ $(document).ready(function () {
             display: "none",
             "z-index": "0",
         });
+    });
+    let $pagesChoosing = $('#pages-choosing');
+    $pagesChoosing.on("click", "label",function (){
+        easel.turnTo($(this).text());
+        workspace = easel.currentPage.getWorkplace();
+    });
+    $pagesChoosing.on("click", ".delete-page-button",function (){
+        easel.remove($(this).parent().find("label").text());
+        workspace = easel.currentPage.getWorkplace();
     });
 });

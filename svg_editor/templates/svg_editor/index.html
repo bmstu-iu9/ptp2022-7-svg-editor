@@ -32,6 +32,7 @@
 			</div>
 		</div>
 		<div id="account-panel">
+			<a style="text-decoration: none; color: black;" href="{% url 'account' %}">{{user.get_username}}</a>
 		</div>
 		<div class="drop-list">
 			<div class="drop-button">Edit</div>
@@ -55,6 +56,10 @@
 		<div class="file-menu-form">
 			<label for="filename">Name:</label>
 			<input name="new-filename" type="text" value="untitled">
+			<select id="save_file_type" size=1>
+    			<option value="svg">.svg</option>
+				<option value="yml">.yml</option>
+			</select>
 		</div>
 		<div class="file-menu-form">
 			<label for="width">Width:</label>
@@ -148,9 +153,6 @@
 			</div>
 		</div>
 	</div>
-	</div>
-	<svg id="workspace" version="1.1" xmlns="http://www.w3.org/2000/svg"
-		xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
 	<div id="addition-panel">
 		<div id="layers-panel-list">
 			<div id="layers-panel-button" class="tool-button"></div>
@@ -167,6 +169,13 @@
 			</div>
 		</div>
 	</div>
+	<div id="easel">
+
+	</div>
+	<div id="pages-panel">
+		<div id="pages-choosing">
+		</div>
+	</div>
 	</div>
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
@@ -178,10 +187,16 @@
 	-->
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topath.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topoly.js"></script>
+	<script src="{% static 'svg_editor/js/main.js' %}"></script>
 	<script src="{% static 'svg_editor/js/design.js' %}"></script>
-	<script src="{% static 'svg_editor/js/main.js' %}?"></script>
-	<script src="{% static 'svg_editor/js/layers.js' %}?"></script>
-	<script src="{% static 'svg_editor/js/draw.js' %}?"></script>
+	<script src="{% static 'svg_editor/js/layers.js' %}"></script>
+	<script src="{% static 'svg_editor/js/baseFactory.js' %}"></script>
+	<script src="{% static 'svg_editor/js/baseNode.js' %}"></script>
+	<script src="{% static 'svg_editor/js/baseSvgElement.js' %}"></script>
+	<script src="{% static 'svg_editor/js/page.js' %}"></script>
+	<script src="{% static 'svg_editor/js/easel.js' %}"></script>
+	<script src="{% static 'svg_editor/js/pageNode.js' %}"></script>
+	<script src="{% static 'svg_editor/js/draw.js' %}"></script>
 	<script>
 		const token = "{{csrf_token}}",
 			saveURL = "{% url 'files_save' %}",
@@ -189,9 +204,15 @@
 			downloadURL = "{% url 'files_download' %}",
 			viewURL = "{% url 'files_view' %}",
 			loadURL = "{% url 'files_get' %}",
-			deleteURL = "{% url 'files_delete' %}";
-
-		const workspace = document.querySelector('#workspace');
+			deleteURL = "{% url 'files_delete' %}",
+			file_name = JSON.parse("{{file_name | escapejs}}"),
+			type = JSON.parse("{{type | escapejs}}"),
+			method = JSON.parse("{{method | escapejs}}");
+		const easel = new Easel(file_name[0], type[0]);
+		var workspace = easel.currentPage.tag;
+		if (method[0] === "open"){
+			easel.edit();
+		}
 	</script>
 	{% endblock javascript %}
 </body>
