@@ -21,8 +21,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #CCD7E4;
-    /*fallback */
+    background: #CCD7E4; /*fallback */
     background-image: linear-gradient(to right top, #5b7dab, #708db6, #859ec0, #9aafcb, #afc0d6, #b2c6da, #b6ccde, #bad2e1, #abcedc, #9ccbd5, #8ec7cb, #84c3be);
     background-size: 400vw 400vh;
     animation: gradient 10s ease infinite;
@@ -114,7 +113,6 @@ body {
 .form {
     padding: 30px;
 }
-
 
 .form .title {
     position: relative;
@@ -265,7 +263,6 @@ body {
     display: block;
     justify-content: center;
     align-items: center;
-
     margin: 10px;
     width: 137px;
     height: 110px;
@@ -304,7 +301,6 @@ body {
 .form-account .blocks .block.ch-pw {
     float: left;
     width: 33%;
-
 }
 
 .form-account .blocks .block.logout {
