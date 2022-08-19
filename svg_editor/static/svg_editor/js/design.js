@@ -567,7 +567,8 @@ $(document).ready(function () {
         });
         let newPageName = document.getElementsByName('new-filename')[0].value,
             newPageType = document.getElementById('save_file_type').value;
-        easel.createPage(newPageName, newPageType)
+        easel.createPage(newPageName, newPageType);
+        easel.save();
         workspace = easel.currentPage.getWorkplace();
         clearInputForm();
     });

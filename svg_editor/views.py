@@ -14,10 +14,9 @@ from . import illustration
 @login_required
 def index(request):
     request_dict = dict(request.GET)
-    if 'file_name' in request_dict and 'type' in request_dict and 'method' in request_dict:
+    if 'file_name' in request_dict and 'type' in request_dict:
         return render(request, 'svg_editor/index.html', {'file_name': json.dumps(request_dict['file_name']),
-                                                         'type': json.dumps(request_dict['type']),
-                                                         'method': json.dumps(request_dict['method'])})
+                                                         'type': json.dumps(request_dict['type'])})
     else:
         return redirect('account')
 
@@ -25,6 +24,7 @@ def index(request):
 @login_required
 def start(request):
     return render(request, 'svg_editor/start.html')
+
 
 # Script for viewing the list of svg and project files
 def files_view(request):
@@ -34,6 +34,22 @@ def files_view(request):
             svgs_lists = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
             response = {
                 'svgs': svgs_lists
+            }
+            return JsonResponse(response, status=200)
+        return JsonResponse({'errors': 'Bad request'}, status=400)
+    return JsonResponse({'errors': 'Permission denied'}, status=403)
+
+
+def files_collision_validation(request):
+    if request.user.is_authenticated:
+        request_dict = dict(request.GET)
+        if request.method == "GET" and 'file_name' in request_dict:
+            path = os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg')
+            files_list = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
+            file_name = request_dict['file_name'][0]
+            print(files_list)
+            response = {
+                'exists': file_name in files_list
             }
             return JsonResponse(response, status=200)
         return JsonResponse({'errors': 'Bad request'}, status=400)

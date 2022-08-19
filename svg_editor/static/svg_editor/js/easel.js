@@ -61,9 +61,9 @@ class Easel extends BaseFactory{
                 file_name: fileName,
             },
             success: function (response) {
-                if (response.file_name.split('.').pop().toLowerCase() === 'svg') {
+                if (response.file_name.split('.').pop().toLowerCase() === 'svg' && response.svg) {
                     openAsSvg(response.svg);
-                } else {
+                } else if (response.yml) {
                     openAsProject(response.yml);
                 }
             },

@@ -1,4 +1,31 @@
 class FileManager {
+    static collisionValidation(fileName, onSuccessFunc){
+        $.ajax({
+            data: {file_name: fileName},
+            type: 'GET',
+            url: collisionValidationURL,
+            success: onSuccessFunc,
+            error: function (response) {
+                alert(response.responseJSON.errors);
+            }
+        });
+    }
+    static create(fileName, type, onSuccessFunc){
+        $.ajax({
+            data: {
+                file_name: fileName,
+                save_as: false,
+                svg: '',
+                type: type,
+            },
+            type: 'POST',
+            url: saveURL,
+            success: onSuccessFunc,
+            error: function (response) {
+                alert(response.responseJSON.errors);
+            }
+        });
+    }
     static upload(data){
         $.ajax({
             data: data,
