@@ -1,3 +1,8 @@
+/**
+ * @author Kabane-UN
+ * @author GarryNeKasparov
+ **/
+
 $(window).on('load', function() {
     $('#preloader').fadeOut("slow");
   });
