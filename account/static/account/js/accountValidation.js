@@ -1,37 +1,25 @@
 class AccountValidation{
-    static validateLogin(username){
+    static validateLogin(username, onSuccessFunc){
         $.ajax({
             data: {
                 'username':username,
             },
             type: 'GET',
             url: usernameValidationURL,
-            success: function (response) {
-                if (response.exists) {
-                    $('#id_username').removeClass('is-valid').addClass('is-invalid');
-                } else {
-                    $('#id_username').removeClass('is-invalid').addClass('is-valid');
-                }
-            },
+            success: onSuccessFunc,
             error: function (response) {
                 alert(response.responseJSON.errors);
             }
         });
     }
-    static validateEmail(email){
+    static validateEmail(email, onSuccessFunc){
         $.ajax({
             data: {
                 'email': email,
             },
             type: 'GET',
             url: emailValidationURL,
-            success: function (response) {
-                if (response.exists) {
-                    $('#id_email').removeClass('is-valid').addClass('is-invalid');
-                } else {
-                    $('#id_email').removeClass('is-invalid').addClass('is-valid');
-                }
-            },
+            success: onSuccessFunc,
             error: function (response) {
                 alert(response.responseJSON.errors);
             }

@@ -1,3 +1,7 @@
+/**
+ * @author Kabane-UN
+ **/
+
 $(document).ready(function () {
 
     // Get csrf_token
