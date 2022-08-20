@@ -46,11 +46,13 @@ function layerUpdate(newDraw) {
 //////////////////////////////////////////
 
 function breakDrawing() {
-    if ('select' in draw) {
-        if (!mouseup) toolMethods[tool]['mouseup']();
-        selectionClear();
-    } else if (object != null) object.remove();
-    if (object != null) object = null;
+    if (draw != undefined) {
+        if ('select' in draw) {
+            if (!mouseup) toolMethods[tool]['mouseup']();
+            selectionClear();
+        } else if (object != null) object.remove();
+        if (object != null) object = null;
+    }
 }
 
 function stopDrawing() {
@@ -130,7 +132,7 @@ function logMouseEvent(event) {
     else if (event.type == 'mousedown') mouseup = false;
 
     if (
-        !isDrawAllowed() || tool != 'cursor' &&
+        !easel.currentPage.pie.isDrawAllowed() || tool != 'cursor' &&
         event.type == 'mousedown' && !$('#workspace')[0].contains(event.target)
     )
         return;

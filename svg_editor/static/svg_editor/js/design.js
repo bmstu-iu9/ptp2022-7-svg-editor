@@ -1,6 +1,6 @@
 $(window).on('load', function() {
     $('#preloader').fadeOut("slow");
-  });
+});
 
 $(document).ready(function () {
     $('#preloader').fadeOut("slow");
@@ -354,7 +354,7 @@ $(document).ready(function () {
             );
         }
     });
-    
+
     $("#deformTool").on("click", function () {
         $(this).toggleClass("tool-clicked");
         const $lastPressed = $(".tool-button.tool-clicked").not(this);
@@ -450,7 +450,7 @@ $(document).ready(function () {
             );
         }
     });
-    
+
     $("#mirrorTool").on("click", function () {
         $(this).toggleClass("tool-clicked");
         const $lastPressed = $(".tool-button.tool-clicked").not(this);
@@ -500,7 +500,7 @@ $(document).ready(function () {
     });
 
 
-    
+
 
     $("#clear-button").on("click", function () {
         draw.clear();
@@ -617,12 +617,93 @@ $(document).ready(function () {
         clearInputForm();
     });
     let $pagesChoosing = $('#pages-choosing');
-    $pagesChoosing.on("click", "label",function (){
+    $pagesChoosing.on("click", "label", function () {
         easel.turnTo($(this).text());
         workspace = easel.currentPage.getWorkplace();
     });
-    $pagesChoosing.on("click", ".delete-page-button",function (){
+    $pagesChoosing.on("click", ".delete-page-button", function () {
         easel.remove($(this).parent().find("label").text());
         workspace = easel.currentPage.getWorkplace();
+    });
+
+    //////////Layers-controls
+    $("#createLayerButton").click(function () {
+        easel.currentPage.pie.createNewLayer();
+    })
+
+    $("#createLayerButton").click();
+
+    $("#deleteLayerButton").click(function () {
+        easel.currentPage.pie.deleteCurrentLayer();
+    });
+
+    $("#opacity_slider").on("change", function () {
+        easel.currentPage.pie.changeCurrentLayerOpacity();
+    });
+
+    $('#layers-panel-content').on("click", "#layers-panel-choosing .layer_note", function () {
+        easel.currentPage.pie.selectLayer(this.layerRemote);
+    })
+
+    $('#layerUp').click(function () { easel.currentPage.pie.currentLayerUp() });
+
+    $('#layerDown').click(function () { easel.currentPage.pie.currentLayerDown() });
+
+    $('#copyLayer').click(function () { easel.currentPage.pie.currentLayerCopy() });
+
+    $('#layers-panel-content').on("dragstart", "#layers-panel-choosing .layer_note", function () {
+        easel.currentPage.pie.selectLayer(this.layerRemote)
+    });
+
+    $('#layers-panel-content').on("dragenter", "#layers-panel-choosing .note_top", function () {
+        this.parentElement.layerRemote.coverTop()
+    })
+
+    $('#layers-panel-content').on("dragenter", "#layers-panel-choosing .note_bottom", function () {
+        this.parentElement.layerRemote.coverBottom()
+    })
+
+    $('#layers-panel-content').on("dragleave", "#layers-panel-choosing .note_top", function () {
+        this.parentElement.layerRemote.uncoverTop()
+    })
+
+    $('#layers-panel-content').on("dragleave", "#layers-panel-choosing .note_bottom", function () {
+        this.parentElement.layerRemote.uncoverBottom()
+    })
+
+    $('#layers-panel-content').on("dragover", "#layers-panel-choosing .note_top, .note_bottom", function (e) {
+        e.preventDefault()
+    })
+
+    $('#layers-panel-content').on("drop", "#layers-panel-choosing .note_top", function () {
+        $(this).trigger("dragleave");
+        let thisRemote = this.parentElement.layerRemote;
+        let current = easel.currentPage.pie.getCurrentLayer()
+        thisRemote.after(current);
+    })
+
+    $('#layers-panel-content').on("drop", "#layers-panel-choosing .note_bottom", function () {
+        $(this).trigger("dragleave");
+        let thisRemote = this.parentElement.layerRemote;
+        let current = easel.currentPage.pie.getCurrentLayer()
+        thisRemote.before(current);
+    })
+
+    $('#layers-panel-content').on("click", "#layers-panel-choosing input", function (e) {
+        let clicked = this.parentElement.parentElement.layerRemote;
+        clicked.switchDisplay();
+        e.stopPropagation();
+    })
+
+    $("#mergeWithPrevious").click(function () {
+        easel.currentPage.pie.mergeCurrentWithPrevious();
+    });
+
+    $("#mergeVisible").click(function () {
+        easel.currentPage.pie.mergeVisible();
+    });
+
+    $('#createFromVisible').click(function () {
+        easel.currentPage.pie.createFromVisible();
     });
 });

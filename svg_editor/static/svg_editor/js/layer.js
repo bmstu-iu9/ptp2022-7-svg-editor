@@ -2,20 +2,12 @@ class Layer extends SVG.Svg{
 	name;
 
 	constructor(baseElement, layerName) {
-		if (baseElement === undefined) {
-			super();
-		} else {
-			super(baseElement);
-		}
+		super(baseElement);
 		this.name = layerName;
 		this.node.classList.add("layer");
 	}
 
-	get name() {
-		return this.name;
-	}
-
-	get svgJS() {
-		return this.svgJsElement;
+	clone() {
+		return new Layer(this.node.cloneNode(true),this.name);
 	}
 }

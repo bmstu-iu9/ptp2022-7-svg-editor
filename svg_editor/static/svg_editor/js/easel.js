@@ -34,6 +34,8 @@ class Easel extends BaseFactory{
         }
         newPage.activateNode();
         this.currentPage = newPage;
+        this.currentPage.replaceControls();
+        this.currentPage.pie.update();
     }
     save(saveAs=false, fileName=this.currentPage.getFileName(), type=this.currentPage.getFileType()){
         $.ajax({
