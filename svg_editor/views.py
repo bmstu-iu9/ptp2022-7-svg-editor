@@ -47,7 +47,6 @@ def files_collision_validation(request):
             path = os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg')
             files_list = list(filter(lambda x: len(x) > 0 and x[0] != '.', os.listdir(path)))
             file_name = request_dict['file_name'][0]
-            print(files_list)
             response = {
                 'exists': file_name in files_list
             }

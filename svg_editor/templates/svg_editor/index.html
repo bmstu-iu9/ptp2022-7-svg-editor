@@ -205,7 +205,7 @@
 			headers: {"X-CSRFToken": token}
 		});
 		const easel = new Easel(file_name, type);
-		workspace = easel.currentPage.tag;
+		let workspace = easel.currentPage.tag;
 		easel.edit();
 	</script>
 	{% endblock javascript %}
