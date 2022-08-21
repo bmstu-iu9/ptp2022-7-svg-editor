@@ -188,6 +188,7 @@
 	<script src="{% static 'svg_editor/js/easel.js' %}"></script>
 	<script src="{% static 'svg_editor/js/pageNode.js' %}"></script>
 	<script src="{% static 'svg_editor/js/draw.js' %}"></script>
+	<script src="{% static 'svg_editor/js/hotkeys.js' %}"></script>
 	<script>
 		const token = "{{csrf_token}}",
 			saveURL = "{% url 'files_save' %}",

@@ -8,7 +8,9 @@ $(document).ready(function (){
         if (event.ctrlKey || event.metaKey) {
             switch (String.fromCharCode(event.which).toLowerCase()) {
                 case 'x':
+                    breakDrawing();
                     easel.save();
+                    break;
             }
         }
     });

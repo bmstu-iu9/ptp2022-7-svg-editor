@@ -22,11 +22,13 @@ $(document).ready(function () {
 
     // Send svg to the server to save it
     $('#save-button').click(function (){
+        breakDrawing();
         easel.save();
     });
 
     // Send svg to the server to save it as
     $('#saveAsFileButton').click(function () {
+        breakDrawing();
         easel.save(true,
             document.getElementById('fileNameInput').value,
             document.getElementById('save_file_type').value);
@@ -64,13 +66,4 @@ $(document).ready(function () {
         currentFileName = this.nextSibling.textContent;
     })
 
-    // Svg save hotkey
-    $(document).bind("keydown", function(event) {
-        if (event.ctrlKey || event.metaKey) {
-            switch (String.fromCharCode(event.which).toLowerCase()) {
-                case 'x':
-                    easel.save();
-            }
-        }
-    });
 })
