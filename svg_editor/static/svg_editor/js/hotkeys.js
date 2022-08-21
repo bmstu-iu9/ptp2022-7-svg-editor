@@ -2,6 +2,7 @@
  * @author Kabane-UN
  * @author AngelicHedgehog
  **/
+
 $(document).ready(function (){
     // Svg save hotkey
     $(document).bind("keydown", function(event) {
