@@ -13,14 +13,6 @@
 	<div id="preloader">
 		<div id="spinner"></div>
 	</div>
-	<!--<p style="font-size: 25px; font-weight: bold">
-		{% if user.is_authenticated %}
-		<a href="{% url 'account' %}">{{user.get_username}}</a>
-		{% else %}
-		<a href="{% url 'login' %}">Login!</a>
-		{% endif %}
-	</p>
-	<h1>СВГ Редактор</h1>-->
 	<header>
 		<div class="drop-list">
 			<div class="drop-button">File</div>
@@ -32,6 +24,13 @@
 			</div>
 		</div>
 		<div id="account-panel">
+			<a style="text-decoration: none; color: black;" href="{% url 'account' %}">{{user.get_username}}
+			</a>
+			{% if user.is_authenticated %}
+			<a href="{% url 'account' %}">{{user.get_username}}</a>
+			{% else %}
+			<a href="{% url 'login' %}">Login</a>
+			{% endif %}
 		</div>
 		<div class="drop-list">
 			<div class="drop-button">Edit</div>
@@ -47,6 +46,10 @@
 			<input id="width-slider" type="range" name="stroke-width" min="1" max="10" value="1" step="0.1">
 			<input id="width-slider-value" type="number" min="1" max="10" value="1">
 		</div>
+		<div id="filling-type">
+			<input id="fillbox" name="fill" type="checkbox" checked>
+			<label for="fill">No fill</label>
+		</div>
 	</div>
 	<div id="new-menu" class="file-menu-panel">
 		<div class="moveable-part-file-menu">
@@ -55,6 +58,10 @@
 		<div class="file-menu-form">
 			<label for="filename">Name:</label>
 			<input name="new-filename" type="text" value="untitled">
+			<select id="save_file_type" size=1>
+				<option value="svg">.svg</option>
+				<option value="yml">.yml</option>
+			</select>
 		</div>
 		<div class="file-menu-form">
 			<label for="width">Width:</label>
@@ -97,13 +104,24 @@
 			<input type="file" id="file" />
 		</div>
 	</div>
+	<div id="text-input-menu" class="file-menu-panel">
+		<div class="moveable-part-file-menu">
+			<button class="close-menu-button"></button>
+		</div>
+		<div class="file-menu-form">
+			<label for="text-tool-input"></label>
+			<input type="text" id="text-tool-input" />
+		</div>
+		<button id="confirm-text-input" class="ok-button">Enter</button>
+	</div>
 	<div id="container">
 		<div id="tools-panel">
 			<div id="tools-choosing">
 				<div title="Cursor" id="cursorTool" class="tool-button" name="cursor"></div>
+				<div title="Move" id="moveTool" class="tool-button" name="move"></div>
 				<div title="Pencil" id="pencilTool" class="tool-button" name="pencil"></div>
 				<div title="Line" id="lineTool" class="tool-button" name="line"></div>
-				<div title="Polygon" id="polygonTool" class="tool-button" name="polygon"></div>
+				<div title="Polygon" id="polygonTool" class="tool-button addition-open" name="polygon"></div>
 				<div id="geometry" class="hiddenTools">
 					<div title="Rectangle" id="rectTool" class="tool-button" name="rect"></div>
 					<div title="Ellipse" id="ellipseTool" class="tool-button" name="ellipse"></div>
@@ -113,14 +131,14 @@
 				<div title="Text" id="textTool" class="tool-button" name="text"></div>
 				<div title="Fill" id="fillTool" class="tool-button" name="fill"></div>
 				<div title="Eraser" id="eraserTool" class="tool-button" name="eraser"></div>
-				<div title="Rotate" id="rotateTool" class="tool-button" name="rotate"></div>
+				<div title="Rotate" id="rotateTool" class="tool-button addition-open" name="rotate"></div>
 				<div id="manage" class="hiddenTools">
 					<div title="Deform" id="deformTool" class="tool-button" name="deform"></div>
 					<div title="Scale" id="scaleTool" class="tool-button" name="scalе"></div>
 					<div title="Split" id="splitTool" class="tool-button" name="split"></div>
 					<div title="Skew" id="skewTool" class="tool-button" name="skew"></div>
 					<div title="Reflect" id="mirrorTool" class="tool-button" name="mirror"></div>
-					<div title="Compress" id="tenscompressTool" class="tool-button" name="tenscompress"></div>
+					<div title="Compress" id="compressTool" class="tool-button" name="compress"></div>
 				</div>
 				<div class="vertical-divider"></div>
 				<div id="color-choosing">
@@ -131,33 +149,31 @@
 						<input id="color-sub" class="box" type="color">
 					</div>
 				</div>
-				<div id="filling-type">
-					<input id="fillbox" name="fill" type="checkbox" checked>
-					<label for="fill">No fill</label>
+			</div>
+		</div>
+		<div id="easel"></div>
+		<div id="addition-panel">
+			<div id="layers-panel-list">
+				<div id="layers-panel-button" class="tool-button"></div>
+				<div id="layers-panel-content">
+					<div id="layers-panel-control">
+						<div id="createLayerButton" class="layers-panel-control-button"></div>
+						<div id="deleteLayerButton" class="layers-panel-control-button"></div>
+						<div id="createNewFileButton" class="layers-panel-control-button"></div>
+						<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
+						<div>Layers</div>
+					</div>
+					<div id="layers-panel-choosing">
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	</div>
-	<svg id="workspace" version="1.1" xmlns="http://www.w3.org/2000/svg"
-		xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
-	<div id="addition-panel">
-		<div id="layers-panel-list">
-			<div id="layers-panel-button" class="tool-button"></div>
-			<div id="layers-panel-content">
-				<div id="layers-panel-control">
-					<div id="createLayerButton" class="layers-panel-control-button"></div>
-					<div id="deleteLayerButton" class="layers-panel-control-button"></div>
-					<div id="createNewFileButton" class="layers-panel-control-button"></div>
-					<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
-					<div>Layers</div>
-				</div>
-				<div id="layers-panel-choosing">
-				</div>
-			</div>
+	<footer>
+		<div id="pages-panel">
+			<div id="pages-choosing"></div>
 		</div>
-	</div>
-	</div>
+	</footer>
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -168,10 +184,16 @@
 	-->
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topath.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topoly.js"></script>
+	<script src="{% static 'svg_editor/js/main.js' %}"></script>
 	<script src="{% static 'svg_editor/js/design.js' %}"></script>
-	<script src="{% static 'svg_editor/js/main.js' %}?"></script>
-	<script src="{% static 'svg_editor/js/layers.js' %}?"></script>
-	<script src="{% static 'svg_editor/js/draw.js' %}?"></script>
+	<script src="{% static 'svg_editor/js/layers.js' %}"></script>
+	<script src="{% static 'svg_editor/js/baseFactory.js' %}"></script>
+	<script src="{% static 'svg_editor/js/baseNode.js' %}"></script>
+	<script src="{% static 'svg_editor/js/baseSvgElement.js' %}"></script>
+	<script src="{% static 'svg_editor/js/page.js' %}"></script>
+	<script src="{% static 'svg_editor/js/easel.js' %}"></script>
+	<script src="{% static 'svg_editor/js/pageNode.js' %}"></script>
+	<script src="{% static 'svg_editor/js/draw.js' %}"></script>
 	<script>
 		const token = "{{csrf_token}}",
 			saveURL = "{% url 'files_save' %}",
@@ -179,9 +201,15 @@
 			downloadURL = "{% url 'files_download' %}",
 			viewURL = "{% url 'files_view' %}",
 			loadURL = "{% url 'files_get' %}",
-			deleteURL = "{% url 'files_delete' %}";
-
-		const workspace = document.querySelector('#workspace');
+			deleteURL = "{% url 'files_delete' %}",
+			file_name = JSON.parse("{{file_name | escapejs}}"),
+			type = JSON.parse("{{type | escapejs}}"),
+			method = JSON.parse("{{method | escapejs}}");
+		const easel = new Easel(file_name[0], type[0]);
+		var workspace = easel.currentPage.tag;
+		if (method[0] === "open") {
+			easel.edit();
+		}
 	</script>
 	{% endblock javascript %}
 </body>

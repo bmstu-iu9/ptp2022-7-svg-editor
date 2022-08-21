@@ -47,8 +47,8 @@ function layerUpdate(newDraw) {
 //////////////////////////////////////////
 
 function breakDrawing() {
-    if ('select' in draw) {
-        if (!mouseup) toolMethods[tool]['mouseup']();
+    if ("select" in draw) {
+        if (!mouseup) toolMethods[tool]["mouseup"]();
         selectionClear();
     } else if (object != null) object.remove();
     if (object != null) object = null;
@@ -63,10 +63,9 @@ function stopDrawing() {
 
 // <=><=><=><=><=> скрипт функционала истории рисования <=><=><=><=><=>
 function historyNew() {
-    let new_history = draw_history.h[draw_history.i]
-        .filter(obj => {
-            return obj.draw != draw || draw.has(obj);
-        });
+    let new_history = draw_history.h[draw_history.i].filter((obj) => {
+        return obj.draw != draw || draw.has(obj);
+    });
     for (const obj of draw.children()) {
         obj.draw = draw;
         if (new_history.indexOf(obj) == -1) new_history.push(obj);
@@ -84,7 +83,7 @@ function historyNew() {
 function historyСorrection() {
     for (i = draw_history.h.length - 1; i >= 0; i--) {
         draw_history.h[i] = draw_history.h[i].filter((obj) => {
-            return $('#workspace')[0].contains(obj.draw.node);
+            return $("#workspace")[0].contains(obj.draw.node);
         });
         if (
             i + 1 != draw_history.h.length &&
@@ -109,30 +108,32 @@ function historyUndo() {
 }
 
 function historyUpdate(last_index) {
-    draw_history.h[last_index].forEach(obj => obj.remove());
-    draw_history.h[draw_history.i].forEach(obj => obj.draw.add(obj));
+    draw_history.h[last_index].forEach((obj) => obj.remove());
+    draw_history.h[draw_history.i].forEach((obj) => obj.draw.add(obj));
 }
 
 // <=><=><=><=><=> скрипты событий <=><=><=><=><=>
 function resizeWindowEvent() {
-    canvasRect = $('#workspace')[0].getBoundingClientRect();
+    canvasRect = $("#workspace")[0].getBoundingClientRect();
 }
 
 function changeToolEvent() {
     breakDrawing();
-    tool = $('.tool-button.tool-clicked').attr('name');
+    tool = $(".tool-button.tool-clicked").attr("name");
     width_value = $('input[name="stroke-width"]').val();
-    color_fill = $('#fillbox').is(':checked') ? 'none' : $('#color-main').val();
-    color_stroke = $('#color-sub').val();
+    color_fill = $("#fillbox").is(":checked") ? "none" : $("#color-main").val();
+    color_stroke = $("#color-sub").val();
 }
 
 function logMouseEvent(event) {
-    if (event.type == 'mouseup') mouseup = true;
-    else if (event.type == 'mousedown') mouseup = false;
+    if (event.type == "mouseup") mouseup = true;
+    else if (event.type == "mousedown") mouseup = false;
 
     if (
-        !isDrawAllowed() || tool != 'cursor' &&
-        event.type == 'mousedown' && !$('#workspace')[0].contains(event.target)
+        !isDrawAllowed() ||
+        (tool != "cursor" &&
+            event.type == "mousedown" &&
+            !$("#workspace")[0].contains(event.target))
     )
         return;
 
@@ -142,9 +143,11 @@ function logMouseEvent(event) {
         event.type in toolMethods[tool]
     ) {
         if (
-            event.type == 'mousedown' &&
-            'select' in draw && draw.select.points.length == 0
-        )  selectionClear()
+            event.type == "mousedown" &&
+            "select" in draw &&
+            draw.select.points.length == 0
+        )
+            selectionClear();
         let x = event.clientX - canvasRect.left,
             y = event.clientY - canvasRect.top;
         toolMethods[tool][event.type](x, y);
@@ -154,8 +157,8 @@ function logMouseEvent(event) {
 // <=><=><=><=><=> скрипт инструмента карандаш <=><=><=><=><=>
 function commonSelectionMake() {
     if (object != null) {
-        if ('select' in draw)
-            if (draw.select.points.length == 0)  selectionClear();
+        if ("select" in draw)
+            if (draw.select.points.length == 0) selectionClear();
             else return;
         draw.select = { lines: [], points: [] };
         let box = object.bbox(),
@@ -169,18 +172,18 @@ function commonSelectionMake() {
                 draw.select.lines.push(
                     draw
                         .line(p1.x, p1.y, p2.x, p2.y)
-                        .stroke({ width: 1, color: '#0ff' })
+                        .stroke({ width: 1, color: "#0ff" })
                 );
         for (let i = 0; i < 4; i++) draw_line(points[i], points[(i + 1) % 4]);
     }
 }
 
 function selectionClear() {
-    if ('select' in draw) {
-        draw.select.points.forEach(arr =>
-            arr.forEach(pnt => (pnt != null ? pnt.remove() : null))
+    if ("select" in draw) {
+        draw.select.points.forEach((arr) =>
+            arr.forEach((pnt) => (pnt != null ? pnt.remove() : null))
         );
-        draw.select.lines.forEach(line => line.remove());
+        draw.select.lines.forEach((line) => line.remove());
         delete draw.select;
     }
 }
@@ -256,8 +259,8 @@ function pathDown(x, y) {
     if (object == null) {
         object = draw
             .path([
-                ['M', x, y],
-                ['C', x, y, x, y, x, y],
+                ["M", x, y],
+                ["C", x, y, x, y, x, y],
             ])
             .fill(color_fill)
             .stroke({ width: width_value, color: color_stroke });
@@ -273,13 +276,13 @@ function pathDown(x, y) {
                 object
                     .array()
                     .slice(0, -2)
-                    .concat(last_line, [['z']])
+                    .concat(last_line, [["z"]])
             );
             stopDrawing();
         } else if (last_line[0][5] == x && last_line[0][6] == y) {
             object.plot(object.array().slice(0, -1));
             stopDrawing();
-        } else object.plot(object.array().concat([['C', x, y, x, y, x, y]]));
+        } else object.plot(object.array().concat([["C", x, y, x, y, x, y]]));
     }
 }
 
@@ -307,8 +310,19 @@ function pathMove(x, y) {
 }
 
 // <=><=><=><=><=> скрипт инструмента текст <=><=><=><=><=>
-function getText(messege, _default) {
-    return prompt(messege) || _default;
+function getText(message, _default) {
+    $("label[for='text-tool-input']").html(message);
+    $("#text-tool-input").val('');
+    $("#text-input-menu").css({
+        display: "block",
+        "z-index": "100",
+    });
+    return new Promise((resolve, reject) => {
+        $("#confirm-text-input").click(function () {
+            const inputVal = $("#text-tool-input").val();
+            resolve(inputVal || _default);
+        });
+    });
 }
 
 function textDown(x, y) {
@@ -319,19 +333,20 @@ function textMove(x, y) {
     rectMove(x, y);
 }
 
-function textUp(x, y) {
-    if (object != null) {
+async function textUp(x, y) {
+    if (object != null && $("#text-input-menu").css("display") == "none"){
         let rect = object;
         rect.remove();
         if (rect.height() != 0 && rect.width() != 0) {
-            object = draw.text(getText('Input text:', ''))
+            object = draw
+                .text(await getText("Input text:", ""))
                 .font({ size: rect.height() })
                 .fill(color_fill)
                 .stroke({ width: width_value, color: color_stroke })
                 .move(rect.x(), rect.y());
             while (object.bbox().width > rect.width())
                 object.text(object.text().slice(0, -1));
-            if (object.text() == '') breakDrawing();
+            if (object.text() == "") breakDrawing();
             else stopDrawing();
         }
     }
@@ -521,19 +536,19 @@ function deformSelectionMake(object) {
         draw
             .ellipse(10)
             .move(coords.x - 5, coords.y - 5)
-            .fill('#0cf');
+            .fill("#0cf");
     if (object.array != null)
-        if (object.type == 'path') {
+        if (object.type == "path") {
             let array = object.array(),
                 first = draw.rect(0, 0),
                 draw_line = (...coords) =>
                     draw
                         .line(coords)
-                        .stroke({ width: 1, color: '#0ff' })
+                        .stroke({ width: 1, color: "#0ff" })
                         .insertAfter(first);
             draw.select.lines.push(first);
             for (let i = 0; i < array.length; i++) {
-                if (array[i][0] == 'z') break;
+                if (array[i][0] == "z") break;
                 draw.select.points[i] = [null];
                 for (let j = 1; j < array[i].length; j += 2)
                     draw.select.points[i] = draw.select.points[i].concat([
@@ -594,7 +609,7 @@ function deformDown(x, y) {
 }
 
 function deformMove(x, y) {
-    if (object != null && 'i' in object) {
+    if (object != null && "i" in object) {
         let selfCoords = absCoordsToSelf(object, x, y),
             array = object.array();
         array[object.i][object.j] = selfCoords.x;
@@ -605,7 +620,7 @@ function deformMove(x, y) {
 }
 
 function deformUp(x, y) {
-    if (object != null && 'i' in object) {
+    if (object != null && "i" in object) {
         selectionClear();
         historyNew();
         delete object.i, object.j;
@@ -628,14 +643,14 @@ function scaleSelectionMake(object) {
             draw.select.lines.push(
                 draw
                     .line(p1.x, p1.y, p2.x, p2.y)
-                    .stroke({ width: 1, color: '#0ff' })
+                    .stroke({ width: 1, color: "#0ff" })
             ),
         draw_ellipse = (coords) =>
             draw.select.points[0].push(
                 draw
                     .ellipse(10)
                     .move(coords.x - 5, coords.y - 5)
-                    .fill('#0cf')
+                    .fill("#0cf")
             );
     for (let i = 0; i < 4; i++) draw_line(points[i], points[(i + 1) % 4]);
     for (let i = 0; i < 4; i++) draw_ellipse(points[i]);
@@ -668,7 +683,7 @@ function scaleDown(x, y) {
 }
 
 function scaleMove(x, y) {
-    if (object != null && 'i' in object) {
+    if (object != null && "i" in object) {
         let moving = draw.select.points[object.i][object.j],
             staying = draw.select.points[object.i][(object.j + 2) % 4],
             mv_pnt = { x: moving.cx(), y: moving.cy() },
@@ -690,7 +705,7 @@ function scaleMove(x, y) {
 }
 
 function scaleUp(x, y) {
-    if (object != null && 'i' in object) {
+    if (object != null && "i" in object) {
         selectionClear();
         historyNew();
         delete object.i, object.j;
@@ -701,8 +716,8 @@ function scaleUp(x, y) {
 // <=><=><=><=><=> скрипт инструмента разбиение <=><=><=><=><=>
 function splitDown(x, y) {
     let obj = findTopOnCoords(x, y);
-    if (obj == null || obj.type.indexOf('poly') == 0) return;
-    obj = obj.toPath().toPoly(width_value + 'px');
+    if (obj == null || obj.type.indexOf("poly") == 0) return;
+    obj = obj.toPath().toPoly(width_value + "px");
     historyNew();
 }
 
@@ -728,7 +743,7 @@ function skewDown(x, y) {
 }
 
 function skewMove(x, y) {
-    if (object != null && 'i' in object) {
+    if (object != null && "i" in object) {
         let moving = draw.select.points[object.i][object.j],
             staying = draw.select.points[object.i][(object.j + 2) % 4],
             st_pnt = absCoordsToSelf(object, staying.cx(), staying.cy()),
@@ -850,7 +865,7 @@ function skewUp(x, y) {
 
 // <=><=><=><=><=> скрипт инструмента отражение <=><=><=><=><=>
 function mirrorDown(x, y) {
-    if ('select' in draw) {
+    if ("select" in draw) {
         if (draw.select.points[0][0].inside(x, y)) {
             draw.select.lines[0].plot(draw.select.lines[0].plot().reverse());
             draw.select.points[0] = draw.select.points[0].reverse();
@@ -899,17 +914,17 @@ function mirrorDown(x, y) {
         }
     } else {
         draw.select = {
-            lines: [draw.line(x, y, x, y).stroke({ width: 1, color: '#0ff' })],
+            lines: [draw.line(x, y, x, y).stroke({ width: 1, color: "#0ff" })],
             points: [
                 [
                     draw
                         .ellipse(10)
                         .move(x - 5, y - 5)
-                        .fill('#0cf'),
+                        .fill("#0cf"),
                     draw
                         .ellipse(10)
                         .move(x - 5, y - 5)
-                        .fill('#0cf'),
+                        .fill("#0cf"),
                 ],
             ],
         };
@@ -931,7 +946,8 @@ function mirrorUp(x, y) {
                 ...draw.select.lines[0].plot()[0],
                 ...draw.select.lines[0].plot()[1]
             ) == 0
-        ) selectionClear();
+        )
+            selectionClear();
         object = null;
     }
 }
@@ -942,7 +958,7 @@ function compressDown(x, y) {
 }
 
 function compressMove(x, y) {
-    if (object != null && 'i' in object) {
+    if (object != null && "i" in object) {
         let moving = draw.select.points[object.i][object.j],
             staying = draw.select.points[object.i][(object.j + 2) % 4],
             mv_pnt = absCoordsToSelf(object, moving.cx(), moving.cy()),
@@ -978,8 +994,8 @@ function compressUp(x, y) {
 
 // <=><=><=><=><=> скрипт инструмента курсор <=><=><=><=><=>
 function canvasUpsize(x, y) {
-    let width = $('#workspace').css('width').slice(0, -2) * 1 + x,
-        height = $('#workspace').css('height').slice(0, -2) * 1 + y;
+    let width = $("#workspace").css("width").slice(0, -2) * 1 + x,
+        height = $("#workspace").css("height").slice(0, -2) * 1 + y;
     if (width <= 0) {
         draw.X *= -1;
         return;
@@ -988,14 +1004,14 @@ function canvasUpsize(x, y) {
         draw.Y *= -1;
         return;
     }
-    $('#workspace').css({ 'width': width, 'height': height });
-    $('.layer').attr({ 'width': width, 'height': height });
+    $("#workspace").css({ width: width, height: height });
+    $(".layer").attr({ width: width, height: height });
 }
 
 function canvasMove(x, y) {
-    let left = $('#workspace').css('margin-left').slice(0, -2) * 1 + x,
-        top = $('#workspace').css('margin-top').slice(0, -2) * 1 + y;
-    $('#workspace').css({ 'margin-left': left, 'margin-top': top });
+    let left = $("#workspace").css("margin-left").slice(0, -2) * 1 + x,
+        top = $("#workspace").css("margin-top").slice(0, -2) * 1 + y;
+    $("#workspace").css({ "margin-left": left, "margin-top": top });
     resizeWindowEvent();
 }
 
@@ -1010,7 +1026,7 @@ function cursorDown(x, y) {
 }
 
 function cursorMove(x, y) {
-    if ('X' in draw && 'Y' in draw) {
+    if ("X" in draw && "Y" in draw) {
         if (draw.X == 0 && draw.Y == 0)
             canvasMove(x - draw.xy.x, y - draw.xy.y);
         else {
@@ -1019,7 +1035,7 @@ function cursorMove(x, y) {
                 canvasMove(x - draw.xy.x, 0);
                 for (const hist of draw_history.h)
                     for (const obj of hist)
-                        if (!('used' in obj)) {
+                        if (!("used" in obj)) {
                             let selfCoords = absCoordsToSelf(obj, draw.xy.x, 0),
                                 selfCoords_ = absCoordsToSelf(obj, x, 0);
                             obj.dx(selfCoords.x - selfCoords_.x);
@@ -1027,8 +1043,7 @@ function cursorMove(x, y) {
                             obj.used = null;
                         }
                 for (const hist of draw_history.h)
-                    for (const obj of hist)
-                        delete obj.used;
+                    for (const obj of hist) delete obj.used;
             } else if (draw.X == 1) {
                 canvasUpsize(x - draw.xy.x, 0);
                 draw.xy.x = x;
@@ -1038,7 +1053,7 @@ function cursorMove(x, y) {
                 canvasMove(0, y - draw.xy.y);
                 for (const hist of draw_history.h)
                     for (const obj of hist)
-                        if (!('used' in obj)) {
+                        if (!("used" in obj)) {
                             let selfCoords = absCoordsToSelf(obj, 0, draw.xy.y),
                                 selfCoords_ = absCoordsToSelf(obj, 0, y);
                             obj.dx(selfCoords.x - selfCoords_.x);
@@ -1046,8 +1061,7 @@ function cursorMove(x, y) {
                             obj.used = null;
                         }
                 for (const hist of draw_history.h)
-                    for (const obj of hist)
-                        delete obj.used;
+                    for (const obj of hist) delete obj.used;
             } else if (draw.Y == 1) {
                 canvasUpsize(0, y - draw.xy.y);
                 draw.xy.y = y;
@@ -1057,9 +1071,7 @@ function cursorMove(x, y) {
 }
 
 function cursorUp(x, y) {
-    delete draw.X,
-        draw.Y,
-        draw.xy;
+    delete draw.X, draw.Y, draw.xy;
 }
 
 // <=><=><=><=><=> скрипт инструмента звезда <=><=><=><=><=>
@@ -1081,21 +1093,27 @@ function starMove(x, y) {
         let w = x - object.x0,
             h = y - object.y0,
             R_y = h / (1 - Math.sin(1.3 * Math.PI)),
-            r_y = R_y * Math.cos(Math.PI * .4) / Math.cos(Math.PI * .2),
-            R_x = R_y * w / h,
-            r_x = r_y * w / h,
-            k1 = Math.cos(Math.PI * Math.sqrt(2) / 10),
+            r_y = (R_y * Math.cos(Math.PI * 0.4)) / Math.cos(Math.PI * 0.2),
+            R_x = (R_y * w) / h,
+            r_x = (r_y * w) / h,
+            k1 = Math.cos((Math.PI * Math.sqrt(2)) / 10),
             k2 = Math.cos(Math.PI / 10),
             plot = [];
         for (let i = 0; i < 10; i++)
-            if (i % 2 == 0) plot.push([
-                object.x0 + R_x * k1 + R_x * Math.cos(Math.PI * (i * .2 + .1)) * k2,
-                object.y0 + R_y - R_y * Math.sin(Math.PI * (i * .2 + .1))
-            ]);
-            else plot.push([
-                object.x0 + R_x * k1 + r_x * Math.cos(Math.PI * (i * .2 + .1)) * k2,
-                object.y0 + R_y - r_y * Math.sin(Math.PI * (i * .2 + .1))
-            ]);
+            if (i % 2 == 0)
+                plot.push([
+                    object.x0 +
+                        R_x * k1 +
+                        R_x * Math.cos(Math.PI * (i * 0.2 + 0.1)) * k2,
+                    object.y0 + R_y - R_y * Math.sin(Math.PI * (i * 0.2 + 0.1)),
+                ]);
+            else
+                plot.push([
+                    object.x0 +
+                        R_x * k1 +
+                        r_x * Math.cos(Math.PI * (i * 0.2 + 0.1)) * k2,
+                    object.y0 + R_y - r_y * Math.sin(Math.PI * (i * 0.2 + 0.1)),
+                ]);
         object.plot(plot);
         commonSelectionMake();
     }
@@ -1105,7 +1123,6 @@ function starUp(x, y) {
     stopDrawing();
 }
 
-
 // <=><=><=><=><=> скрипт перехвата событий документа и окна <=><=><=><=><=>
 $(document)
     /* подготовка параметров после прогрузки страницы
@@ -1114,8 +1131,8 @@ $(document)
         changeToolEvent();
         resizeWindowEvent();
 
-        $('#control-panel').change(changeToolEvent);
-        $('#tools-panel').change(changeToolEvent);
+        $("#control-panel").change(changeToolEvent);
+        $("#tools-panel").change(changeToolEvent);
     })
 
     /* перезват нажания сочитаний клавиш ctrl-z и ctrl-shift-z
@@ -1129,7 +1146,7 @@ $(document)
 
     // выход из режима рисования путём нажатия клавишы escape
     .keydown(function (event) {
-        if (event.key === 'Escape') breakDrawing();
+        if (event.key === "Escape") breakDrawing();
     });
 
 // перехват событий окна, влияющих на рисование
