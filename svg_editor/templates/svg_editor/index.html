@@ -198,8 +198,8 @@
 			loadURL = "{% url 'files_get' %}",
 			deleteURL = "{% url 'files_delete' %}",
 			collisionValidationURL = "{% url 'files_collision_validation' %}",
-			file_name = JSON.parse("{{file_name | escapejs}}")[0],
-			type = JSON.parse("{{type | escapejs}}")[0];
+			file_name = JSON.parse("{{file_name | escapejs}}"),
+			type = JSON.parse("{{type | escapejs}}");
 		// Get csrf_token
 		$.ajaxSetup({
 			headers: {"X-CSRFToken": token}
