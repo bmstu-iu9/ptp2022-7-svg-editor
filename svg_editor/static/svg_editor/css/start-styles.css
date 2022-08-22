@@ -489,10 +489,26 @@ select::-ms-expand {
 }
 
 #list_svg {
-    margin-left: -7px;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
 }
 
-#list_svg li::marker {
-    content: "▸";
-    color: #828A95;
+* {
+    scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: #CCD7E4;
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #828A95;
+    border-radius: 10px;
 }
