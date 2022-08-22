@@ -39,17 +39,18 @@ def files_view(request):
     return JsonResponse({'errors': 'Bad request'}, status=400)
 
 
+# Dynamic new files name validation
 @login_required
 def files_collision_validation(request):
-        request_dict = request.GET.dict()
-        if request.method == "GET" and 'file_name' in request_dict:
-            path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'))
-            path_to_file = path / Path(request_dict['file_name'])
-            response = {
-                'exists': path_to_file.exists()
-            }
-            return JsonResponse(response, status=200)
-        return JsonResponse({'errors': 'Bad request'}, status=400)
+    request_dict = request.GET.dict()
+    if request.method == "GET" and 'file_name' in request_dict:
+        path = Path(os.path.join(BASE_DIR, f'svg_editor/media/svg_editor/{str(request.user)}/svg'))
+        path_to_file = path / Path(request_dict['file_name'])
+        response = {
+            'exists': path_to_file.exists()
+        }
+        return JsonResponse(response, status=200)
+    return JsonResponse({'errors': 'Bad request'}, status=400)
 
 
 # Script for saving svg and project files
@@ -66,12 +67,12 @@ def files_save(request):
         if len(request_dict["file_name"]) > 0:
             save_as = eval(request_dict['save_as'].capitalize())
             if not (save_as and path_to_file.exists()):
-                stream = open(path_to_file, 'w')
-                if path_to_file.suffix == '.svg':
-                    stream.write(svg)
-                else:
-                    yaml.dump({'type': 'illustration'}, stream=stream)
-                    illustration.dump(svg, stream=stream)
+                with open(path_to_file, 'w') as stream:
+                    if path_to_file.suffix == '.svg':
+                        stream.write(svg)
+                    else:
+                        yaml.dump({'type': 'illustration'}, stream=stream)
+                        illustration.dump(svg, stream=stream)
                 return JsonResponse({'file_name': path_to_file.name}, status=200)
     return JsonResponse({'errors': 'Bad file name'}, status=400)
 
