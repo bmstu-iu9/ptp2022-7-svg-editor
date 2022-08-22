@@ -574,7 +574,7 @@ $(document).ready(function () {
             newPageType = document.getElementById('save_file_type').value;
         easel.createPage(newPageName, newPageType);
         FileManager.create(newPageName, newPageType, function () {})
-        workspace = easel.currentPage.getWorkplace();
+        workspace = document.getElementById('workspace');
         $(this).prop('disabled', true);
         clearInputForm();
     });
@@ -626,10 +626,10 @@ $(document).ready(function () {
     let $pagesChoosing = $('#pages-choosing');
     $pagesChoosing.on("click", "label",function (){
         easel.turnTo($(this).text());
-        workspace = easel.currentPage.getWorkplace();
+        workspace = document.getElementById('workspace');
     });
     $pagesChoosing.on("click", ".delete-page-button",function (){
         easel.remove($(this).parent().find("label").text());
-        workspace = easel.currentPage.getWorkplace();
+        workspace = document.getElementById('workspace');
     });
 });

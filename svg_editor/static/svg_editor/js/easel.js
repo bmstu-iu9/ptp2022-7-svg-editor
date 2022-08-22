@@ -2,9 +2,12 @@ class Easel extends BaseFactory{
     usedPages;
     currentPage;
     constructor(fileName, fileType) {
-        super(document.getElementById('easel'));
+        super($('#easel'));
         this.usedPages = [];
         this.createPage(fileName, fileType);
+    }
+    getCurrentPage(){
+        return this.currentPage;
     }
     createPage(fileName, fileType){
         let newPage = new Page(fileName, fileType);
@@ -27,10 +30,10 @@ class Easel extends BaseFactory{
     turnTo(pageName){
         let newPage = this.usedPages.find(page => page.getName() === pageName);
         if (this.currentPage){
-            this.factoryContainer.replaceChild(newPage.getWorkplace(), this.currentPage.getWorkplace());
+            this.currentPage.getWorkplace().replaceWith(newPage.getWorkplace());
             this.currentPage.deactivateNode();
         } else {
-            this.factoryContainer.appendChild(newPage.getWorkplace());
+            this.factoryContainer.append(newPage.getWorkplace());
         }
         newPage.activateNode();
         this.currentPage = newPage;

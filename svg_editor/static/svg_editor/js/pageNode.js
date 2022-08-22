@@ -1,22 +1,21 @@
 class PageNode extends BaseNode{
     constructor(name) {
-        super(name, document.getElementById('pages-choosing'));
-        this.tag.setAttribute("class", "page-node");
-        this.tag.setAttribute("draggable", "true");
-        let label = document.createElement('label');
-        label.innerText = this.name;
-        this.tag.appendChild(label);
-        let deletePageButton = document.createElement('div');
-        deletePageButton.setAttribute("class", "delete-page-button");
-        this.tag.appendChild(deletePageButton);
+        super(name, $('#pages-choosing'));
+        this.tag.addClass("page-node");
+        let label = $(document.createElement('label'));
+        label.text(this.name)
+        this.tag.append(label);
+        let deletePageButton = $(document.createElement('div'));
+        deletePageButton.addClass("delete-page-button");
+        this.tag.append(deletePageButton);
     }
     deactivate(){
-        this.tag.classList.remove('active');
+        this.tag.removeClass('active');
     }
     activate(){
-        this.tag.classList.add('active');
+        this.tag.addClass('active');
     }
     remove(){
-        this.container.removeChild(this.tag);
+        this.tag.remove();
     }
 }
