@@ -10,6 +10,7 @@ class Easel extends BaseFactory{
         let newPage = new Page(fileName, fileType);
         this.usedPages.push(newPage);
         this.turnTo(newPage.getName());
+        return newPage;
     }
     remove(pageName){
        let indexToDelete = this.usedPages.findIndex(page => page.getName() === pageName),
@@ -63,8 +64,9 @@ class Easel extends BaseFactory{
                 file_name: fileName,
             },
             success: function (response) {
-                if (response.file_name.split('.').pop().toLowerCase() === 'svg') {
-                    openAsSvg(response.svg);
+                let fileType = response.file_name.split('.').pop().toLowerCase();
+                if (fileType === 'svg') {
+                    easel.openAsSvg(response.svg, response.file_name, fileType);
                 } else {
                     openAsProject(response.yml);
                 }
@@ -73,5 +75,12 @@ class Easel extends BaseFactory{
                 alert(response.responseJSON.errors);
             }
         });
+    }
+
+    openAsSvg(svgString, fileName, fileType) {
+        let page = this.createPage(fileName, fileType)
+        let oParser = new DOMParser();
+        let oDOM = oParser.parseFromString(svgString, "application/xml");
+        page.pie.createNewLayer(oDOM.documentElement, 'base');
     }
 }

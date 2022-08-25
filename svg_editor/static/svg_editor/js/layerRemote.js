@@ -123,4 +123,23 @@ class LayerRemote {
 		$(this.relatedLayer.node).toggleClass('non_displayable');
 	}
 
+	getSvg() {
+		let svg = this.relatedLayer.clone().node;
+		svg.removeAttribute("xmlns:svgjs");
+		svg.removeAttribute("xmlns:xlink");
+		svg.removeAttribute("xmlns");
+		svg.removeAttribute("version");
+		svg.removeAttribute("class");
+		return svg;
+	}
+
+	getLayerSvg() {
+		let layer = this.relatedLayer.clone().node;
+		layer.removeAttribute("xmlns:svgjs");
+		layer.removeAttribute("xmlns:xlink");
+		layer.removeAttribute("xmlns");
+		layer.removeAttribute("version");
+		layer.setAttribute('name', this.getName());
+		return layer;
+	}
 }

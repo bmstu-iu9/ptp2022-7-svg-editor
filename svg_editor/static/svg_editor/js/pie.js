@@ -11,9 +11,9 @@ class Pie {
 
 	getCurrentLayer() { return this.currentLayer };
 
-	createNewLayer() {
-		let remote = new LayerRemote(new Layer(undefined, 'layer'));
-		this.addLayerTo(remote);
+	createNewLayer(baseElement, layerName = 'layer') {
+		let remote = new LayerRemote(new Layer(baseElement, layerName));
+		this.addLayer(remote);
 		this.selectLayer(remote);
 	}
 
@@ -38,7 +38,7 @@ class Pie {
 		this.update();
 	}
 
-	addLayerTo(remote, place) {
+	addLayer(remote, place) {
 		remote.setLayerSize(this.layersPanel.clientWidth, this.layersPanel.clientHeight);
 		if (place == 'end') {
 			this.layersPanel.prepend(remote.getLayerNode());
@@ -140,7 +140,7 @@ class Pie {
 			union.getLayerNode().prepend(layer.getLayerNode());
 			layer.removeRemote();
 		}
-		this.addLayerTo(union);
+		this.addLayer(union);
 	}
 
 }

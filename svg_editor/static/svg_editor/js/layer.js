@@ -10,4 +10,5 @@ class Layer extends SVG.Svg{
 	clone() {
 		return new Layer(this.node.cloneNode(true),this.name);
 	}
+
 }
