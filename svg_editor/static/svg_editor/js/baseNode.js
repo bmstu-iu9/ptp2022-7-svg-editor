@@ -1,3 +1,7 @@
+/**
+ * @author Kabane-UN
+ **/
+
 class BaseNode{
     tag;
     container;
@@ -10,11 +14,5 @@ class BaseNode{
     }
     getName(){
         return this.name;
-    }
-    deactivate(){
-
-    }
-    activate(){
-
     }
 }

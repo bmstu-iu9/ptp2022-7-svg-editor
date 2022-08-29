@@ -1,3 +1,8 @@
+/**
+ * @author Kabane-UN
+ **/
+
+// Canvas class for drawing
 class Page extends BaseSvgElement{
     fileName;
     fileType;

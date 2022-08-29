@@ -1,3 +1,8 @@
+/**
+ * @author Kabane-UN
+ **/
+
+// The panel class of the open file
 class PageNode extends BaseNode{
     constructor(name) {
         super(name, $('#pages-choosing'));

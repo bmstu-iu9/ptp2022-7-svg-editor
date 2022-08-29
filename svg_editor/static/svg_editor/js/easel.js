@@ -1,3 +1,8 @@
+/**
+ * @author Kabane-UN
+ **/
+
+// The class of the easel on which the canvases are placed
 class Easel extends BaseFactory{
     usedPages;
     currentPage;
@@ -9,11 +14,13 @@ class Easel extends BaseFactory{
     getCurrentPage(){
         return this.currentPage;
     }
+    // Create a new page
     createPage(fileName, fileType){
         let newPage = new Page(fileName, fileType);
         this.usedPages.push(newPage);
         this.turnTo(newPage.getName());
     }
+    // Remove page with this name
     remove(pageName){
        let indexToDelete = this.usedPages.findIndex(page => page.getName() === pageName),
            deletedPage = this.usedPages[indexToDelete];
@@ -27,6 +34,7 @@ class Easel extends BaseFactory{
            a.click();
        }
     }
+    // Turn to page with this name
     turnTo(pageName){
         let newPage = this.usedPages.find(page => page.getName() === pageName);
         if (this.currentPage){
@@ -38,6 +46,7 @@ class Easel extends BaseFactory{
         newPage.activateNode();
         this.currentPage = newPage;
     }
+    // Request server to save chosen page
     save(saveAs=false, fileName=this.currentPage.getFileName(), type=this.currentPage.getFileType()){
         $.ajax({
             data: {
@@ -56,6 +65,7 @@ class Easel extends BaseFactory{
             }
         });
     }
+    // Get load from server svg with this name
     edit(fileName=this.currentPage.getName()){
         $.ajax({
             url: loadURL,

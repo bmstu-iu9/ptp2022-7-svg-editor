@@ -1,4 +1,10 @@
+/**
+ * @author Kabane-UN
+ **/
+
+// Class that contains user data pre-validation
 class AccountValidation{
+    // Sending a username to the server to verify its uniqueness
     static validateLogin(username, onSuccessFunc){
         $.ajax({
             data: {
@@ -12,6 +18,7 @@ class AccountValidation{
             }
         });
     }
+    // Sending a user email to the server to verify its uniqueness
     static validateEmail(email, onSuccessFunc){
         $.ajax({
             data: {
@@ -25,6 +32,7 @@ class AccountValidation{
             }
         });
     }
+    // Sending a passwords fields to the server to verify theirs missmatch
     static validatePasswords(password1, password2, onSuccessFunc){
         $.ajax({
             data: {

@@ -3,6 +3,7 @@
  * @author AngelicHedgehog
  **/
 
+// Hotkeys for editor page
 $(document).ready(function (){
     // Svg save hotkey
     $(document).bind("keydown", function(event) {

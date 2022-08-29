@@ -1,3 +1,7 @@
+/**
+ * @author Kabane-UN
+ **/
+
 class BaseSvgElement{
     tag;
     name;
