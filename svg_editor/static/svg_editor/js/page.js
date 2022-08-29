@@ -1,3 +1,8 @@
+/**
+ * @author Kabane-UN
+ **/
+
+// Canvas class for drawing
 class Page extends BaseSvgElement{
     fileName;
     fileType;
@@ -6,7 +11,7 @@ class Page extends BaseSvgElement{
         super(name + "." + type);
         this.fileName = name;
         this.fileType = type;
-        this.tag.setAttribute('id','workspace');
+        this.tag.attr('id','workspace');
         this.node = new PageNode(this.name);
     }
     removeNode(){

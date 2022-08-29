@@ -13,4 +13,5 @@ urlpatterns = [
     path('files_upload', views.files_upload, name='files_upload'),
     path('files_download', views.files_download, name='files_download'),
     path('files_delete', views.files_delete, name='files_delete'),
+    path('files_collision_validation', views.files_collision_validation, name='files_collision_validation'),
 ]

@@ -1,4 +1,39 @@
+/**
+ * @author Kabane-UN
+ **/
+
+// Class with files work methods
 class FileManager {
+    // Check file names collision
+    static collisionValidation(fileName, onSuccessFunc){
+        $.ajax({
+            data: {file_name: fileName},
+            type: 'GET',
+            url: collisionValidationURL,
+            success: onSuccessFunc,
+            error: function (response) {
+                alert(response.responseJSON.errors);
+            }
+        });
+    }
+    // Create a new file
+    static create(fileName, type, onSuccessFunc){
+        $.ajax({
+            data: {
+                file_name: fileName,
+                save_as: false,
+                svg: '',
+                type: type,
+            },
+            type: 'POST',
+            url: saveURL,
+            success: onSuccessFunc,
+            error: function (response) {
+                alert(response.responseJSON.errors);
+            }
+        });
+    }
+    // Upload new file from user PC to the server
     static upload(data){
         $.ajax({
             data: data,
@@ -15,6 +50,7 @@ class FileManager {
             }
         });
     }
+    // Download file from server to user PC
     static download(fileName){
         $.ajax({
             url: downloadURL,
@@ -32,6 +68,7 @@ class FileManager {
             },
         });
     }
+    // Delete selected file from server or delete all
     static delete(fileName, all=false){
         $.ajax({
             url: deleteURL,
@@ -48,6 +85,7 @@ class FileManager {
             },
         });
     }
+    // Get a list of files on the server
     static view(){
         $.ajax({
             url: viewURL,

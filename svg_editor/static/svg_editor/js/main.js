@@ -6,18 +6,29 @@ let currentFileName = null;
 
 $(document).ready(function () {
 
-    // Get csrf_token
-    $.ajaxSetup({
-        headers: {"X-CSRFToken": token}
-    });
+    // Validate files collision
+    $('input[name="new-filename"], #save_file_type').on("keyup change", function (){
+        FileManager.collisionValidation($('input[name="new-filename"]').val()+'.'+$('#save_file_type').val(),
+            function (response) {
+                if (response.exists) {
+                    $('input[name="new-filename"]').removeClass('is-valid').addClass('is-invalid');
+                    $('.ok-button').prop('disabled', true);
+                } else {
+                    $('input[name="new-filename"]').removeClass('is-invalid').addClass('is-valid');
+                    $('.ok-button').prop('disabled', false);
+                }
+            });
+    })
 
     // Send svg to the server to save it
     $('#save-button').click(function (){
+        breakDrawing();
         easel.save();
     });
 
     // Send svg to the server to save it as
     $('#saveAsFileButton').click(function () {
+        breakDrawing();
         easel.save(true,
             document.getElementById('fileNameInput').value,
             document.getElementById('save_file_type').value);
@@ -55,13 +66,4 @@ $(document).ready(function () {
         currentFileName = this.nextSibling.textContent;
     })
 
-    // Svg save hotkey
-    $(document).bind("keydown", function(event) {
-        if (event.ctrlKey || event.metaKey) {
-            switch (String.fromCharCode(event.which).toLowerCase()) {
-                case 'x':
-                    easel.save();
-            }
-        }
-    });
 })

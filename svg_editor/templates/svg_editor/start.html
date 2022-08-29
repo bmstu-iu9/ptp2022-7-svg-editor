@@ -4,18 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Start</title>
+    <link rel="stylesheet" href="{% static 'svg_editor/css/start_page_style.css' %}">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
 </head>
 <body>
 <p style="font-size: 25px; font-weight: bold">
 New
 <div style="padding-top: 50px"><label>Name your file: </label>
-<input type="text" id="fileNameInput" value="untitled" style="width: 300px">
+<input type="text" id="fileNameInput" style="width: 300px">
 <select id="save_file_type" size=1>
     <option value="svg">.svg</option>
     <option value="yml">.yml</option>
 </select>
 </div>
-<button id="createFileButton">Create</button>
+<button id="createFileButton" disabled="disabled">Create</button>
 </p>
 <div class="panel">
 		<button id="target">Reload</button>
@@ -32,7 +35,9 @@ New
 <script>
 const token = "{{csrf_token}}",
     viewURL = "{% url 'files_view' %}",
-    uploadURL = "{% url 'files_upload' %}";
+    saveURL = "{% url 'files_save' %}",
+    uploadURL = "{% url 'files_upload' %}",
+    collisionValidationURL = "{% url 'files_collision_validation' %}";
 </script>
 </body>
 </html>
