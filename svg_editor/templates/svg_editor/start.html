@@ -1,38 +1,83 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Start</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'svg_editor/css/start-styles.css' %}? 202208200008">
 </head>
+
 <body>
-<p style="font-size: 25px; font-weight: bold">
-New
-<div style="padding-top: 50px"><label>Name your file: </label>
-<input type="text" id="fileNameInput" value="untitled" style="width: 300px">
-<select id="save_file_type" size=1>
-    <option value="svg">.svg</option>
-    <option value="yml">.yml</option>
-</select>
-</div>
-<button id="createFileButton">Create</button>
-</p>
-<div class="panel">
-		<button id="target">Reload</button>
-		<button id="openButton">Open</button>
-		<p id="text">Click on the Reload button to get a list of saved files!<p>
-		<ul id="list_svg"></ul>
-</div>
-<input type="file" id="uploadButton" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
-<script src="{% static 'svg_editor/js/projectManager.js' %}? 20220714154345"></script>
-<script src="{% static 'svg_editor/js/main.js' %}"></script>
-<script src="{% static 'svg_editor/js/fileManager.js' %}"></script>
-<script>
-const token = "{{csrf_token}}",
-    viewURL = "{% url 'files_view' %}",
-    uploadURL = "{% url 'files_upload' %}";
-</script>
+    <div class="parent-wrapper">
+        <div class="wrapper-login" style="max-width: 480px;">
+            <div class="form">
+                <span class="title">Start</span>
+                <div class="signup">
+                    <div class="title" style="font-size: 15px; color: #767D87;">
+                        New file
+                    </div>
+                    <div class="input-field-start">
+                        <label for="fileNameInput">Name your file:</label>
+                        <input type="text" id="fileNameInput" value="untitled" required>
+                        <select id="save_file_type" class="custom-select sources" size=1 placeholder=".svg">
+                            <option value="svg" selected>.svg</option>
+                            <option value="yml">.yml</option>
+                        </select>
+                    </div>
+                    <button id="createFileButton" class="input-field button">Create</button>
+                    <div class="title" style="font-size: 15px; color: #767D87; margin-top: 15px;">
+                        Open file from your local folder
+                    </div>
+                    <div class="box">
+                        <input type="file" id="uploadButton" class="input-file" />
+                        <label for="uploadButton">
+                            <div class="choose">Choose a file&hellip;</div><span></span>
+                        </label>
+                    </div>
+                    <div class="title" style="font-size: 15px; color: #767D87; margin-top: 15px;">
+                        Saved files
+                    </div>
+                    <div class="buttons">
+                        <button id="target" class="input-field button">Reload</button>
+                        <button id="openButton" class="input-field button">Open</button>
+                    </div>
+                    <div class="signup">
+                        <span class="check-text" id="text">Click on the Reload button to get the list of saved
+                            files!</span>
+                    </div>
+                    <div class="panel">
+                        <ul id="list_svg"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ul class="shapes">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+    <script src="{% static 'svg_editor/js/projectManager.js' %}? 20220714154345"></script>
+    <script src="{% static 'svg_editor/js/main.js' %}"></script>
+    <script src="{% static 'svg_editor/js/fileManager.js' %}"></script>
+    <script src="{% static 'svg_editor/js/startDesign.js' %}"></script>
+    <script>
+        const token = "{{csrf_token}}",
+            viewURL = "{% url 'files_view' %}",
+            uploadURL = "{% url 'files_upload' %}";
+    </script>
 </body>
+
 </html>
