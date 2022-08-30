@@ -6,11 +6,9 @@ $(document).ready(function () {
 
     // Select box customization
     $(".custom-select").each(function () {
-        var classes = $(this).attr("class"),
-            id = $(this).attr("id"),
-            name = $(this).attr("name");
+        const classes = $(this).attr("class");
 
-        var template = '<div class="' + classes + '">';
+        let template = '<div class="' + classes + '">';
 
         template +=
             '<span class="custom-select-trigger">' +
@@ -52,7 +50,7 @@ $(document).ready(function () {
         }
     );
 
-    $(".custom-select-trigger").on("click", function () {
+    $(".custom-select-trigger").on("click", function (event) {
         $("html").one("click", function () {
             $(".custom-select").removeClass("opened");
         });
@@ -88,13 +86,11 @@ $(document).ready(function () {
     });
 
     // File input customization
-    $(".inputfile").each(function () {
+    $(".input-file").each(function () {
         $(this).on("change", function (event) {
-            var fileName = '';
+            let fileName = '';
 
-            if (this.files && this.files.length > 1)
-                fileName = (this.getAttribute("data-multiple-caption") || "").replace("{count}", this.files.length);
-            else if (event.target.value)
+            if (event.target.value)
                 fileName = event.target.value.split("\\").pop();
 
             if (fileName)

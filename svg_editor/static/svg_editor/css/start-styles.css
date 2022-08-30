@@ -21,8 +21,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #CCD7E4; /*fallback */
-    background-image: linear-gradient(to right top, #5b7dab, #708db6, #859ec0, #9aafcb, #afc0d6, #b2c6da, #b6ccde, #bad2e1, #abcedc, #9ccbd5, #8ec7cb, #84c3be);
+    background: #CCD7E4; /* fallback */
+    background-image: linear-gradient(to right top,
+            #5b7dab, #708db6, #859ec0, #9aafcb,
+            #afc0d6, #b2c6da, #b6ccde, #bad2e1,
+            #abcedc, #9ccbd5, #8ec7cb, #84c3be);
     background-size: 400vw 400vh;
     animation: gradient 10s ease infinite;
 }
@@ -97,7 +100,6 @@ body {
 
 .form .button input,
 #createFileButton,
-.box .input-file+label,
 #target,
 #openButton {
     border: none;
@@ -110,8 +112,6 @@ body {
 
 .button input:hover,
 #createFileButton:hover,
-.box .input-file:focus+label,
-.box .input-file+label:hover,
 #target:hover,
 #openButton:hover {
     background-color: #767D87;
@@ -423,7 +423,7 @@ select::-ms-expand {
     background-color: #767D87;
 }
 
-.inputfile {
+.input-file {
     width: 0.1px;
     height: 0.1px;
     opacity: 0;
@@ -432,7 +432,7 @@ select::-ms-expand {
     z-index: -1;
 }
 
-.inputfile+label {
+.input-file+label {
     cursor: pointer;
     background-color: transparent;
     margin-top: -20px;
@@ -441,7 +441,7 @@ select::-ms-expand {
     gap: 0;
 }
 
-.inputfile:focus+label {
+.input-file:focus+label {
     border-color: #828A95;
 }
 
@@ -456,7 +456,7 @@ select::-ms-expand {
     overflow: hidden;
 }
 
-.inputfile+label .choose {
+.input-file+label .choose {
     height: 30px;
     width: 140px;
     margin-right: 5px;
@@ -472,9 +472,9 @@ select::-ms-expand {
 
 }
 
-.inputfile:focus+label .choose,
-.inputfile.has-focus+label .choose,
-.inputfile+label:hover .choose {
+.input-file:focus+label .choose,
+.input-file.has-focus+label .choose,
+.input-file+label:hover .choose {
     background-color: #767D87;
 }
 

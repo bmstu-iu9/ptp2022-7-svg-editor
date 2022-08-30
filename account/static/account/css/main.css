@@ -21,15 +21,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #CCD7E4; /*fallback */
-    background-image: linear-gradient(to right top, #5b7dab, #708db6, #859ec0, #9aafcb, #afc0d6, #b2c6da, #b6ccde, #bad2e1, #abcedc, #9ccbd5, #8ec7cb, #84c3be);
+    background: #CCD7E4; /* fallback */
+    background-image: linear-gradient(to right top,
+            #5b7dab, #708db6, #859ec0, #9aafcb,
+            #afc0d6, #b2c6da, #b6ccde, #bad2e1,
+            #abcedc, #9ccbd5, #8ec7cb, #84c3be);
     background-size: 400vw 400vh;
     animation: gradient 10s ease infinite;
 }
 
 @keyframes gradient {
     0% {
-        background-position: 0% 50%;
+        background-position: 0 50%;
     }
 
     50% {
@@ -37,7 +40,7 @@ body {
     }
 
     100% {
-        background-position: 0% 50%;
+        background-position: 0 50%;
     }
 }
 
@@ -51,42 +54,15 @@ body {
     z-index: 2;
 }
 
-.wrapper-email-complete {
+.wrapper-email {
     position: relative;
     max-width: 430px;
     width: 100%;
     background: #FFFFFF;
     border-radius: 10px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    background-image: url("../icons/confetti-2596224.svg");
     background-repeat: no-repeat;
     background-position: 340px 10px;
-    z-index: 2;
-}
-
-.wrapper-email-done {
-    position: relative;
-    max-width: 430px;
-    width: 100%;
-    background: #FFFFFF;
-    border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    background-image: url("../icons/watch.svg");
-    background-repeat: no-repeat;
-    background-position: 345px 10px;
-    z-index: 2;
-}
-
-.wrapper-email-incomplete {
-    position: relative;
-    max-width: 430px;
-    width: 100%;
-    background: #FFFFFF;
-    border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    background-image: url("../icons/rain.svg");
-    background-repeat: no-repeat;
-    background-position: 345px 10px;
     z-index: 2;
 }
 
