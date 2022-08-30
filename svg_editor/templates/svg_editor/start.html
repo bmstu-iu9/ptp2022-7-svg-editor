@@ -28,7 +28,7 @@
                             <option value="yml">.yml</option>
                         </select>
                     </div>
-                    <button id="createFileButton" class="input-field button">Create</button>
+                    <button id="createFileButton" class="input-field button" disabled="disabled">Create</button>
                     <div class="title" style="font-size: 15px; color: #767D87; margin-top: 15px;">
                         Open file from your local folder
                     </div>
@@ -76,7 +76,9 @@
     <script>
         const token = "{{csrf_token}}",
             viewURL = "{% url 'files_view' %}",
-            uploadURL = "{% url 'files_upload' %}";
+            uploadURL = "{% url 'files_upload' %}",
+            saveURL = "{% url 'files_save' %}",
+            collisionValidationURL = "{% url 'files_collision_validation' %}";
     </script>
 </body>
 
