@@ -96,7 +96,7 @@ class FileManager {
                 list.innerHTML = "";
                 let key;
                 for (key in response.svgs) {
-                    list.innerHTML += `<input class="inner_list_svg" type='radio' name='selected_file'>${response.svgs[key]}`
+                    list.innerHTML += `<li><input class="inner_list_svg" type='radio' name='selected_file'>${response.svgs[key]}</li>`
                 }
             },
             error: function (response) {
