@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'illustrator.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'svg-editor',
-        'USER': 'postgres',
-        'PASSWORD': '103856',
+        'NAME': 'artemnostrum',
+        'USER': 'artemnostrum',
+        'PASSWORD': '69AnGe2YM4jskjHy',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
