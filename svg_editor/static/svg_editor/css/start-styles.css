@@ -512,3 +512,11 @@ select::-ms-expand {
     background-color: #828A95;
     border-radius: 10px;
 }
+
+.is-valid {
+    border: 2px solid #08ec17!important;
+}
+
+.is-invalid {
+    border: 2px solid #ec081b!important;
+}
