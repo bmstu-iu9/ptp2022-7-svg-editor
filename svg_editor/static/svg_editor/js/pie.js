@@ -17,6 +17,11 @@ class Pie {
 		this.selectLayer(remote);
 	}
 
+	createLayer(baseElement, layerName = 'layer') {
+		let remote = new LayerRemote(new Layer(baseElement, layerName));
+		return remote;
+	}
+
 	deleteCurrentLayer() {
 		let nextLayer = this.currentLayer.getPrevious();
 		this.currentLayer.remove();
