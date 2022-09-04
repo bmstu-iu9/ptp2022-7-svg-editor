@@ -83,7 +83,7 @@ $(document).ready(function () {
             .parents(".custom-select")
             .find(".custom-select-trigger")
             .text($(this).text());
-        $('#save_file_type').trigger('change');
+        $('#save-file-type').trigger('change');
     });
 
     // File input customization
