@@ -112,7 +112,7 @@
 ## Смена пароля
 * Для смены пароля нажмите на соответствующую ссылку в личном кабинете.
 * Заполните поля, следуя инструкциям.
-![password_change_form](https://user-images.githubusercontent.com/67114367/188322520-111b9689-ba2a-45e0-ad22-55fd3f3a5bab.png)
+* ![password_change_form](https://user-images.githubusercontent.com/67114367/188322520-111b9689-ba2a-45e0-ad22-55fd3f3a5bab.png)
 * После смены пароля откроется страница, уведомляющая об успешной смене пароля.
 * ![password_change_done](https://user-images.githubusercontent.com/67114367/188322608-d2f4da0c-40ef-4e61-9cba-5d8027bab3b3.png)
 
