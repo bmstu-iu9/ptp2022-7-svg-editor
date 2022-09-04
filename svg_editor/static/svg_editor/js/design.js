@@ -323,11 +323,12 @@ $(document).ready(function () {
         });
     });
 
-    $("new-ok-button").on("click", function () {
+    $("#new-ok-button").on("click", function () {
         let newPageName = document.getElementsByName("new-filename")[0].value,
             newPageType = document.getElementById("new-file-type").value;
+        easel.remove(`${newPageName}.${newPageType}`, false);
         easel.createPage(newPageName, newPageType);
-        workspace = easel.currentPage.getWorkplace();
+        workspace = document.getElementById('workspace');
     });
 
     $(".close-menu-button").on("click", function () {

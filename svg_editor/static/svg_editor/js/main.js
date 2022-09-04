@@ -6,7 +6,7 @@ let currentFileName = null;
 
 $(document).ready(function () {
     // Validate files collision
-    $('input[name="new-filename"], #new_file_type').on(
+    $('input[name="new-filename"], #new-file-type').on(
         "keyup change",
         function () {
             FileManager.collisionValidation(
@@ -18,12 +18,12 @@ $(document).ready(function () {
                         $('input[name="new-filename"]')
                             .removeClass("is-valid")
                             .addClass("is-invalid");
-                        $(".new-ok-button").prop("disabled", true);
+                        $("#new-ok-button").prop("disabled", true);
                     } else {
                         $('input[name="new-filename"]')
                             .removeClass("is-invalid")
                             .addClass("is-valid");
-                        $(".new-ok-button").prop("disabled", false);
+                        $("#new-ok-button").prop("disabled", false);
                     }
                 }
             );
@@ -42,7 +42,7 @@ $(document).ready(function () {
         easel.save(
             true,
             $("#save-as-name").val(),
-            $("save-as-file-type").val()
+            $("#save-as-file-type").val()
         );
     });
 
@@ -76,7 +76,12 @@ $(document).ready(function () {
     });
     // Edit file from server
     $(".drop-moving-button[name='edit-file']").click(function () {
-        easel.edit(currentFileName);
+        if (currentFileName) {
+            easel.remove(currentFileName, false);
+            easel.createPage(currentFileName.slice(0, -4), currentFileName.slice(-3));
+            workspace = document.getElementById('workspace');
+            easel.edit();
+        }
     });
 
     // Choosing a current svg
