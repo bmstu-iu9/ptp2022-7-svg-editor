@@ -1131,27 +1131,8 @@ $(document)
         changeToolEvent();
         resizeWindowEvent();
 
-<<<<<<< HEAD
         $("#control-panel").change(changeToolEvent);
         $("#tools-panel").change(changeToolEvent);
-    })
-
-    /* перезват нажания сочитаний клавиш ctrl-z и ctrl-shift-z
-    для передвиженя по истории рисования */
-    .keypress(function (event) {
-        if (event.which === 26 && event.ctrlKey) {
-            if (event.shiftKey) historyUndo();
-            else historyBack();
-        }
-    })
-
-    // выход из режима рисования путём нажатия клавишы escape
-    .keydown(function (event) {
-        if (event.key === "Escape") breakDrawing();
-=======
-        $('#control-panel').change(changeToolEvent);
-        $('#tools-panel').change(changeToolEvent);
->>>>>>> develop
     });
 
 // перехват событий окна, влияющих на рисование
