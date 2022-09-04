@@ -1,37 +1,37 @@
 <h1 align="center">
-    Рисует и точка
+    Artem Nostrum
 </h1>
 
 >Данный проект представляет из себя реализацию векторного графического редактора с системой управления учётными записями в рамках проектно-технологической практики кафедры ИУ9 в 2022 году
 
-# Документация
+# Содержание документации
 ### Инсталяция проекта **АНДРЕЙ**
 * [Требуемые параметры системы](#требуемые-параметры-системы)
 * [Установка](#установка)
 * [Запуск](#запуск)
 ### Возможности редактора
 * [Инструменты](#инструменты)
-  * [<img src="./svg_editor/static/svg_editor/icons/cursor.svg" height=16>Курсор<img src="./svg_editor/static/svg_editor/icons/cursor-active.svg" height=16>](#курсор)
-  * [<img src="./svg_editor/static/svg_editor/icons/pencil.svg" height=16>Карандаш<img src="./svg_editor/static/svg_editor/icons/pencil-active.svg" height=16>](#карандаш)
-  * [<img src="./svg_editor/static/svg_editor/icons/line.svg" height=16>Линия<img src="./svg_editor/static/svg_editor/icons/line-active.svg" height=16>](#линия)
+  * [<img src="./svg_editor/static/svg_editor/icons/cursor.svg" height=16> Курсор <img src="./svg_editor/static/svg_editor/icons/cursor-active.svg" height=16>](#курсор)
+  * [<img src="./svg_editor/static/svg_editor/icons/pencil.svg" height=16> Карандаш <img src="./svg_editor/static/svg_editor/icons/pencil-active.svg" height=16>](#карандаш)
+  * [<img src="./svg_editor/static/svg_editor/icons/line.svg" height=16> Линия <img src="./svg_editor/static/svg_editor/icons/line-active.svg" height=16>](#линия)
   * [Фигуры](#фигуры)
-    * [<img src="./svg_editor/static/svg_editor/icons/polygon.svg" height=16>Многоугольник<img src="./svg_editor/static/svg_editor/icons/polygon-active.svg" height=16>](#многоугольник)
-    * [<img src="./svg_editor/static/svg_editor/icons/rect.svg" height=16>Прямоугольник<img src="./svg_editor/static/svg_editor/icons/rect-active.svg" height=16>](#прямоугольник)
-    * [<img src="./svg_editor/static/svg_editor/icons/ellipse.svg" height=16>Эллипс<img src="./svg_editor/static/svg_editor/icons/ellipse-active.svg" height=16>](#эллипс)
-    * [<img src="./svg_editor/static/svg_editor/icons/star.svg" height=16>Звезда<img src="./svg_editor/static/svg_editor/icons/star-active.svg" height=16>](#звезда)
-  * [<img src="./svg_editor/static/svg_editor/icons/path.svg" height=16>Путь<img src="./svg_editor/static/svg_editor/icons/path-active.svg" height=16>](#путь)
-  * [<img src="./svg_editor/static/svg_editor/icons/text.svg" height=16>Текст<img src="./svg_editor/static/svg_editor/icons/text-active.svg" height=16>](#текст)
-  * [<img src="./svg_editor/static/svg_editor/icons/fill.svg" height=16>Заливка<img src="./svg_editor/static/svg_editor/icons/fill-active.svg" height=16>](#заливка)
-  * [<img src="./svg_editor/static/svg_editor/icons/eraser.svg" height=16>Ластик<img src="./svg_editor/static/svg_editor/icons/eraser-active.svg" height=16>](#ластик)
-  * [<img src="./svg_editor/static/svg_editor/icons/move.svg" height=16>Перемещение<img src="./svg_editor/static/svg_editor/icons/move-active.svg" height=16>](#перемещение)
-  * [<img src="./svg_editor/static/svg_editor/icons/rotate.svg" height=16>Вращение<img src="./svg_editor/static/svg_editor/icons/rotate-active.svg" height=16>](#вращение)
+    * [<img src="./svg_editor/static/svg_editor/icons/polygon.svg" height=16> Многоугольник <img src="./svg_editor/static/svg_editor/icons/polygon-active.svg" height=16>](#многоугольник)
+    * [<img src="./svg_editor/static/svg_editor/icons/rect.svg" height=16> Прямоугольник <img src="./svg_editor/static/svg_editor/icons/rect-active.svg" height=16>](#прямоугольник)
+    * [<img src="./svg_editor/static/svg_editor/icons/ellipse.svg" height=16> Эллипс <img src="./svg_editor/static/svg_editor/icons/ellipse-active.svg" height=16>](#эллипс)
+    * [<img src="./svg_editor/static/svg_editor/icons/star.svg" height=16> Звезда <img src="./svg_editor/static/svg_editor/icons/star-active.svg" height=16>](#звезда)
+  * [<img src="./svg_editor/static/svg_editor/icons/path.svg" height=16> Путь <img src="./svg_editor/static/svg_editor/icons/path-active.svg" height=16>](#путь)
+  * [<img src="./svg_editor/static/svg_editor/icons/text.svg" height=16> Текст <img src="./svg_editor/static/svg_editor/icons/text-active.svg" height=16>](#текст)
+  * [<img src="./svg_editor/static/svg_editor/icons/fill.svg" height=16> Заливка <img src="./svg_editor/static/svg_editor/icons/fill-active.svg" height=16>](#заливка)
+  * [<img src="./svg_editor/static/svg_editor/icons/eraser.svg" height=16> Ластик <img src="./svg_editor/static/svg_editor/icons/eraser-active.svg" height=16>](#ластик)
+  * [<img src="./svg_editor/static/svg_editor/icons/move.svg" height=16> Перемещение <img src="./svg_editor/static/svg_editor/icons/move-active.svg" height=16>](#перемещение)
+  * [<img src="./svg_editor/static/svg_editor/icons/rotate.svg" height=16> Вращение <img src="./svg_editor/static/svg_editor/icons/rotate-active.svg" height=16>](#вращение)
   * [Трансформация](#трансформация)
-    * [<img src="./svg_editor/static/svg_editor/icons/deform.svg" height=16>Деформация<img src="./svg_editor/static/svg_editor/icons/deform-active.svg" height=16>](#деформация)
-    * [<img src="./svg_editor/static/svg_editor/icons/scale.svg" height=16>Масштабирование<img src="./svg_editor/static/svg_editor/icons/scale-active.svg" height=16>](#масштабирование)
-    * [<img src="./svg_editor/static/svg_editor/icons/split.svg" height=16>Разбиение<img src="./svg_editor/static/svg_editor/icons/split-active.svg" height=16>](#разбиение)
-    * [<img src="./svg_editor/static/svg_editor/icons/skew.svg" height=16>Скос<img src="./svg_editor/static/svg_editor/icons/skew-active.svg" height=16>](#скос)
-    * [<img src="./svg_editor/static/svg_editor/icons/mirror.svg" height=16>Отражение<img src="./svg_editor/static/svg_editor/icons/mirror-active.svg" height=16>](#отражение)
-    * [<img src="./svg_editor/static/svg_editor/icons/tenscompress.svg" height=16>Расширение-сжатие<img src="./svg_editor/static/svg_editor/icons/tenscompress-active.svg" height=16>](#расширение-сжатие)
+    * [<img src="./svg_editor/static/svg_editor/icons/deform.svg" height=16> Деформация <img src="./svg_editor/static/svg_editor/icons/deform-active.svg" height=16>](#деформация)
+    * [<img src="./svg_editor/static/svg_editor/icons/scale.svg" height=16> Масштабирование <img src="./svg_editor/static/svg_editor/icons/scale-active.svg" height=16>](#масштабирование)
+    * [<img src="./svg_editor/static/svg_editor/icons/split.svg" height=16> Разбиение <img src="./svg_editor/static/svg_editor/icons/split-active.svg" height=16>](#разбиение)
+    * [<img src="./svg_editor/static/svg_editor/icons/skew.svg" height=16> Скос <img src="./svg_editor/static/svg_editor/icons/skew-active.svg" height=16>](#скос)
+    * [<img src="./svg_editor/static/svg_editor/icons/mirror.svg" height=16> Отражение <img src="./svg_editor/static/svg_editor/icons/mirror-active.svg" height=16>](#отражение)
+    * [<img src="./svg_editor/static/svg_editor/icons/compress.svg" height=16> Расширение-сжатие <img src="./svg_editor/static/svg_editor/icons/compress-active.svg" height=16>](#расширение-сжатие)
 * [Отмена и повтор действий](#отмена-и-повтор-действий)
 * [<img src="./svg_editor/static/svg_editor/icons/layers.svg" height=16>Слои<img src="./svg_editor/static/svg_editor/icons/layers-active.svg" height=16> **ГАМИД**](#слои)
 * [Проекты **АНДРЕЙ**](#проекты)
@@ -50,25 +50,33 @@
 * [Спасибо](#нашему-куратору-посевину-даниле-павловичу-большое-спасибо-за-то-что-направлял-и-вёл-наш-проект-а-так-же-помогал-решать-все-вопросы-касающиеся-разработки-)
 
 # Инсталяция проекта
-Инструкции ниже помогут Вам загрузить и запустить копию проекта для личного использования на Вашей локальной машине.
+Инструкции ниже помогут вам загрузить и запустить копию проекта для личного использования на вашей локальной машине.
 ### Требуемые параметры системы
-* Операционная система: win/lin и лучше
-* Оперативная память: 2гб и больше
-* python: 3.7 и выше
-* html: 5 и шире
+* python: 3.8.10 и выше
+* для unix обязательно иметь пакет python3-venv
 ### Установка
-Установка-то дело плёвое. Каждый прохожий сможет её сделать. Проверим? Ты только не уходи!
-1. **Установите зависимости**
+1. **Скопируйте репозиторий в вашу директорию и перейдите в корень проекта**
     ```shell
-    Короче, комьютерный, я тебя в разетку влючил и в благородство играть не буду: установишь для меня пару зависимостей — и мы в расчёте.
+    $ git clone <репозиторий> --branch=main
+    $ cd ptp2022-7-svg-editor
     ```
-2. **Разверните базу данных**
+2. **Создайте виртуальную среду и активируйте ее**
     ```shell
-    /rotate data_base 180
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    ```
+3. **Установите зависимости**
+    ```shell
+    (venv) $ python3 -m pip install --upgrade pip
+    (venv) $ pip install -r requirements.txt
+    ```
+4. **Сделайте миграции**
+    ```shell
+    (venv) $ python manage.py migrate
     ```
 ### Запуск
 ```shell
-/python manage.py runserver
+(venv) $ python manage.py runserver
 ```
 
 # Возможности редактора
