@@ -65,6 +65,14 @@
     $ python3 -m venv venv
     $ source venv/bin/activate
     ```
+    <details>
+    <summary>Windows</summary>
+   
+    ```shell
+    > python -m venv venv
+    > venv\Scripts\activate
+    ```
+    </details>
 3. **Установите зависимости**
     ```shell
     (venv) $ python3 -m pip install --upgrade pip
