@@ -511,7 +511,7 @@ td {
 }
 
 #layers-panel-content {
-    width: 18%;
+    width: 20em;
     height: 80%;
     display: inline-block;
     position: absolute;
