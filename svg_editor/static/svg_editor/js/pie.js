@@ -44,7 +44,6 @@ class Pie {
 	}
 
 	addLayer(remote, place) {
-		console.log(this.layersPanel.clientWidth);
 		remote.setLayerSize(this.layersPanel.clientWidth, this.layersPanel.clientHeight);
 		if (place == 'end') {
 			this.layersPanel.prepend(remote.getLayerNode());

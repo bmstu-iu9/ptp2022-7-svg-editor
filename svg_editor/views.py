@@ -66,7 +66,7 @@ def files_save(request):
                                          f'.{request_dict["type"]}'))
         if len(request_dict["file_name"]) > 0:
             save_as = eval(request_dict['save_as'].capitalize())
-            if not ((not save_as) and path_to_file.exists()):
+            if not (save_as and path_to_file.exists()):
                 with open(path_to_file, 'w') as stream:
                     if path_to_file.suffix == '.svg':
                         stream.write(svg)

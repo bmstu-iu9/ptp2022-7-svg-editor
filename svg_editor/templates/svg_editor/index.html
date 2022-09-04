@@ -178,14 +178,19 @@
 				<div id="layers-panel-button" class="tool-button"></div>
 				<div id="layers-panel-content">
 					<div id="layers-panel-control">
-						<div id="create-layer-button" class="layers-panel-control-button"></div>
-						<div id="delete-layer-button" class="layers-panel-control-button"></div>
-						<div id="create-new-file-button" class="layers-panel-control-button"></div>
-						<input id="opacity-slider" type="range" min="0" max="1" step="0.01" value="1">
+						<button id="createLayerButton" class="layers-panel-control-button"></button>
+						<button id="deleteLayerButton" class="layers-panel-control-button"></button>
 						<div>Layers</div>
 					</div>
 					<div id="layers-panel-choosing">
 					</div>
+					<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
+					<button id="mergeWithPrevious">merge with previous</button>
+					<button id="mergeVisible">merge visible</button>
+					<button id="createFromVisible">create layer from visible</button>
+					<button id="copyLayer">copy</button>
+					<button id="layerUp">up</button>
+					<button id="layerDown">down</button>
 				</div>
 			</div>
 		</div>
@@ -198,17 +203,11 @@
 	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<!--<script src="{% static 'svg_editor/js/design.js' %} 20220714154345"></script>
-	<script src="{% static 'svg_editor/js/main.js' %}? 20220714154345"></script>
-	<script src="{% static 'svg_editor/js/layers.js' %}? 202207232241"></script>
-	<script src="{% static 'svg_editor/js/draw.js' %}? 20220714154345"></script>
-	-->
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topath.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topoly.js"></script>
 	<script src="{% static 'svg_editor/js/main.js' %}"></script>
 	<script src="{% static 'svg_editor/js/fileManager.js' %}"></script>
 	<script src="{% static 'svg_editor/js/design.js' %}"></script>
-	<!-- <script src="{% static 'svg_editor/js/layers.js' %}"></script> -->
 	<script src="{% static 'svg_editor/js/baseFactory.js' %}"></script>
 	<script src="{% static 'svg_editor/js/baseNode.js' %}"></script>
 	<script src="{% static 'svg_editor/js/baseSvgElement.js' %}"></script>

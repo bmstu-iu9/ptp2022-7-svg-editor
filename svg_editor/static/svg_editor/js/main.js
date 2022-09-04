@@ -62,8 +62,8 @@ $(document).ready(function () {
     });
 
     // Download file from server
-    $('#download-button').click(function () {
-        FileManager.download(easel.currentPage.getFileName() + '.' + easel.currentPage.getFileType());
+    $(".drop-moving-button[name='download-file']").click(function () {
+        FileManager.download(currentFileName);
     });
 
     // Get list of user files at server
@@ -86,9 +86,7 @@ $(document).ready(function () {
     $(".drop-moving-button[name='edit-file']").click(function () {
         if (currentFileName) {
             easel.remove(currentFileName, false);
-            easel.createPage(currentFileName.slice(0, -4), currentFileName.slice(-3));
-            workspace = document.getElementById('workspace');
-            easel.edit();
+            easel.edit(currentFileName.slice(0, -4), currentFileName.slice(-3));
         }
     });
 

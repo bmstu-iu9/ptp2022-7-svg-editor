@@ -47,6 +47,7 @@ function layerUpdate(newDraw) {
 //////////////////////////////////////////
 
 function breakDrawing() {
+    if (draw == undefined) return; //заглушка
     if ("select" in draw) {
         if (!mouseup) toolMethods[tool]["mouseup"]();
         selectionClear();
@@ -130,7 +131,7 @@ function logMouseEvent(event) {
     else if (event.type == "mousedown") mouseup = false;
 
     if (
-        !isDrawAllowed() ||
+        easel.currentPage == undefined || !easel.currentPage.pie.isDrawAllowed() || //заглушка
         (tool != "cursor" &&
             event.type == "mousedown" &&
             !$("#workspace")[0].contains(event.target))
@@ -1129,7 +1130,7 @@ $(document)
     и подключение отслеживания измженения параметров иструментов*/
     .ready(function () {
         changeToolEvent();
-        /*if (easel.currentPage != undefined) */resizeWindowEvent();
+        if (easel.currentPage != undefined) resizeWindowEvent(); // заглушка
 
         $("#control-panel").change(changeToolEvent);
         $("#tools-panel").change(changeToolEvent);

@@ -53,10 +53,6 @@ class Easel extends BaseFactory{
     }
     // Request server to save chosen page
     save(saveAs=false, fileName=this.currentPage.getFileName(), type=this.currentPage.getFileType()){
-        if (saveAs) {
-            fileName = $("#file_name").val();
-            type = $("#save_file_type1").val();
-        }
         $.ajax({
             data: {
                 file_name: fileName,
@@ -65,7 +61,13 @@ class Easel extends BaseFactory{
                 type: type,
             },
             type: 'POST',
-            url: saveURL
+            url: saveURL,
+            success: function (response) {
+                alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно сохранен!');
+            },
+            error: function (response) {
+                alert(response.responseJSON.errors);
+            }
         });
     }
     // Get load from server svg with this name
@@ -107,7 +109,6 @@ class Easel extends BaseFactory{
 
             while (taskStack.length > 0) {
                 const task = taskStack.pop();
-                // console.log(task.obj, task.node);
                 for (let attr of task.obj.attributes) {
                     let attrName = Object.keys(attr)[0];
                     task.node.setAttribute(attrName, attr[attrName]);
