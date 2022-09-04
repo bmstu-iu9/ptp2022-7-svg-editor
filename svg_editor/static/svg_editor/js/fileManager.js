@@ -91,12 +91,12 @@ class FileManager {
             url: viewURL,
             type: 'GET',
             success: function (response) {
-                document.getElementById('text').innerHTML = "List of the saved files:";
-                let list = document.querySelector('#list_svg');
+                document.getElementById('list-text').innerHTML = "List of the saved files:";
+                let list = document.querySelector('#list-svg');
                 list.innerHTML = "";
                 let key;
                 for (key in response.svgs) {
-                    list.innerHTML += `<li><input class="inner_list_svg" type='radio' name='selected_file'>${response.svgs[key]}</li>`
+                    list.innerHTML += `<li><input class="inner-list-svg" type='radio' name='selected_file'>${response.svgs[key]}</li>`
                 }
             },
             error: function (response) {

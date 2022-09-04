@@ -8,7 +8,7 @@ $(window).on('load', function() {
   });
 
 $(document).ready(function () {
-    $('#preloader').fadeOut("slow");
+    $("#preloader").fadeOut("slow");
     const disableSelect = (e) => {
         return false;
     };
@@ -51,465 +51,209 @@ $(document).ready(function () {
     }
     $(".moveable-part-file-menu").mousedown(handle_mousedown);
 
+    function clearInputForm(obj) {
+        obj.find("input[type='text']").val("untitled");
+        obj.find("input[type='number']").val("0");
+    }
+
+    function clickTool(name) {
+        const $this = $(`#${name}-tool`);
+        const $lastPressed = $(".tool-button.tool-clicked")
+            .not($this)
+            .not($("#layers-panel-button"));
+        $this.toggleClass("tool-clicked");
+        if (!$this.hasClass("addition-open")) {
+            $(".hidden-tools").removeClass("open");
+        }
+        if ($lastPressed.length) {
+            $lastPressed.css(
+                "background-image",
+                $lastPressed.css("background-image").replace("-active", "")
+            );
+            $lastPressed.removeClass("tool-clicked");
+        }
+        if ($this.hasClass("tool-clicked")) {
+            $this.css(
+                "background-image",
+                `url('/static/svg_editor/icons/${name}-active.svg')`
+            );
+            changeToolEvent();
+        } else {
+            $this.css(
+                "background-image",
+                `url('/static/svg_editor/icons/${name}.svg')`
+            );
+        }
+    }
+    function swap(a, b) {
+        var tmp = $("<span>").hide();
+        a.before(tmp);
+        b.before(a);
+        tmp.replaceWith(b);
+    }
     // Инструменты
-    $("#moveTool").on("click", function () {
-        $("#filling-type").css("display", "none");
+    $("#cursor-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
-        $(this).toggleClass("tool-clicked");
-        //buttonClick($(this), $(".tool-button"));
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/move-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/move.svg')"
-            );
-        }
-    });
-
-    $("#pencilTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $("#width-parameter").css("display", "inline-block");
-            $("#filling-type").css("display", "inline-block");
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/pencil-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $("#width-parameter").css("display", "none");
-            $("#filling-type").css("display", "none");
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/pencil.svg')"
-            );
-        }
-    });
-
-    $("#lineTool").on("click", function () {
         $("#filling-type").css("display", "none");
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/line-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/line.svg')"
-            );
-        }
+        clickTool("cursor");
+    });
+    $("#move-tool").on("click", function () {
+        clickTool("move");
     });
 
-    $("#polygonTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        $(this).next().toggleClass("open");
+    $("#pencil-tool").on("click", function () {
+        clickTool("pencil");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
             $("#filling-type").css("display", "inline-block");
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/polygon-active.svg')"
-            );
-            changeToolEvent();
         } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/polygon.svg')"
-            );
             $("#width-parameter").css("display", "none");
             $("#filling-type").css("display", "none");
         }
     });
 
-    $("#rectTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
+    $("#line-tool").on("click", function () {
+        clickTool("line");
+        $("#filling-type").css("display", "none");
         if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/rect-active.svg')"
-            );
-            changeToolEvent();
+            $("#width-parameter").css("display", "inline-block");
         } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/rect.svg')"
-            );
+            $("#width-parameter").css("display", "none");
         }
     });
 
-    $("#ellipseTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
+    $("#tools-choosing").on("click", ".addition-open", function () {
         if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/ellipse-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/ellipse.svg')"
-            );
+            $(this).next().toggleClass("open");
         }
     });
 
-    $("#pathTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
+    $("#tools-choosing").on("click", "#geometry .tool-button", function (e) {
+        const $this = $(`#${e.target.id}`);
+        const $curAdditionOpen = $("#geometry").prev();
+        $this.addClass("addition-open");
+        $curAdditionOpen.removeClass("addition-open");
+        swap($this, $curAdditionOpen);
+    });
+
+    $("#tools-choosing").on("click", "#manage .tool-button", function (e) {
+        const $this = $(`#${e.target.id}`);
+        const $curAdditionOpen = $("#manage").prev();
+        $this.addClass("addition-open");
+        $curAdditionOpen.removeClass("addition-open");
+        swap($this, $curAdditionOpen);
+    });
+
+    $("#polygon-tool").on("click", function () {
+        clickTool("polygon");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
             $("#filling-type").css("display", "inline-block");
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/path-active.svg')"
-            );
-            changeToolEvent();
         } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/path.svg')"
-            );
             $("#width-parameter").css("display", "none");
             $("#filling-type").css("display", "none");
         }
     });
 
-    $("#textTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
+    $("#rect-tool").on("click", function () {
+        clickTool("rect");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/text-active.svg')"
-            );
-            changeToolEvent();
+            $("#filling-type").css("display", "inline-block");
         } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/text.svg')"
-            );
+            $("#width-parameter").css("display", "none");
+            $("#filling-type").css("display", "none");
+        }
+    });
+
+    $("#ellipse-tool").on("click", function () {
+        clickTool("ellipse");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+            $("#filling-type").css("display", "inline-block");
+        } else {
+            $("#width-parameter").css("display", "none");
+            $("#filling-type").css("display", "none");
+        }
+    });
+
+    $("#star-tool").on("click", function () {
+        clickTool("star");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+            $("#filling-type").css("display", "inline-block");
+        } else {
+            $("#width-parameter").css("display", "none");
+            $("#filling-type").css("display", "none");
+        }
+    });
+
+    $("#path-tool").on("click", function () {
+        clickTool("path");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+        } else {
             $("#width-parameter").css("display", "none");
         }
     });
 
-    $("#fillTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/fill-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/fill.svg')"
-            );
-        }
+    $("#text-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("text");
     });
 
-    $("#eraserTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/eraser-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/eraser.svg')"
-            );
-        }
+    $("#fill-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("fill");
     });
 
-    $("#cursorTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/cursor-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/cursor.svg')"
-            );
-        }
+    $("#eraser-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("eraser");
     });
 
-    $("#rotateTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        $(this).next().toggleClass("open");
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/rotate-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/rotate.svg')"
-            );
-        }
-    });
-    
-    $("#deformTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/deform-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/deform.svg')"
-            );
-        }
+    $("#rotate-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("rotate");
     });
 
-    $("#scaleTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/scale-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/scale.svg')"
-            );
-        }
+    $("#deform-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("deform");
     });
 
-    $("#splitTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/split-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/split.svg')"
-            );
-        }
+    $("#scale-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("scale");
     });
 
-    $("#skewTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/skew-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/skew.svg')"
-            );
-        }
-    });
-    
-    $("#mirrorTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/mirror-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/mirror.svg')"
-            );
-        }
+    $("#split-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("split");
     });
 
-    $("#compressTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/compress-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/compress.svg')"
-            );
-        }
+    $("#skew-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("skew");
     });
 
-
-    
-
-    $("#clear-button").on("click", function () {
-        draw.clear();
-        object = null;
+    $("#mirror-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("mirror");
+    });
+    $("#compress-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("compress");
     });
     // Слайдер ширины
     $(document).on("input", "#width-slider", function () {
@@ -523,7 +267,6 @@ $(document).ready(function () {
     $(".drop-button").on("click", function () {
         $(".drop-button").not(this).removeClass("selected");
         let currentDropdown = $(this).parent().find(".drop-content");
-        //buttonClick($(this), $(".drop-button"));
         $(this).toggleClass("selected");
         currentDropdown.toggleClass("open");
         $(".drop-content").not(currentDropdown).removeClass("open");
@@ -537,7 +280,6 @@ $(document).ready(function () {
                 "background-image",
                 "url('/static/svg_editor/icons/layers-active.svg')"
             );
-            changeToolEvent();
         } else {
             $(this).css(
                 "background-image",
@@ -559,7 +301,16 @@ $(document).ready(function () {
 
     // Обработка меню нового файла
     $(".drop-moving-button[name='new-file']").on("click", function () {
+        clearInputForm($("#new-menu"));
         $("#new-menu").css({
+            display: "block",
+            "z-index": "100",
+        });
+    });
+
+    $(".drop-moving-button[name='save-as-file']").on("click", function () {
+        clearInputForm($("#new-menu"));
+        $("#save-as-menu").css({
             display: "block",
             "z-index": "100",
         });
@@ -570,13 +321,13 @@ $(document).ready(function () {
             display: "none",
             "z-index": "0",
         });
-        let newPageName = document.getElementsByName('new-filename')[0].value,
-            newPageType = document.getElementById('save_file_type').value;
+    });
+
+    $("new-ok-button").on("click", function () {
+        let newPageName = document.getElementsByName("new-filename")[0].value,
+            newPageType = document.getElementById("new-file-type").value;
         easel.createPage(newPageName, newPageType);
-        FileManager.create(newPageName, newPageType, function () {})
-        workspace = document.getElementById('workspace');
-        $(this).prop('disabled', true);
-        clearInputForm();
+        workspace = easel.currentPage.getWorkplace();
     });
 
     $(".close-menu-button").on("click", function () {
@@ -584,36 +335,37 @@ $(document).ready(function () {
             display: "none",
             "z-index": "0",
         });
-        clearInputForm();
     });
 
     $(".drop-moving-button[name='save-file']").on("click", function () {
+        clearInputForm($("#save-menu"));
         $("#save-menu").css({
             display: "block",
             "z-index": "100",
         });
     });
 
-    $(".drop-moving-button[name='download-file']").on("click", function () {
-        $("#download-menu").css({
-            display: "block",
-            "z-index": "100",
-        });
-    });
-
-    $("#download-button").on("click", function () {
-        $(this).parent().css({
-            display: "none",
-            "z-index": "0",
-        });
-        clearInputForm();
-    });
-
     $(".drop-moving-button[name='open-file']").on("click", function () {
+        clearInputForm($("#open-menu"));
         $("#open-menu").css({
             display: "block",
             "z-index": "100",
         });
+    });
+
+    $(".drop-moving-button[name='delete-file']").on("click", function () {
+        $("#delete-menu").css({
+            display: "block",
+            "z-index": "100",
+        });
+    });
+
+    $(".drop-moving-button[name='undo']").on("click", function () {
+        historyBack();
+    });
+    
+    $(".drop-moving-button[name='redo']").on("click", function () {
+        historyUndo();
     });
 
     $("#file").on("input", function () {
@@ -621,14 +373,14 @@ $(document).ready(function () {
             display: "none",
             "z-index": "0",
         });
-        clearInputForm();
     });
-    let $pagesChoosing = $('#pages-choosing');
-    $pagesChoosing.on("click", "label",function (){
+
+    let $pagesChoosing = $("#pages-choosing");
+    $pagesChoosing.on("click", "label", function () {
         easel.turnTo($(this).text());
         workspace = document.getElementById('workspace');
     });
-    $pagesChoosing.on("click", ".delete-page-button",function (){
+    $pagesChoosing.on("click", ".delete-page-button", function () {
         easel.remove($(this).parent().find("label").text());
         workspace = document.getElementById('workspace');
     });

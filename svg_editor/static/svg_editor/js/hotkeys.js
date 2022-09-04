@@ -20,16 +20,16 @@ $(document).ready(function (){
     для передвиженя по истории рисования */
     $(document).bind('keypress', function (event) {
         if (event.which === 26 && event.ctrlKey) {
-            if (event.shiftKey) {
-                historyUndo();
-            } else {
-                historyBack();
-            }
+            if (event.shiftKey) historyUndo();
+            else historyBack();
         }
     });
 
     // выход из режима рисования путём нажатия клавишы escape
     $(document).bind('keydown', function (event) {
-        if (event.key === 'Escape') breakDrawing();
+        if (event.key === "Escape") breakDrawing();
+        $('#control-panel').change(changeToolEvent);
+        $('#tools-panel').change(changeToolEvent);
     });
+
 })

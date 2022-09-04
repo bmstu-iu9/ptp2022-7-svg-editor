@@ -4,7 +4,7 @@
 
 'use strict'
 
-const opacitySlider = document.querySelector('#opacity_slider');
+const opacitySlider = document.querySelector('#opacity-slider');
 const layerControlPanel = document.querySelector('#layers-panel-choosing');
 
 let currentLayerNote,
@@ -202,22 +202,22 @@ function openAsProject(yml) {
 
 $(document).ready(function () {
 
-    $("#createLayerButton").click(function () {
+    $("#create-layer-button").click(function () {
         createLayer();
     })
-    $("#deleteLayerButton").click(function () {
+    $("#delete-layer-button").click(function () {
         deleteLayer();
     })
-    $("#createNewFileButton").click(function () {
+    $("#create-new-file-button").click(function () {
         deleteAllLayers();
         createLayer();
     })
 
-    $("#opacity_slider").on("change", changeOpacity);
+    $("#opacity-slider").on("change", changeOpacity);
 
-    $("#createNewFileButton").click();
+    $("#create-new-file-button").click();
 
-    $('#layers-panel-choosing').on("click", ".layer_note", function () {
+    $('#layers-panel-choosing').on("click", ".layer-note", function () {
         $(".layer-note.active").not(this).removeClass("active");
         $(this).toggleClass("active");
         selectLayer(this);
