@@ -124,7 +124,7 @@ td {
     background: #f1f1f1;
     text-align: center;
     width: 78px;
-    max-height: 170px;
+    max-height: 400px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 11;
     top: 40px;
@@ -150,7 +150,6 @@ td {
 }
 
 .file-menu-panel {
-    background-color: whitesmoke;
     width: 25%;
     height: 200px;
     position: fixed;
@@ -161,6 +160,20 @@ td {
     transform: translate(-50%, -50%);
     border: 1px solid black;
     z-index: 0;
+    background: white;
+}
+
+#user-files {
+    background-color: whitesmoke;
+    width: 500px;
+    height: 300px;
+    position: fixed;
+    display: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid black;
+    z-index: 20;
     background: white;
 }
 
@@ -281,85 +294,85 @@ td {
     transition: background-color 0.3s;
 }
 
-#cursorTool {
+#cursor-tool {
     background-image: url("/static/svg_editor/icons/cursor.svg");
 }
 
-#moveTool {
+#move-tool {
     background-image: url("/static/svg_editor/icons/move.svg");
 }
 
-#pencilTool {
+#pencil-tool {
     background-image: url("/static/svg_editor/icons/pencil.svg");
 }
 
-#lineTool {
+#line-tool {
     background-image: url("/static/svg_editor/icons/line.svg");
     transform: scale(1, -1);
 }
 
-#polygonTool {
+#polygon-tool {
     background-image: url("/static/svg_editor/icons/polygon.svg");
     background-size: 35px;
 }
 
-#pathTool {
+#path-tool {
     background-image: url("/static/svg_editor/icons/path.svg");
 }
 
-#textTool {
+#text-tool {
     background-image: url("/static/svg_editor/icons/text.svg");
     background-size: 20px;
 }
 
-#rectTool {
+#rect-tool {
     background-image: url("/static/svg_editor/icons/rect.svg");
     background-size: 30px;
 }
 
-#ellipseTool {
+#ellipse-tool {
     background-image: url("/static/svg_editor/icons/ellipse.svg");
     background-size: 30px;
 }
 
-#fillTool {
+#fill-tool {
     background-image: url("/static/svg_editor/icons/fill.svg");
     background-size: 30px;
 }
 
-#eraserTool {
+#eraser-tool {
     background-image: url("/static/svg_editor/icons/eraser.svg");
 }
 
-#rotateTool {
+#rotate-tool {
     background-image: url("/static/svg_editor/icons/rotate.svg");
 }
 
-#deformTool {
+#deform-tool {
     background-image: url("/static/svg_editor/icons/deform.svg");
 }
 
-#scaleTool {
+#scale-tool {
     background-image: url("/static/svg_editor/icons/scale.svg");
 }
 
-#splitTool {
+#split-tool {
     background-image: url("/static/svg_editor/icons/split.svg");
 }
 
-#skewTool {
+#skew-tool {
     background-image: url("/static/svg_editor/icons/skew.svg");
 }
 
-#mirrorTool {
+#mirror-tool {
     background-image: url("/static/svg_editor/icons/mirror.svg");
 }
 
-#compressTool {
+#compress-tool {
     background-image: url("/static/svg_editor/icons/compress.svg");
 }
 
-#starTool {
+#star-tool {
     background-image: url("/static/svg_editor/icons/star.svg");
 }
 
@@ -388,7 +401,7 @@ td {
     transition: background-color 0.2s ease-out;
 }
 
-.hiddenTools {
+.hidden-tools {
     width: 125px;
     border: 1px solid;
     margin-left: 38px;
@@ -401,22 +414,22 @@ td {
     transform-origin: left top;
 }
 
-.hiddenTools.open {
+.hidden-tools.open {
     transform: scale(1);
     opacity: 1;
 }
 
-#geometry.hiddenTools {
+#geometry.hidden-tools {
     height: 36px;
     margin-top: -40px;
 }
 
-#manage.hiddenTools {
+#manage.hidden-tools {
     margin-top: -40px;
     height: 83px;
 }
 
-.hiddenTools .tool-button {
+.hidden-tools .tool-button {
     display: inline-block;
     margin-left: 5px;
     margin-top: 2px;
@@ -558,12 +571,12 @@ td {
     background-position: center;
 }
 
-#createLayerButton {
+#create-layer-button {
     background-image: url("/static/svg_editor/icons/plus.svg");
     margin-left: 5px;
 }
 
-#deleteLayerButton {
+#delet-layer-button {
     background-image: url("/static/svg_editor/icons/trash.svg");
 }
 

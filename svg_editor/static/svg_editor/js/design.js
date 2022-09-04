@@ -52,13 +52,13 @@ $(document).ready(function () {
     }
 
     function clickTool(name) {
-        const $this = $(`#${name}Tool`);
+        const $this = $(`#${name}-tool`);
         const $lastPressed = $(".tool-button.tool-clicked")
             .not($this)
             .not($("#layers-panel-button"));
         $this.toggleClass("tool-clicked");
         if (!$this.hasClass("addition-open")) {
-            $(".hiddenTools").removeClass("open");
+            $(".hidden-tools").removeClass("open");
         }
         if ($lastPressed.length) {
             $lastPressed.css(
@@ -87,16 +87,16 @@ $(document).ready(function () {
         tmp.replaceWith(b);
     }
     // Инструменты
-    $("#cursorTool").on("click", function () {
+    $("#cursor-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("cursor");
     });
-    $("#moveTool").on("click", function () {
+    $("#move-tool").on("click", function () {
         clickTool("move");
     });
 
-    $("#pencilTool").on("click", function () {
+    $("#pencil-tool").on("click", function () {
         clickTool("pencil");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -107,7 +107,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#lineTool").on("click", function () {
+    $("#line-tool").on("click", function () {
         clickTool("line");
         $("#filling-type").css("display", "none");
         if ($(this).hasClass("tool-clicked")) {
@@ -139,7 +139,7 @@ $(document).ready(function () {
         swap($this, $curAdditionOpen);
     });
 
-    $("#polygonTool").on("click", function () {
+    $("#polygon-tool").on("click", function () {
         clickTool("polygon");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -150,7 +150,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#rectTool").on("click", function () {
+    $("#rect-tool").on("click", function () {
         clickTool("rect");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -161,7 +161,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#ellipseTool").on("click", function () {
+    $("#ellipse-tool").on("click", function () {
         clickTool("ellipse");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -172,7 +172,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#starTool").on("click", function () {
+    $("#star-tool").on("click", function () {
         clickTool("star");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -183,7 +183,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#pathTool").on("click", function () {
+    $("#path-tool").on("click", function () {
         clickTool("path");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -192,60 +192,60 @@ $(document).ready(function () {
         }
     });
 
-    $("#textTool").on("click", function () {
+    $("#text-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("text");
     });
 
-    $("#fillTool").on("click", function () {
+    $("#fill-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("fill");
     });
 
-    $("#eraserTool").on("click", function () {
+    $("#eraser-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("eraser");
     });
 
-    $("#rotateTool").on("click", function () {
+    $("#rotate-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("rotate");
     });
 
-    $("#deformTool").on("click", function () {
+    $("#deform-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("deform");
     });
 
-    $("#scaleTool").on("click", function () {
+    $("#scale-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("scale");
     });
 
-    $("#splitTool").on("click", function () {
+    $("#split-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("split");
     });
 
-    $("#skewTool").on("click", function () {
+    $("#skew-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("skew");
     });
 
-    $("#mirrorTool").on("click", function () {
+    $("#mirror-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("mirror");
     });
-    $("#compressTool").on("click", function () {
+    $("#compress-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("compress");
@@ -303,16 +303,26 @@ $(document).ready(function () {
         });
     });
 
+    $(".drop-moving-button[name='save-as-file']").on("click", function () {
+        clearInputForm($("#new-menu"));
+        $("#save-as-menu").css({
+            display: "block",
+            "z-index": "100",
+        });
+    });
+
     $(".ok-button").on("click", function () {
         $(this).parent().css({
             display: "none",
             "z-index": "0",
         });
+    });
+
+    $("new-ok-button").on("click", function () {
         let newPageName = document.getElementsByName("new-filename")[0].value,
-            newPageType = document.getElementById("save_file_type").value;
+            newPageType = document.getElementById("new-file-type").value;
         easel.createPage(newPageName, newPageType);
         workspace = easel.currentPage.getWorkplace();
-        clearInputForm();
     });
 
     $(".close-menu-button").on("click", function () {
@@ -330,21 +340,6 @@ $(document).ready(function () {
         });
     });
 
-    $(".drop-moving-button[name='download-file']").on("click", function () {
-        clearInputForm($("#download-menu"));
-        $("#download-menu").css({
-            display: "block",
-            "z-index": "100",
-        });
-    });
-
-    $("#download-button").on("click", function () {
-        $(this).parent().css({
-            display: "none",
-            "z-index": "0",
-        });
-    });
-
     $(".drop-moving-button[name='open-file']").on("click", function () {
         clearInputForm($("#open-menu"));
         $("#open-menu").css({
@@ -353,12 +348,28 @@ $(document).ready(function () {
         });
     });
 
+    $(".drop-moving-button[name='delete-file']").on("click", function () {
+        $("#delete-menu").css({
+            display: "block",
+            "z-index": "100",
+        });
+    });
+
+    $(".drop-moving-button[name='undo']").on("click", function () {
+        historyBack();
+    });
+    
+    $(".drop-moving-button[name='redo']").on("click", function () {
+        historyUndo();
+    });
+
     $("#file").on("input", function () {
         $(this).parent().parent().css({
             display: "none",
             "z-index": "0",
         });
     });
+
     let $pagesChoosing = $("#pages-choosing");
     $pagesChoosing.on("click", "label", function () {
         easel.turnTo($(this).text());
