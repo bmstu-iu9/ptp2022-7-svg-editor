@@ -18,8 +18,8 @@ $(document).ready(function (){
     });
     /* перезват нажания сочитаний клавиш ctrl-z и ctrl-shift-z
     для передвиженя по истории рисования */
-    $(document).bind('keypress', function (event) {
-        if (String.fromCharCode(event.which).toLowerCase() == 'z' && event.ctrlKey) {
+    $(document).bind('keydown', function (event) {
+        if (String.fromCharCode(event.which).toLowerCase() === 'z' && event.ctrlKey) {
             if (event.shiftKey) historyUndo();
             else historyBack();
         }
