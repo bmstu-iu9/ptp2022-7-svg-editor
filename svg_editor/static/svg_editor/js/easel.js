@@ -58,13 +58,7 @@ class Easel extends BaseFactory{
                 type: type,
             },
             type: 'POST',
-            url: saveURL,
-            success: function (response) {
-                alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно сохранен!');
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            }
+            url: saveURL
         });
     }
     // Get load from server svg with this name
@@ -81,9 +75,6 @@ class Easel extends BaseFactory{
                 } else if (!$.isEmptyObject(response.yml)) {
                     openAsProject(response.yml);
                 }
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
             }
         });
     }
