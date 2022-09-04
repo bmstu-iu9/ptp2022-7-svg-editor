@@ -1,6 +1,11 @@
-$(window).on("load", function () {
-    $("#preloader").fadeOut("slow");
-});
+/**
+ * @author Kabane-UN
+ * @author GarryNeKasparov
+ **/
+
+$(window).on('load', function() {
+    $('#preloader').fadeOut("slow");
+  });
 
 $(document).ready(function () {
     $("#preloader").fadeOut("slow");
@@ -373,10 +378,10 @@ $(document).ready(function () {
     let $pagesChoosing = $("#pages-choosing");
     $pagesChoosing.on("click", "label", function () {
         easel.turnTo($(this).text());
-        workspace = easel.currentPage.getWorkplace();
+        workspace = document.getElementById('workspace');
     });
     $pagesChoosing.on("click", ".delete-page-button", function () {
         easel.remove($(this).parent().find("label").text());
-        workspace = easel.currentPage.getWorkplace();
+        workspace = document.getElementById('workspace');
     });
 });

@@ -203,6 +203,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topath.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topoly.js"></script>
 	<script src="{% static 'svg_editor/js/main.js' %}"></script>
+	<script src="{% static 'svg_editor/js/fileManager.js' %}"></script>
 	<script src="{% static 'svg_editor/js/design.js' %}"></script>
 	<script src="{% static 'svg_editor/js/layers.js' %}"></script>
 	<script src="{% static 'svg_editor/js/baseFactory.js' %}"></script>
@@ -223,14 +224,16 @@
 			viewURL = "{% url 'files_view' %}",
 			loadURL = "{% url 'files_get' %}",
 			deleteURL = "{% url 'files_delete' %}",
+			collisionValidationURL = "{% url 'files_collision_validation' %}",
 			file_name = JSON.parse("{{file_name | escapejs}}"),
-			type = JSON.parse("{{type | escapejs}}"),
-			method = JSON.parse("{{method | escapejs}}");
-		const easel = new Easel(file_name[0], type[0]);
-		var workspace = easel.currentPage.tag;
-		if (method[0] === "open") {
-			easel.edit();
-		}
+			type = JSON.parse("{{type | escapejs}}");
+		// Get csrf_token
+		$.ajaxSetup({
+			headers: { "X-CSRFToken": token }
+		});
+		const easel = new Easel(file_name, type);
+		let workspace = document.getElementById('workspace');
+		easel.edit();
 	</script>
 	{% endblock javascript %}
 </body>

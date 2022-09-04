@@ -12,7 +12,10 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{% static 'account/js/style-functions.js' %}? 202208072157"></script>
+    <script src="{% static 'account/js/accountValidation.js' %}? 202208072157"></script>
+    <script src="{% static 'account/js/signupValidation.js' %}? 20220714154345"></script>
 </head>
 
 <body>
@@ -86,23 +89,32 @@
                                 </span>
                             </div>
                             <div class="input-field button">
-                                <input id="signup-button" type="submit" value="Create your account!">
+                                <input id="signup-button" type="submit" disabled="disabled" value="Create your account!">
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+        <ul class="shapes">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
     </div>
     {% block javascript %}
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 		const token = "{{ csrf_token }}",
 			usernameValidationURL = "{% url 'validate_username' %}",
             emailValidationURL = "{% url 'validate_email' %}",
             passwordValidationURL = "{% url 'validate_passwords' %}";
 	</script>
-	<script src="{% static 'account/js/main.js' %}? 20220714154345"></script>
 	{% endblock javascript %}
 </body>
 

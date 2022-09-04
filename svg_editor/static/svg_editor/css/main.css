@@ -633,4 +633,12 @@ td {
     transform: translateY(-50%);
 }
 
+.is-valid {
+    border: 3px solid #08ec17!important;
+}
+
+.is-invalid {
+    border: 3px solid #ec081b!important;
+}
+
 

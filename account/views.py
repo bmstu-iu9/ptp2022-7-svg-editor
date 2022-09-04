@@ -2,6 +2,7 @@ import os
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordResetView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
@@ -42,6 +43,7 @@ def signup(request):
             email = EmailMessage(
                 mail_subject, message, to=[to_email]
             )
+            email.content_subtype = 'html'
             email.send()
             return render(request, 'registration/active_email_done.html')
     else:
@@ -63,6 +65,10 @@ def activate(request, uidb64, token):
         return render(request, 'registration/active_email_complete.html')
     else:
         return render(request, 'registration/active_email_incomplete.html')
+
+
+class HtmlPasswordResetView(PasswordResetView):
+    html_email_template_name = "registration/password_reset_email.html"
 
 
 # Username validate script
