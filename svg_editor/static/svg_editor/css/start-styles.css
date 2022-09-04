@@ -99,9 +99,9 @@ body {
 }
 
 .form .button input,
-#createFileButton,
-#target,
-#openButton {
+#create-file-button,
+#reload-button,
+#open-button {
     border: none;
     background-color: #828A95;
     color: #FFFFFF;
@@ -111,26 +111,26 @@ body {
 }
 
 .button input:hover,
-#createFileButton:hover,
-#target:hover,
-#openButton:hover {
+#create-file-button:hover,
+#reload-button:hover,
+#open-button:hover {
     background-color: #767D87;
 }
 
-#createFileButton {
+#create-file-button {
     margin-top: 0;
     height: 30px;
     width: 80px;
 }
 
-#target {
+#reload-button {
     margin-top: 0;
     margin-right: 4px;
     height: 30px;
     width: 90px;
 }
 
-#openButton {
+#open-button {
     margin-top: 0;
     height: 30px;
     width: 70px

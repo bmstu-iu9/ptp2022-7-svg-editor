@@ -5,31 +5,45 @@
 let currentFileName = null;
 
 $(document).ready(function () {
-
     // Validate files collision
-    $('input[name="new-filename"], #save_file_type').on("keyup change", function (){
-        FileManager.collisionValidation($('input[name="new-filename"]').val()+'.'+$('#save_file_type').val(),
-            function (response) {
-                if (response.exists) {
-                    $('input[name="new-filename"]').removeClass('is-valid').addClass('is-invalid');
-                    $('.ok-button').prop('disabled', true);
-                } else {
-                    $('input[name="new-filename"]').removeClass('is-invalid').addClass('is-valid');
-                    $('.ok-button').prop('disabled', false);
+    $('input[name="new-filename"], #new-file-type').on(
+        "keyup change",
+        function () {
+            FileManager.collisionValidation(
+                $('input[name="new-filename"]').val() +
+                    "." +
+                    $("#new-file-type").val(),
+                function (response) {
+                    if (response.exists) {
+                        $('input[name="new-filename"]')
+                            .removeClass("is-valid")
+                            .addClass("is-invalid");
+                        $("#new-ok-button").prop("disabled", true);
+                    } else {
+                        $('input[name="new-filename"]')
+                            .removeClass("is-invalid")
+                            .addClass("is-valid");
+                        $("#new-ok-button").prop("disabled", false);
+                    }
                 }
-            });
-    })
+            );
+        }
+    );
 
     // Send svg to the server to save it
-    $('#save-button').click(function (){
+    $("#save-button").click(function () {
         breakDrawing();
         easel.save();
     });
 
     // Send svg to the server to save it as
-    $('#save-as-button').click(function (){
+    $("#save-as-button").click(function () {
         breakDrawing();
-        easel.save(true);
+        easel.save(
+            true,
+            $("#save-as-name").val(),
+            $("#save-as-file-type").val()
+        );
     });
 
     // Send svg to the server to save it as
@@ -41,9 +55,9 @@ $(document).ready(function () {
     // });
 
     // Upload users file to the server
-    $('#file').change(function () {
+    $("#file").change(function () {
         let data = new FormData();
-        data.append('file', $("#file")[0].files[0]);
+        data.append("file", $("#file")[0].files[0]);
         FileManager.upload(data);
     });
 
@@ -53,23 +67,33 @@ $(document).ready(function () {
     });
 
     // Get list of user files at server
-    $('#target').click(function () {
+    $(".drop-moving-button[name='view-file']").click(function () {
+        $("#user-files").css({
+            display: "block",
+            "z-index": 20,
+        });
         FileManager.view();
     });
 
     // Delete users files from server
-    $("#deleteButton").click(function () {
-        FileManager.delete(currentFileName, document.getElementById("deleteAll").checked);
-    })
-
+    $("#delete-button").click(function () {
+        FileManager.delete(
+            currentFileName,
+            $("#delete-all-input")[0].checked
+        );
+    });
     // Edit file from server
-    $("#editButton").click(function (){
-        easel.edit(currentFileName);
+    $(".drop-moving-button[name='edit-file']").click(function () {
+        if (currentFileName) {
+            easel.remove(currentFileName, false);
+            easel.createPage(currentFileName.slice(0, -4), currentFileName.slice(-3));
+            workspace = document.getElementById('workspace');
+            easel.edit();
+        }
     });
 
     // Choosing a current svg
-    $('#list_svg').on("click", ".inner_list_svg", function () {
+    $("#list-svg").on("click", ".inner-list-svg", function () {
         currentFileName = this.nextSibling.textContent;
-    })
-
-})
+    });
+});

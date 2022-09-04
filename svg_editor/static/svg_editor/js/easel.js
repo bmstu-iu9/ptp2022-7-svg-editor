@@ -22,17 +22,19 @@ class Easel extends BaseFactory{
         return newPage;
     }
     // Remove page with this name
-    remove(pageName){
-       let indexToDelete = this.usedPages.findIndex(page => page.getName() === pageName),
-           deletedPage = this.usedPages[indexToDelete];
-       this.usedPages.splice(indexToDelete, 1);
-       deletedPage.removeNode();
-       if (this.usedPages.length > 0 && pageName === this.currentPage.getName()) {
-           this.turnTo(this.usedPages[0].getName());
-       } else if (this.usedPages.length <= 0) {
-           let a = document.createElement("a");
-           a.href = "/account";
-           a.click();
+    remove(pageName, redirect=true){
+       let indexToDelete = this.usedPages.findIndex(page => page.getName() === pageName);
+       if (indexToDelete !== -1) {
+           let deletedPage = this.usedPages[indexToDelete];
+           this.usedPages.splice(indexToDelete, 1);
+           deletedPage.removeNode();
+           if (this.usedPages.length > 0 && pageName === this.currentPage.getName()) {
+               this.turnTo(this.usedPages[0].getName());
+           } else if (this.usedPages.length <= 0 && redirect) {
+               let a = document.createElement("a");
+               a.href = "/account";
+               a.click();
+           }
        }
     }
     // Turn to page with this name
@@ -63,13 +65,7 @@ class Easel extends BaseFactory{
                 type: type,
             },
             type: 'POST',
-            url: saveURL,
-            success: function (response) {
-                alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно сохранен!');
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            }
+            url: saveURL
         });
     }
     // Get load from server svg with this name
@@ -86,9 +82,6 @@ class Easel extends BaseFactory{
                 } else if (fileType == 'yml' && !$.isEmptyObject(response.yml)) {
                     easel.openAsProject(response.yml, fileName);
                 }
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
             }
         });
     }
