@@ -1,4 +1,9 @@
-class Page extends BaseSvgElement {
+/**
+ * @author Kabane-UN
+ **/
+
+// Canvas class for drawing
+class Page extends BaseSvgElement{
     fileName;
     fileType;
     node;
@@ -8,7 +13,7 @@ class Page extends BaseSvgElement {
         super(name + "." + type);
         this.fileName = name;
         this.fileType = type;
-        this.tag.setAttribute('id', 'workspace');
+        this.tag.attr('id','workspace');
         this.node = new PageNode(this.name);
         let controlPanel = document.createElement('div');
         controlPanel.setAttribute('id', 'layers-panel-choosing');

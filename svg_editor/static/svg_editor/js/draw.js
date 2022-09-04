@@ -1048,23 +1048,6 @@ $(document)
 
         $('#control-panel').change(changeToolEvent);
         $('#tools-panel').change(changeToolEvent);
-    })
-
-    /* перезват нажания сочитаний клавиш ctrl-z и ctrl-shift-z
-    для передвиженя по истории рисования */
-    .bind('keypress', function (event) {
-        if (event.which === 26 && event.ctrlKey) {
-            if (event.shiftKey) {
-                historyUndo();
-            } else {
-                historyBack();
-            }
-        }
-    })
-
-    // выход из режима рисования путём нажатия клавишы escape
-    .bind('keydown', function (event) {
-        if (event.key === 'Escape') breakDrawing();
     });
 
 // перехват событий окна, влияющих на рисование

@@ -41,9 +41,9 @@ def __todict(parsed):
 def dump(svg, stream=None):
     parsed_svg = BeautifulSoup(svg.replace('\n', ''), 'html.parser')
     svg_dict = __todict(parsed_svg)
-    if stream:
+    if stream and svg_dict:
         yaml.dump(svg_dict, stream=stream,  encoding='UTF-8', allow_unicode=True)
-    else:
+    elif not stream:
         return svg_dict
 
 
