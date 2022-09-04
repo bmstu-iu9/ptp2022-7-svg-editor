@@ -3,7 +3,7 @@
  * @author GarryNeKasparov
  **/
 
-$(window).on('load', function() {
+$(window).on('load', function () {
     $('#preloader').fadeOut("slow");
 });
 
@@ -573,8 +573,7 @@ $(document).ready(function () {
         let newPageName = document.getElementsByName('new-filename')[0].value,
             newPageType = document.getElementById('save_file_type').value;
         easel.createPage(newPageName, newPageType);
-        FileManager.create(newPageName, newPageType, function () {})
-        workspace = document.getElementById('workspace');
+        FileManager.create(newPageName, newPageType, function () { })
         $(this).prop('disabled', true);
         clearInputForm();
     });
@@ -638,7 +637,7 @@ $(document).ready(function () {
         easel.currentPage.pie.createNewLayer();
     })
 
-    $("#createLayerButton").click();
+    // $("#createLayerButton").click();
 
     $("#deleteLayerButton").click(function () {
         easel.currentPage.pie.deleteCurrentLayer();

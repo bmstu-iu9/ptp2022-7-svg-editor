@@ -132,7 +132,7 @@ function logMouseEvent(event) {
     else if (event.type == 'mousedown') mouseup = false;
 
     if (
-        !easel.currentPage.pie.isDrawAllowed() || tool != 'cursor' &&
+        /*easel.currentPage == undefined||*/ !easel.currentPage.pie.isDrawAllowed() || tool != 'cursor' &&
         event.type == 'mousedown' && !$('#workspace')[0].contains(event.target)
     )
         return;
@@ -1044,7 +1044,7 @@ $(document)
     и подключение отслеживания измженения параметров иструментов*/
     .ready(function () {
         changeToolEvent();
-        resizeWindowEvent();
+        /*if (easel.currentPage != undefined) */resizeWindowEvent();
 
         $('#control-panel').change(changeToolEvent);
         $('#tools-panel').change(changeToolEvent);

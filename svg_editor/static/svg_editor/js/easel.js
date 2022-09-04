@@ -9,7 +9,7 @@ class Easel extends BaseFactory{
     constructor(fileName, fileType) {
         super($('#easel'));
         this.usedPages = [];
-        this.createPage(fileName, fileType);
+		this.edit(file_name,type);
     }
     getCurrentPage(){
         return this.currentPage;
@@ -51,6 +51,10 @@ class Easel extends BaseFactory{
     }
     // Request server to save chosen page
     save(saveAs=false, fileName=this.currentPage.getFileName(), type=this.currentPage.getFileType()){
+        if (saveAs) {
+            fileName = $("#file_name").val();
+            type = $("#save_file_type1").val();
+        }
         $.ajax({
             data: {
                 file_name: fileName,
@@ -69,19 +73,18 @@ class Easel extends BaseFactory{
         });
     }
     // Get load from server svg with this name
-    edit(fileName=this.currentPage.getName()){
+    edit(fileName=this.currentPage.getName(), fileType){
         $.ajax({
             url: loadURL,
             type: 'GET',
             data: {
-                file_name: fileName,
+                file_name: fileName+'.'+fileType,
             },
             success: function (response) {
-                let fileType = response.file_name.split('.').pop().toLowerCase();
                 if (fileType == 'svg') {
-                    easel.openAsSvg(response.svg, response.file_name);
+                    easel.openAsSvg(response.svg, fileName);
                 } else if (fileType == 'yml' && !$.isEmptyObject(response.yml)) {
-                    easel.openAsProject(response.yml, response.file_name);
+                    easel.openAsProject(response.yml, fileName);
                 }
             },
             error: function (response) {

@@ -17,7 +17,7 @@ class Page extends BaseSvgElement{
         this.node = new PageNode(this.name);
         let controlPanel = document.createElement('div');
         controlPanel.setAttribute('id', 'layers-panel-choosing');
-        this.pie = new Pie(this.tag, controlPanel);
+        this.pie = new Pie(this.tag[0], controlPanel);
     }
 
     replaceControls() {

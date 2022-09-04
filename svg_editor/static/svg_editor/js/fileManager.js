@@ -60,7 +60,7 @@ class FileManager {
             },
             success: function () {
                 let a = document.createElement("a");
-                a.href = "/files_download?file_name=" + currentFileName;
+                a.href = "/files_download?file_name=" + fileName;
                 a.click();
             },
             error: function (response) {
