@@ -10,10 +10,7 @@ class FileManager {
             data: {file_name: fileName},
             type: 'GET',
             url: collisionValidationURL,
-            success: onSuccessFunc,
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            }
+            success: onSuccessFunc
         });
     }
     // Create a new file
@@ -27,10 +24,7 @@ class FileManager {
             },
             type: 'POST',
             url: saveURL,
-            success: onSuccessFunc,
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            }
+            success: onSuccessFunc
         });
     }
     // Upload new file from user PC to the server
@@ -41,13 +35,7 @@ class FileManager {
             url: uploadURL,
             processData: false,
             cache: false,
-            contentType: false,
-            success: function (response) {
-                alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно загружен!');
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            }
+            contentType: false
         });
     }
     // Download file from server to user PC
@@ -62,10 +50,7 @@ class FileManager {
                 let a = document.createElement("a");
                 a.href = "/files_download?file_name=" + currentFileName;
                 a.click();
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            },
+            }
         });
     }
     // Delete selected file from server or delete all
@@ -76,13 +61,7 @@ class FileManager {
             data: {
                 file_name: fileName,
                 all: all,
-            },
-            success: function (response) {
-                alert('Поздравляем! ' + response.num_of_del + ' файл(ов) успешно удалено!');
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            },
+            }
         });
     }
     // Get a list of files on the server
@@ -98,9 +77,6 @@ class FileManager {
                 for (key in response.svgs) {
                     list.innerHTML += `<li><input class="inner-list-svg" type='radio' name='selected_file'>${response.svgs[key]}</li>`
                 }
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
             }
         });
     }
