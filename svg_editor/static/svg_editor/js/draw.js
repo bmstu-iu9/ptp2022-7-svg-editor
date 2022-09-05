@@ -41,6 +41,7 @@ let draw,
 
 ///////////выполняется при переключении на новый слой/////////////
 function layerUpdate(newDraw) {
+    if (draw == null) historyNew();
     draw = newDraw;
     breakDrawing();
 }
