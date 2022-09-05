@@ -382,7 +382,7 @@ $(document).ready(function () {
             newPageType = document.getElementById("new-file-type").value;
         easel.remove(`${newPageName}.${newPageType}`, false);
         easel.createPage(newPageName, newPageType);
-        workspace = document.getElementById('workspace');
+        easel.currentPage.pie.createNewLayer(undefined,'base');
     });
 
     $(".close-menu-button").on("click", function () {

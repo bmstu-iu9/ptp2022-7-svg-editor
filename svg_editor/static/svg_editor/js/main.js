@@ -46,14 +46,6 @@ $(document).ready(function () {
         );
     });
 
-    // Send svg to the server to save it as
-    // $('#saveAsFileButton').click(function () {
-    //     breakDrawing();
-    //     easel.save(true,
-    //         document.getElementById('fileNameInput').value,
-    //         document.getElementById('save_file_type').value);
-    // });
-
     // Upload users file to the server
     $("#file").change(function () {
         let data = new FormData();

@@ -115,7 +115,7 @@ function historyUpdate(last_index) {
 
 // <=><=><=><=><=> скрипты событий <=><=><=><=><=>
 function resizeWindowEvent() {
-    canvasRect = $("#workspace")[0].getBoundingClientRect();
+    canvasRect = $(easel.currentPage.pie.layersPanel)[0].getBoundingClientRect();
 }
 
 function changeToolEvent() {
@@ -1130,7 +1130,7 @@ $(document)
     и подключение отслеживания измженения параметров иструментов*/
     .ready(function () {
         changeToolEvent();
-        if (easel.currentPage != undefined) resizeWindowEvent(); // заглушка
+        resizeWindowEvent();
 
         $("#control-panel").change(changeToolEvent);
         $("#tools-panel").change(changeToolEvent);
