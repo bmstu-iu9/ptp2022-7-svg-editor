@@ -119,6 +119,7 @@ function historyUpdate(last_index) {
 // <=><=><=><=><=> скрипты событий <=><=><=><=><=>
 function resizeWindowEvent() {
     canvasRect = $(easel.currentPage.pie.layersPanel)[0].getBoundingClientRect();
+    easel.currentPage.pie.resizeLayers();
 }
 
 function changeToolEvent() {

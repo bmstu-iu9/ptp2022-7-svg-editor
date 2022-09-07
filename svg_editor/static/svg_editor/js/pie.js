@@ -55,6 +55,13 @@ class Pie {
 		}
 	}
 
+	resizeLayers(){
+		for (let node of this.controlPanel.childNodes) {
+			let remote = node.layerRemote;
+			remote.setLayerSize(this.layersPanel.clientWidth, this.layersPanel.clientHeight);
+		}
+	}
+
 	changeCurrentLayerOpacity() {
 		this.currentLayer.setOpacity(opacitySlider.value);
 	}
