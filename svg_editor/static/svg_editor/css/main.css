@@ -651,6 +651,8 @@ td {
     margin: 0 auto;
     margin-top: 5px;
     position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .page-node{
