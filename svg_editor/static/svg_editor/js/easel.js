@@ -145,6 +145,7 @@ class Easel extends BaseFactory {
             svgLayer = oDOM.documentElement;
             let remote = page.pie.createLayer(svgLayer, svgLayer.getAttribute("name"));
             page.pie.addLayer(remote, 'end');
+            page.pie.selectLayer(remote);
             // Парсинг происходит по сути дважды, иначе добавленные слои почему-то не отображаются на странице
         }
     }
