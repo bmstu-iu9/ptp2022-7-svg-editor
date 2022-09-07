@@ -78,9 +78,7 @@ $(document).ready(function () {
     $(".drop-moving-button[name='edit-file']").click(function () {
         if (currentFileName) {
             easel.remove(currentFileName, false);
-            easel.createPage(currentFileName.slice(0, -4), currentFileName.slice(-3));
-            workspace = document.getElementById('workspace');
-            easel.edit();
+            easel.edit(currentFileName.slice(0, -4), currentFileName.slice(-3));
         }
     });
 

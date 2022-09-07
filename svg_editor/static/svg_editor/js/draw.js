@@ -48,6 +48,7 @@ function layerUpdate(newDraw) {
 //////////////////////////////////////////
 
 function breakDrawing() {
+    if (draw == undefined) return; //заглушка
     if ("select" in draw) {
         if (!mouseup) toolMethods[tool]["mouseup"]();
         selectionClear();
@@ -115,7 +116,7 @@ function historyUpdate(last_index) {
 
 // <=><=><=><=><=> скрипты событий <=><=><=><=><=>
 function resizeWindowEvent() {
-    canvasRect = $("#workspace")[0].getBoundingClientRect();
+    canvasRect = $(easel.currentPage.pie.layersPanel)[0].getBoundingClientRect();
 }
 
 function changeToolEvent() {
@@ -131,7 +132,7 @@ function logMouseEvent(event) {
     else if (event.type == "mousedown") mouseup = false;
 
     if (
-        !isDrawAllowed() ||
+        easel.currentPage == undefined || !easel.currentPage.pie.isDrawAllowed() || //заглушка
         (tool != "cursor" &&
             event.type == "mousedown" &&
             !$("#workspace")[0].contains(event.target))
