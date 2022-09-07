@@ -5,13 +5,13 @@ class LayerRemote {
 	constructor(relatedLayer) {
 		this.htmlNode = document.createElement('div');
 		this.htmlNode.insertAdjacentHTML('beforeend', `
-		<div class="note-top">
+		<div class="note_top">
 		<input type="checkbox" checked/>
 		<label>${relatedLayer.name}</label>
 		</div>
-		<div class="note-bottom"></div>
+		<div class="note_bottom"></div>
 		`);
-		this.htmlNode.classList.add('layer-note');
+		this.htmlNode.classList.add('layer_note');
 		this.htmlNode.setAttribute('draggable', 'true');
 
 		this.htmlNode.layerRemote = this;
@@ -70,7 +70,7 @@ class LayerRemote {
 	}
 
 	switch() {
-		$(this.htmlNode).toggleClass('active-note');
+		$(this.htmlNode).toggleClass('active_note');
 	}
 
 	getOpacity() {
@@ -82,7 +82,7 @@ class LayerRemote {
 	}
 
 	isEnabled() {
-		return !$(this.relatedLayer.node).hasClass('non-displayable');
+		return !$(this.relatedLayer.node).hasClass('non_displayable');
 	}
 
 	after(layer) {
@@ -101,26 +101,26 @@ class LayerRemote {
 
 	coverTop() {
 		this.htmlNode.querySelector('input').classList.add('unactive');
-		this.htmlNode.classList.add('hovered-top');
+		this.htmlNode.classList.add('hovered_top');
 	}
 
 	uncoverTop() {
 		this.htmlNode.querySelector('input').classList.remove('unactive');
-		this.htmlNode.classList.remove('hovered-top');
+		this.htmlNode.classList.remove('hovered_top');
 	}
 
 	coverBottom() {
 		this.htmlNode.querySelector('input').classList.add('unactive');
-		this.htmlNode.classList.add('hovered-bottom');
+		this.htmlNode.classList.add('hovered_bottom');
 	}
 
 	uncoverBottom() {
 		this.htmlNode.querySelector('input').classList.remove('unactive');
-		this.htmlNode.classList.remove('hovered-bottom');
+		this.htmlNode.classList.remove('hovered_bottom');
 	}
 
 	switchDisplay() {
-		$(this.relatedLayer.node).toggleClass('non-displayable');
+		$(this.relatedLayer.node).toggleClass('non_displayable');
 	}
 
 	getSvg() {

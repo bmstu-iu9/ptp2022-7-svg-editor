@@ -1,69 +1,5 @@
 {% load static %}
 <!DOCTYPE html>
-<<<<<<< HEAD
-<html lang="ru">
-
-<head>
-	<meta charset="UTF-8" />
-	<title>SVG-Editor</title>
-	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207141345">
-	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script src="{% static 'svg_editor/js/main.js' %}? 202207141345"></script>
-</head>
-
-<body>
-	<header style="margin: 10px">
-		<div class="drop-list">
-			<button class="drop-button">File</button>
-			<div class="drop-content">
-				<p><button name="new-file" class="drop-moving-button">New</button></p>
-				<p><button name="save-file" class="drop-moving-button">Save</button></p>
-				<p><button name="download-file" class="drop-moving-button">Download</button></p>
-				<p><button name="open-file" class="drop-moving-button">Open</button></p>
-			</div>
-		</div>
-		<div class="drop-list">
-			<button class="drop-button">Edit</button>
-			<div class="drop-content">
-				<p><button name="undo" class="drop-moving-button">Undo</button></p>
-				<p><button name="redo" class="drop-moving-button">Redo</button></p>
-			</div>
-		</div>
-	</header>
-	<div id="control-panel">CONTROL PANEL</div>
-	<!--Добавить возможность закрыть окно без изменений-->
-	<div id="new-menu" class="file-menu-panel">
-		<div class="moveable-part-file-menu">
-			<button class="close-menu-button"></button>
-		</div>
-		<div class="file-menu-form">
-			<label for="file_name">Name:</label>
-			<input name="file_name" type="text" value="untitled">
-		</div>
-		<div class="file-menu-form">
-			<label for="width">Width:</label>
-			<input name="width" type="number" value="0">
-		</div>
-		<div class="file-menu-form">
-			<label for="height">Height:</label>
-			<input name="height" type="number" value="0">
-		</div>
-		<button class="ok-button">OK</button>
-	</div>
-	<div id="save-menu" class="file-menu-panel">
-		<div class="moveable-part-file-menu">
-			<button class="close-menu-button"></button>
-		</div>
-		<div class="file-menu-form">
-			<label>Name your file:</label>
-			<input id="file_name" type="text" value="untitled">
-			<label>.svg</label>
-		</div>
-		<button id="save-button">Save it!</button>
-	</div>
-	<div id="download-menu" class="file-menu-panel">
-=======
 <html lang="en">
 
 <head>
@@ -132,7 +68,6 @@
 		<button class="ok-button">Ok</button>
 	</div>
 	<div id="new-menu" class="file-menu-panel">
->>>>>>> interface-features
 		<div class="moveable-part-file-menu">
 			<button class="close-menu-button"></button>
 		</div>
@@ -146,68 +81,7 @@
 		</div>
 		<button id="new-ok-button" class="ok-button" disabled="disabled">Ok</button>
 	</div>
-	<div id="open-menu" class="file-menu-panel">
-		<div class="moveable-part-file-menu">
-			<button class="close-menu-button"></button>
-		</div>
-		<div class="file-menu-form">
-			<input type="file" id="file" />
-		</div>
-	</div>
-	<!--Окна загрузки и экспорта??-->
-	<div id="container">
-		<div id="tools-panel">
-			<table id="tools-choosing">
-				<tr>
-					<td>
-						<button class="tool-button"></button>
-					</td>
-					<td>
-						<button class="tool-button"></button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<button class="tool-button"></button>
-					</td>
-					<td>
-						<button class="tool-button"></button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<button class="tool-button"></button>
-					</td>
-					<td>
-						<button class="tool-button"></button>
-					</td>
-				</tr>
-			</table>
-			<div id="color-choosing">
-				<div id="color-choosing-box-main">
-					<input class="box" type="color">
-				</div>
-				<div id="color-choosing-box-sub">
-					<input class="box" type="color">
-				</div>
-			</div>
-			<div id="filling-type">
-				<input name="fill" type="checkbox">
-				<label for="fill">No fill</label>
-			</div>
-		</div>
 
-<<<<<<< HEAD
-		<svg id="workspace"></svg>
-		<div id="addition-panel">
-			<div id="layers-panel">
-				<div id="layers-panel-control">
-					<button id="layers-panel-control-button" class="new"></button>
-					<button id="layers-panel-control-button" class="delete"></button>
-				</div>
-				<div class="layer">
-					<button class="layer-button">Layer 0</button>
-=======
 	<div id="save-as-menu" class="file-menu-panel">
 		<div class="moveable-part-file-menu">
 			<button class="close-menu-button"></button>
@@ -283,29 +157,23 @@
 				<div id="layers-panel-button" class="tool-button"></div>
 				<div id="layers-panel-content">
 					<div id="layers-panel-control">
-						<button id="create-layer-button" class="layers-panel-control-button"></button>
-						<button id="delete-layer-button" class="layers-panel-control-button"></button>
+						<button id="createLayerButton" class="layers-panel-control-button"></button>
+						<button id="deleteLayerButton" class="layers-panel-control-button"></button>
 						<div>Layers</div>
 					</div>
 					<div id="layers-panel-choosing">
 					</div>
-					<input id="opacity-slider" type="range" min="0" max="1" step="0.01" value="1">
-					<button id="merge-with-previous">merge with previous</button>
-					<button id="merge-visible">merge visible</button>
-					<button id="create-from-visible">create layer from visible</button>
-					<button id="copy-layer">copy</button>
-					<button id="layer-up">up</button>
-					<button id="layer-down">down</button>
->>>>>>> interface-features
+					<input id="opacity_slider" type="range" min="0" max="1" step="0.01" value="1">
+					<button id="mergeWithPrevious">merge with previous</button>
+					<button id="mergeVisible">merge visible</button>
+					<button id="createFromVisible">create layer from visible</button>
+					<button id="copyLayer">copy</button>
+					<button id="layerUp">up</button>
+					<button id="layerDown">down</button>
 				</div>
 			</div>
 		</div>
 	</div>
-<<<<<<< HEAD
-</body>
-
-</html>
-=======
 	<footer>
 		<div id="pages-panel">
 			<div id="pages-choosing"></div>
@@ -352,4 +220,3 @@
 </body>
 
 </html>
->>>>>>> interface-features

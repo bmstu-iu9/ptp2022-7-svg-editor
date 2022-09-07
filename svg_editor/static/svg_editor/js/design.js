@@ -413,129 +413,83 @@ $(document).ready(function () {
     });
 
     //////////Layers-controls
-    $("#create-layer-button").click(function () {
+    $("#createLayerButton").click(function () {
         easel.currentPage.pie.createNewLayer();
-    });
+    })
 
     // $("#createLayerButton").click();
 
-    $("#delete-layer-button").click(function () {
+    $("#deleteLayerButton").click(function () {
         easel.currentPage.pie.deleteCurrentLayer();
     });
 
-    $("#opacity-slider").on("change", function () {
+    $("#opacity_slider").on("change", function () {
         easel.currentPage.pie.changeCurrentLayerOpacity();
     });
 
-    $("#layers-panel-content").on(
-        "click",
-        "#layers-panel-choosing .layer-note",
-        function () {
-            easel.currentPage.pie.selectLayer(this.layerRemote);
-        }
-    );
+    $('#layers-panel-content').on("click", "#layers-panel-choosing .layer_note", function () {
+        easel.currentPage.pie.selectLayer(this.layerRemote);
+    })
 
-    $("#layer-up").click(function () {
-        easel.currentPage.pie.currentLayerUp();
+    $('#layerUp').click(function () { easel.currentPage.pie.currentLayerUp() });
+
+    $('#layerDown').click(function () { easel.currentPage.pie.currentLayerDown() });
+
+    $('#copyLayer').click(function () { easel.currentPage.pie.currentLayerCopy() });
+
+    $('#layers-panel-content').on("dragstart", "#layers-panel-choosing .layer_note", function () {
+        easel.currentPage.pie.selectLayer(this.layerRemote)
     });
 
-    $("#layer-down").click(function () {
-        easel.currentPage.pie.currentLayerDown();
-    });
+    $('#layers-panel-content').on("dragenter", "#layers-panel-choosing .note_top", function () {
+        this.parentElement.layerRemote.coverTop()
+    })
 
-    $("#copy-layer").click(function () {
-        easel.currentPage.pie.currentLayerCopy();
-    });
+    $('#layers-panel-content').on("dragenter", "#layers-panel-choosing .note_bottom", function () {
+        this.parentElement.layerRemote.coverBottom()
+    })
 
-    $("#layers-panel-content").on(
-        "dragstart",
-        "#layers-panel-choosing .layer-note",
-        function () {
-            easel.currentPage.pie.selectLayer(this.layerRemote);
-        }
-    );
+    $('#layers-panel-content').on("dragleave", "#layers-panel-choosing .note_top", function () {
+        this.parentElement.layerRemote.uncoverTop()
+    })
 
-    $("#layers-panel-content").on(
-        "dragenter",
-        "#layers-panel-choosing .note-top",
-        function () {
-            this.parentElement.layerRemote.coverTop();
-        }
-    );
+    $('#layers-panel-content').on("dragleave", "#layers-panel-choosing .note_bottom", function () {
+        this.parentElement.layerRemote.uncoverBottom()
+    })
 
-    $("#layers-panel-content").on(
-        "dragenter",
-        "#layers-panel-choosing .note-bottom",
-        function () {
-            this.parentElement.layerRemote.coverBottom();
-        }
-    );
+    $('#layers-panel-content').on("dragover", "#layers-panel-choosing .note_top, .note_bottom", function (e) {
+        e.preventDefault()
+    })
 
-    $("#layers-panel-content").on(
-        "dragleave",
-        "#layers-panel-choosing .note-top",
-        function () {
-            this.parentElement.layerRemote.uncoverTop();
-        }
-    );
+    $('#layers-panel-content').on("drop", "#layers-panel-choosing .note_top", function () {
+        $(this).trigger("dragleave");
+        let thisRemote = this.parentElement.layerRemote;
+        let current = easel.currentPage.pie.getCurrentLayer()
+        thisRemote.after(current);
+    })
 
-    $("#layers-panel-content").on(
-        "dragleave",
-        "#layers-panel-choosing .note-bottom",
-        function () {
-            this.parentElement.layerRemote.uncoverBottom();
-        }
-    );
+    $('#layers-panel-content').on("drop", "#layers-panel-choosing .note_bottom", function () {
+        $(this).trigger("dragleave");
+        let thisRemote = this.parentElement.layerRemote;
+        let current = easel.currentPage.pie.getCurrentLayer()
+        thisRemote.before(current);
+    })
 
-    $("#layers-panel-content").on(
-        "dragover",
-        "#layers-panel-choosing .note-top, .note-bottom",
-        function (e) {
-            e.preventDefault();
-        }
-    );
+    $('#layers-panel-content').on("click", "#layers-panel-choosing input", function (e) {
+        let clicked = this.parentElement.parentElement.layerRemote;
+        clicked.switchDisplay();
+        e.stopPropagation();
+    })
 
-    $("#layers-panel-content").on(
-        "drop",
-        "#layers-panel-choosing .note-top",
-        function () {
-            $(this).trigger("dragleave");
-            let thisRemote = this.parentElement.layerRemote;
-            let current = easel.currentPage.pie.getCurrentLayer();
-            thisRemote.after(current);
-        }
-    );
-
-    $("#layers-panel-content").on(
-        "drop",
-        "#layers-panel-choosing .note-bottom",
-        function () {
-            $(this).trigger("dragleave");
-            let thisRemote = this.parentElement.layerRemote;
-            let current = easel.currentPage.pie.getCurrentLayer();
-            thisRemote.before(current);
-        }
-    );
-
-    $("#layers-panel-content").on(
-        "click",
-        "#layers-panel-choosing input",
-        function (e) {
-            let clicked = this.parentElement.parentElement.layerRemote;
-            clicked.switchDisplay();
-            e.stopPropagation();
-        }
-    );
-
-    $("#merge-with-previous").click(function () {
+    $("#mergeWithPrevious").click(function () {
         easel.currentPage.pie.mergeCurrentWithPrevious();
     });
 
-    $("#merge-visible").click(function () {
+    $("#mergeVisible").click(function () {
         easel.currentPage.pie.mergeVisible();
     });
 
-    $("#create-from-visible").click(function () {
+    $('#createFromVisible').click(function () {
         easel.currentPage.pie.createFromVisible();
     });
 });
