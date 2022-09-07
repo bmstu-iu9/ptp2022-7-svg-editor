@@ -33,7 +33,6 @@
 		<div class="drop-list">
 			<div class="drop-button">Manage</div>
 			<div class="drop-content">
-				<div name="view-file" class="drop-moving-button">View</div>
 				<div name="edit-file" class="drop-moving-button">Edit</div>
 				<div name="download-file" class="drop-moving-button">Download</div>
 				<div name="delete-file" class="drop-moving-button">Delete</div>
@@ -63,7 +62,10 @@
 			<button class="close-menu-button"></button>
 		</div>
 		<div id="list-text"></div>
-		<ul id="list-svg"></ul>
+		<ul style="overflow-y: scroll; height: 150px" id="list-svg"></ul>
+		<input id="delete-all-input" type="checkbox">
+		<label for="delete-all-input">Delete All</label>
+		<button class="ok-button">Ok</button>
 	</div>
 	<div id="new-menu" class="file-menu-panel">
 		<div class="moveable-part-file-menu">
@@ -78,29 +80,6 @@
 			</select>
 		</div>
 		<button id="new-ok-button" class="ok-button" disabled="disabled">Ok</button>
-	</div>
-
-	<div id="delete-menu" class="file-menu-panel">
-		<div class="moveable-part-file-menu">
-			<button class="close-menu-button"></button>
-		</div>
-		<input id="delete-all-input" type="checkbox">Delete all
-		<button id="delete-button" class="ok-button">Delete</button>
-	</div>
-
-	<div id="save-menu" class="file-menu-panel">
-		<div class="moveable-part-file-menu">
-			<button class="close-menu-button"></button>
-		</div>
-		<div class="file-menu-form">
-			<label>Name your file:</label>
-			<input id="file_name" type="text" value="untitled">
-			<select id="save_file_type1" size=1>
-				<option value="svg">.svg</option>
-				<option value="yml">.yml</option>
-			</select>
-		</div>
-		<button id="save-button" class="ok-button">Save</button>
 	</div>
 
 	<div id="save-as-menu" class="file-menu-panel">

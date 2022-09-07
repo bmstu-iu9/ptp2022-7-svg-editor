@@ -78,28 +78,20 @@ $(document).ready(function () {
     });
 
     // Download file from server
-    $(".drop-moving-button[name='download-file']").click(function () {
+    $("#user-files").on("click", "#download-button", function () {
         FileManager.download(currentFileName);
     });
 
-    // Get list of user files at server
-    $(".drop-moving-button[name='view-file']").click(function () {
-        $("#user-files").css({
-            display: "block",
-            "z-index": 20,
-        });
-        FileManager.view();
-    });
 
     // Delete users files from server
-    $("#delete-button").click(function () {
+    $("#user-files").on("click", "#delete-button", function () {
         FileManager.delete(
             currentFileName,
             $("#delete-all-input")[0].checked
         );
     });
     // Edit file from server
-    $(".drop-moving-button[name='edit-file']").click(function () {
+    $("#user-files").on("click", "#edit-button", function () {
         if (currentFileName) {
             easel.remove(currentFileName, false);
             easel.edit(currentFileName.slice(0, -4), currentFileName.slice(-3));

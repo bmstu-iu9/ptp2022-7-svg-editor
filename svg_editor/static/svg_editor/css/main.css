@@ -29,6 +29,20 @@ body {
     background-color: #d9d9d9;
     z-index: 100;
 }
+
+label[for=delete-all-input]  {
+    display: none;
+    left: 50px;
+    top: 240px;
+    position: absolute;
+}
+#delete-all-input {
+    display: none;
+    top: 243px;
+    left: 30px;
+    position: absolute;
+}
+
 #spinner {
     content: " ";
     position: fixed;
@@ -483,12 +497,10 @@ td {
 #easel {
     width: 70%;
     height: 75%;
-    border: 1px solid #3e3e3e;
     position: relative;
     margin: 10px 100px 0 100px;
     z-index: 0;
     top: 70px;
-    background: white;
 }
 
 #workspace {
@@ -573,13 +585,13 @@ td {
     background-position: center;
 }
 
-#create-layer-button {
+#createLayerButton {
     background-image: url("/static/svg_editor/icons/plus.svg");
     margin-left: 5px;
 }
 
-#delet-layer-button {
-    background-image: url("/static/svg_editor/icons/trash.svg");
+#deleteLayerButton {
+    background-image: url("/static/svg_editor/icons/x.svg");
 }
 
 .layer {
@@ -669,5 +681,6 @@ td {
 .is-invalid {
     border: 3px solid #ec081b!important;
 }
+
 
 

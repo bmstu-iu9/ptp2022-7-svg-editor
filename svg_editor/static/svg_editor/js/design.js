@@ -3,8 +3,8 @@
  * @author GarryNeKasparov
  **/
 
-$(window).on('load', function () {
-    $('#preloader').fadeOut("slow");
+$(window).on("load", function () {
+    $("#preloader").fadeOut("slow");
 });
 
 $(document).ready(function () {
@@ -198,15 +198,23 @@ $(document).ready(function () {
     });
 
     $("#text-tool").on("click", function () {
-        $("#width-parameter").css("display", "none");
-        $("#filling-type").css("display", "none");
         clickTool("text");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+        } else {
+            $("#width-parameter").css("display", "none");
+        }
     });
 
     $("#fill-tool").on("click", function () {
-        $("#width-parameter").css("display", "none");
-        $("#filling-type").css("display", "none");
         clickTool("fill");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+            $("#filling-type").css("display", "inline-block");
+        } else {
+            $("#width-parameter").css("display", "none");
+            $("#filling-type").css("display", "none");
+        }
     });
 
     $("#eraser-tool").on("click", function () {
@@ -215,52 +223,16 @@ $(document).ready(function () {
         clickTool("eraser");
     });
 
-    $("#splitTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/split-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/split.svg')"
-            );
-        }
+    $("#rotate-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("rotate");
     });
 
-    $("#skewTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/skew-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/skew.svg')"
-            );
-        }
+    $("#deform-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("deform");
     });
 
     $("#scale-tool").on("click", function () {
@@ -269,28 +241,10 @@ $(document).ready(function () {
         clickTool("scale");
     });
 
-    $("#compressTool").on("click", function () {
-        $(this).toggleClass("tool-clicked");
-        const $lastPressed = $(".tool-button.tool-clicked").not(this);
-        if ($lastPressed.length) {
-            $lastPressed.css(
-                "background-image",
-                $lastPressed.css("background-image").replace("-active", "")
-            );
-            $lastPressed.removeClass("tool-clicked");
-        }
-        if ($(this).hasClass("tool-clicked")) {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/compress-active.svg')"
-            );
-            changeToolEvent();
-        } else {
-            $(this).css(
-                "background-image",
-                "url('/static/svg_editor/icons/compress.svg')"
-            );
-        }
+    $("#split-tool").on("click", function () {
+        $("#width-parameter").css("display", "none");
+        $("#filling-type").css("display", "none");
+        clickTool("split");
     });
 
     $("#skew-tool").on("click", function () {
@@ -362,6 +316,39 @@ $(document).ready(function () {
         });
     });
 
+    $(".drop-moving-button[name='edit-file']").on("click", function () {
+        $("#user-files").css({
+            display: "block",
+            "z-index": "100",
+        });
+        $("#user-files").find(".ok-button").attr("id", "edit-button");
+        $("#delete-all-input").css({ display: "none" });
+        $("label[for='delete-all-input']").css({ display: "none" });
+        FileManager.view();
+    });
+
+    $(".drop-moving-button[name='delete-file']").on("click", function () {
+        $("#user-files").css({
+            display: "block",
+            "z-index": "100",
+        });
+        $("#user-files").find(".ok-button").attr("id", "delete-button");
+        $("#delete-all-input").css({ display: "block" });
+        $("label[for='delete-all-input']").css({ display: "block" });
+        FileManager.view();
+    });
+
+    $(".drop-moving-button[name='download-file']").on("click", function () {
+        $("#user-files").css({
+            display: "block",
+            "z-index": "100",
+        });
+        $("#user-files").find(".ok-button").attr("id", "download-button");
+        $("#delete-all-input").css({ display: "none" });
+        $("label[for='delete-all-input']").css({ display: "none" });
+        FileManager.view();
+    });
+
     $(".drop-moving-button[name='save-as-file']").on("click", function () {
         clearInputForm($("#new-menu"));
         $("#save-as-menu").css({
@@ -382,21 +369,13 @@ $(document).ready(function () {
             newPageType = document.getElementById("new-file-type").value;
         easel.remove(`${newPageName}.${newPageType}`, false);
         easel.createPage(newPageName, newPageType);
-        easel.currentPage.pie.createNewLayer(undefined,'base');
+        easel.currentPage.pie.createNewLayer(undefined, "base");
     });
 
     $(".close-menu-button").on("click", function () {
         $(this).parent().parent().css({
             display: "none",
             "z-index": "0",
-        });
-    });
-
-    $(".drop-moving-button[name='save-file']").on("click", function () {
-        clearInputForm($("#save-menu"));
-        $("#save-menu").css({
-            display: "block",
-            "z-index": "100",
         });
     });
 
@@ -408,17 +387,10 @@ $(document).ready(function () {
         });
     });
 
-    $(".drop-moving-button[name='delete-file']").on("click", function () {
-        $("#delete-menu").css({
-            display: "block",
-            "z-index": "100",
-        });
-    });
-
     $(".drop-moving-button[name='undo']").on("click", function () {
         historyBack();
     });
-    
+
     $(".drop-moving-button[name='redo']").on("click", function () {
         historyUndo();
     });
@@ -433,11 +405,11 @@ $(document).ready(function () {
     let $pagesChoosing = $("#pages-choosing");
     $pagesChoosing.on("click", "label", function () {
         easel.turnTo($(this).text());
-        workspace = document.getElementById('workspace');
+        workspace = document.getElementById("workspace");
     });
     $pagesChoosing.on("click", ".delete-page-button", function () {
         easel.remove($(this).parent().find("label").text());
-        workspace = document.getElementById('workspace');
+        workspace = document.getElementById("workspace");
     });
 
     //////////Layers-controls
