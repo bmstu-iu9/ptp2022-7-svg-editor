@@ -5,13 +5,13 @@ class LayerRemote {
 	constructor(relatedLayer) {
 		this.htmlNode = document.createElement('div');
 		this.htmlNode.insertAdjacentHTML('beforeend', `
-		<div class="note_top">
+		<div class="note-top">
 		<input type="checkbox" checked/>
 		<label>${relatedLayer.name}</label>
 		</div>
-		<div class="note_bottom"></div>
+		<div class="note-bottom"></div>
 		`);
-		this.htmlNode.classList.add('layer_note');
+		this.htmlNode.classList.add('layer-note');
 		this.htmlNode.setAttribute('draggable', 'true');
 
 		this.htmlNode.layerRemote = this;
