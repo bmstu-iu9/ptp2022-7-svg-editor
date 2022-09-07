@@ -61,13 +61,7 @@ class Easel extends BaseFactory {
                 type: type,
             },
             type: 'POST',
-            url: saveURL,
-            success: function (response) {
-                alert('Поздравляем! Файл с названием ' + response.file_name + ' успешно сохранен!');
-            },
-            error: function (response) {
-                alert(response.responseJSON.errors);
-            }
+            url: saveURL
         });
     }
     // Get load from server svg with this name
@@ -151,6 +145,7 @@ class Easel extends BaseFactory {
             svgLayer = oDOM.documentElement;
             let remote = page.pie.createLayer(svgLayer, svgLayer.getAttribute("name"));
             page.pie.addLayer(remote, 'end');
+            page.pie.selectLayer(remote);
             // Парсинг происходит по сути дважды, иначе добавленные слои почему-то не отображаются на странице
         }
     }

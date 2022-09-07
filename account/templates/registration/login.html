@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -67,11 +67,11 @@
         </ul>
     </div>
     <script>
-		const token = "{{ csrf_token }}",
-			usernameValidationURL = "{% url 'validate_username' %}",
+        const token = "{{ csrf_token }}",
+            usernameValidationURL = "{% url 'validate_username' %}",
             emailValidationURL = "{% url 'validate_email' %}",
             passwordValidationURL = "{% url 'validate_passwords' %}";
-	</script>
+    </script>
 </body>
 
 </html>

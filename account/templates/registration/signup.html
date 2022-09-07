@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -28,7 +28,8 @@
                         {% csrf_token %}
                         <div class="form1">
                             <div class="input-field username">
-                                <input type="text" name="username" id="id_username" placeholder="Enter your username" required>
+                                <input type="text" name="username" id="id_username" placeholder="Enter your username"
+                                    required>
                                 <i class="uil uil-user icon"></i>
                             </div>
                             <small class="instruction username">Required field. Maximum 150 characters <br> The field
@@ -89,7 +90,8 @@
                                 </span>
                             </div>
                             <div class="input-field button">
-                                <input id="signup-button" type="submit" disabled="disabled" value="Create your account!">
+                                <input id="signup-button" type="submit" disabled="disabled"
+                                    value="Create your account!">
                             </div>
                         </div>
                     </form>
@@ -109,13 +111,13 @@
         </ul>
     </div>
     {% block javascript %}
-	<script>
-		const token = "{{ csrf_token }}",
-			usernameValidationURL = "{% url 'validate_username' %}",
+    <script>
+        const token = "{{ csrf_token }}",
+            usernameValidationURL = "{% url 'validate_username' %}",
             emailValidationURL = "{% url 'validate_email' %}",
             passwordValidationURL = "{% url 'validate_passwords' %}";
-	</script>
-	{% endblock javascript %}
+    </script>
+    {% endblock javascript %}
 </body>
 
 </html>

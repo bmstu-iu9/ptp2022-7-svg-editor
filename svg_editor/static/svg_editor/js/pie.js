@@ -33,6 +33,7 @@ class Pie {
 	selectLayer(remote) {
 		if (this.currentLayer !== null) {
 			this.currentLayer.switch();
+			selectionClear();
 		}
 		remote.switch();
 

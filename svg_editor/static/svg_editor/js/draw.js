@@ -41,8 +41,10 @@ let draw,
 
 ///////////выполняется при переключении на новый слой/////////////
 function layerUpdate(newDraw) {
-    if (draw == null) historyNew();
+    if (newDraw == null) return;
     draw = newDraw;
+    resizeWindowEvent();
+    historyNew();
     breakDrawing();
 }
 //////////////////////////////////////////
@@ -336,7 +338,7 @@ function textMove(x, y) {
 }
 
 async function textUp(x, y) {
-    if (object != null && $("#text-input-menu").css("display") == "none"){
+    if (object != null && $("#text-input-menu").css("display") == "none") {
         let rect = object;
         rect.remove();
         if (rect.height() != 0 && rect.width() != 0) {
@@ -494,7 +496,7 @@ function angleFromTo(center, point) {
     let angle =
         (Math.acos(
             (point.x - center.x) /
-                distanceTo(point.x, point.y, center.x, center.y)
+            distanceTo(point.x, point.y, center.x, center.y)
         ) *
             180) /
         Math.PI;
@@ -698,9 +700,9 @@ function scaleMove(x, y) {
             k =
                 y_a == 0
                     ? x_b / x_a -
-                      (((y_a * x_b) / x_a - y_b) * y_a) / (x_a ** 2 + y_a ** 2)
+                    (((y_a * x_b) / x_a - y_b) * y_a) / (x_a ** 2 + y_a ** 2)
                     : y_b / y_a -
-                      (((x_a * y_b) / y_a - x_b) * x_a) / (x_a ** 2 + y_a ** 2);
+                    (((x_a * y_b) / y_a - x_b) * x_a) / (x_a ** 2 + y_a ** 2);
         if (k) object.scale(k, st_pnt_self.x, st_pnt_self.y);
         scaleSelectionMake(object);
     }
@@ -765,8 +767,8 @@ function skewMove(x, y) {
                         0,
                         1,
                         st_pnt.x -
-                            (st_pnt.x * (coords.x - st_pnt.x)) /
-                                (mv_pnt.x - st_pnt.x),
+                        (st_pnt.x * (coords.x - st_pnt.x)) /
+                        (mv_pnt.x - st_pnt.x),
                         coords.y - st_pnt.y
                     );
                     break;
@@ -778,8 +780,8 @@ function skewMove(x, y) {
                         (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y),
                         st_pnt.x - coords.x,
                         st_pnt.y -
-                            (st_pnt.y * (coords.y - st_pnt.y)) /
-                                (mv_pnt.y - st_pnt.y)
+                        (st_pnt.y * (coords.y - st_pnt.y)) /
+                        (mv_pnt.y - st_pnt.y)
                     );
                     break;
                 case 2:
@@ -789,8 +791,8 @@ function skewMove(x, y) {
                         0,
                         1,
                         st_pnt.x -
-                            (st_pnt.x * (coords.x - st_pnt.x)) /
-                                (mv_pnt.x - st_pnt.x),
+                        (st_pnt.x * (coords.x - st_pnt.x)) /
+                        (mv_pnt.x - st_pnt.x),
                         st_pnt.y - coords.y
                     );
                     break;
@@ -802,8 +804,8 @@ function skewMove(x, y) {
                         (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y),
                         coords.x - st_pnt.x,
                         st_pnt.y -
-                            (st_pnt.y * (coords.y - st_pnt.y)) /
-                                (mv_pnt.y - st_pnt.y)
+                        (st_pnt.y * (coords.y - st_pnt.y)) /
+                        (mv_pnt.y - st_pnt.y)
                     );
                     break;
             }
@@ -881,10 +883,10 @@ function mirrorDown(x, y) {
                 object = obj.clone().insertAfter(obj);
                 obj.remove();
                 let point1 = absCoordsToSelf(
-                        object,
-                        select.points[0][0].cx(),
-                        select.points[0][0].cy()
-                    ),
+                    object,
+                    select.points[0][0].cx(),
+                    select.points[0][0].cy()
+                ),
                     point2 = absCoordsToSelf(
                         object,
                         select.points[0][1].cx(),
@@ -973,9 +975,9 @@ function compressMove(x, y) {
                 0,
                 (coords.y - st_pnt.y) / (mv_pnt.y - st_pnt.y),
                 st_pnt.x -
-                    (st_pnt.x * (coords.x - st_pnt.x)) / (mv_pnt.x - st_pnt.x),
+                (st_pnt.x * (coords.x - st_pnt.x)) / (mv_pnt.x - st_pnt.x),
                 st_pnt.y -
-                    (st_pnt.y * (coords.y - st_pnt.y)) / (mv_pnt.y - st_pnt.y)
+                (st_pnt.y * (coords.y - st_pnt.y)) / (mv_pnt.y - st_pnt.y)
             );
         if (Math.abs(mv_pnt.x - st_pnt.x) < 1) {
             matrix.a = 1;
@@ -1105,15 +1107,15 @@ function starMove(x, y) {
             if (i % 2 == 0)
                 plot.push([
                     object.x0 +
-                        R_x * k1 +
-                        R_x * Math.cos(Math.PI * (i * 0.2 + 0.1)) * k2,
+                    R_x * k1 +
+                    R_x * Math.cos(Math.PI * (i * 0.2 + 0.1)) * k2,
                     object.y0 + R_y - R_y * Math.sin(Math.PI * (i * 0.2 + 0.1)),
                 ]);
             else
                 plot.push([
                     object.x0 +
-                        R_x * k1 +
-                        r_x * Math.cos(Math.PI * (i * 0.2 + 0.1)) * k2,
+                    R_x * k1 +
+                    r_x * Math.cos(Math.PI * (i * 0.2 + 0.1)) * k2,
                     object.y0 + R_y - r_y * Math.sin(Math.PI * (i * 0.2 + 0.1)),
                 ]);
         object.plot(plot);
@@ -1131,7 +1133,6 @@ $(document)
     и подключение отслеживания измженения параметров иструментов*/
     .ready(function () {
         changeToolEvent();
-        resizeWindowEvent();
 
         $("#control-panel").change(changeToolEvent);
         $("#tools-panel").change(changeToolEvent);
