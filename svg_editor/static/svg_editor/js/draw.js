@@ -42,11 +42,9 @@ let draw,
 ///////////выполняется при переключении на новый слой/////////////
 function layerUpdate(newDraw) {
     if (newDraw == null) return;
-    let draw_null = draw == null;
     draw = newDraw;
     resizeWindowEvent();
-    if (!draw_null)
-        historyNew();
+    historyNew();
     breakDrawing();
 }
 //////////////////////////////////////////
