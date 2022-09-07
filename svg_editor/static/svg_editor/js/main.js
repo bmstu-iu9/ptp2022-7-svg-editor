@@ -5,7 +5,7 @@
 let currentFileName = null;
 
 $(document).ready(function () {
-    // Validate files collision
+    // Validate files collision in new file menu
     $('input[name="new-filename"], #new-file-type').on(
         "keyup change",
         function () {
@@ -24,6 +24,30 @@ $(document).ready(function () {
                             .removeClass("is-invalid")
                             .addClass("is-valid");
                         $("#new-ok-button").prop("disabled", false);
+                    }
+                }
+            );
+        }
+    );
+    // Validate files collision in save as menu
+    $('#save-as-name, #save-as-file-type').on(
+        "keyup change",
+        function () {
+            FileManager.collisionValidation(
+                $('#save-as-name').val() +
+                    "." +
+                    $("#save-as-file-type").val(),
+                function (response) {
+                    if (response.exists) {
+                        $('#save-as-name')
+                            .removeClass("is-valid")
+                            .addClass("is-invalid");
+                        $('#save-as-button').prop("disabled", true);
+                    } else {
+                        $('#save-as-name')
+                            .removeClass("is-invalid")
+                            .addClass("is-valid");
+                        $("#save-as-button").prop("disabled", false);
                     }
                 }
             );
