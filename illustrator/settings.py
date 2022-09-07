@@ -25,13 +25,12 @@ SECRET_KEY = 'django-insecure-f3$al5pcujjy8-4m69&@^se5bbg=x6f%p+fv@us3zy9@ql_o67
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '185.105.224.63']
+ALLOWED_HOSTS = ['127.0.0.1', '185.105.224.63',  'artemnostrum.yss.su', 'localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -40,6 +39,7 @@ INSTALLED_APPS = [
     'account',
     'crispy_forms',
     'django.contrib.admin',
+    'django.contrib.auth',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -80,23 +80,30 @@ WSGI_APPLICATION = 'illustrator.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'svg-editor',
-        'USER': 'postgres',
-        'PASSWORD': '103856',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3'
     }
 }
-
-
 # Registration basic urls
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/account'
 
 LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_URL = '/account/login'
+
+
+# Email settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_HOST_USER = 'illustratoriu9@mail.ru'
+EMAIL_HOST_PASSWORD = 'ugecY5GypdKtYLDiGLmV'
+EMAIL_PORT = 2525
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 # Password validation
@@ -121,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Moscow'
 
