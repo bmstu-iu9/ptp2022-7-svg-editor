@@ -70,7 +70,7 @@ class LayerRemote {
 	}
 
 	switch() {
-		$(this.htmlNode).toggleClass('active_note');
+		$(this.htmlNode).toggleClass('active-note');
 	}
 
 	getOpacity() {
@@ -82,7 +82,7 @@ class LayerRemote {
 	}
 
 	isEnabled() {
-		return !$(this.relatedLayer.node).hasClass('non_displayable');
+		return !$(this.relatedLayer.node).hasClass('non-displayable');
 	}
 
 	after(layer) {
@@ -101,26 +101,26 @@ class LayerRemote {
 
 	coverTop() {
 		this.htmlNode.querySelector('input').classList.add('unactive');
-		this.htmlNode.classList.add('hovered_top');
+		this.htmlNode.classList.add('hovered-top');
 	}
 
 	uncoverTop() {
 		this.htmlNode.querySelector('input').classList.remove('unactive');
-		this.htmlNode.classList.remove('hovered_top');
+		this.htmlNode.classList.remove('hovered-top');
 	}
 
 	coverBottom() {
 		this.htmlNode.querySelector('input').classList.add('unactive');
-		this.htmlNode.classList.add('hovered_bottom');
+		this.htmlNode.classList.add('hovered-bottom');
 	}
 
 	uncoverBottom() {
 		this.htmlNode.querySelector('input').classList.remove('unactive');
-		this.htmlNode.classList.remove('hovered_bottom');
+		this.htmlNode.classList.remove('hovered-bottom');
 	}
 
 	switchDisplay() {
-		$(this.relatedLayer.node).toggleClass('non_displayable');
+		$(this.relatedLayer.node).toggleClass('non-displayable');
 	}
 
 	getSvg() {

@@ -601,7 +601,7 @@ label[for=delete-all-input]  {
     border-bottom: 1px solid black;
 }
 
-#workspace .non_displayable{
+#workspace .non-displayable{
     display: none; 
 }
 

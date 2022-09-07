@@ -429,7 +429,7 @@ $(document).ready(function () {
 
     $("#layers-panel-content").on(
         "click",
-        "#layers-panel-choosing .layer_note",
+        "#layers-panel-choosing .layer-note",
         function () {
             easel.currentPage.pie.selectLayer(this.layerRemote);
         }
