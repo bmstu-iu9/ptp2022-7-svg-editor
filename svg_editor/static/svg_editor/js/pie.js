@@ -33,6 +33,7 @@ class Pie {
 	selectLayer(remote) {
 		if (this.currentLayer !== null) {
 			this.currentLayer.switch();
+			selectionClear();
 		}
 		remote.switch();
 
@@ -51,6 +52,13 @@ class Pie {
 		} else {
 			this.layersPanel.append(remote.getLayerNode());
 			this.controlPanel.prepend(remote.getNote());
+		}
+	}
+
+	resizeLayers(){
+		for (let node of this.controlPanel.childNodes) {
+			let remote = node.layerRemote;
+			remote.setLayerSize(this.layersPanel.clientWidth, this.layersPanel.clientHeight);
 		}
 	}
 

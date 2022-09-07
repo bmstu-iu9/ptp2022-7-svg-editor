@@ -29,6 +29,20 @@ body {
     background-color: #d9d9d9;
     z-index: 100;
 }
+
+label[for=delete-all-input]  {
+    display: none;
+    left: 50px;
+    top: 240px;
+    position: absolute;
+}
+#delete-all-input {
+    display: none;
+    top: 243px;
+    left: 30px;
+    position: absolute;
+}
+
 #spinner {
     content: " ";
     position: fixed;
@@ -385,7 +399,12 @@ td {
     position: absolute;
     z-index:10;
     border-right: 1px solid #3e3e3e;
-    border-top: 1px solid #3e3e3e;
+}
+
+#list-svg {
+    overflow-y: scroll; 
+    overflow-x: hidden; 
+    height: 150px;
 }
 
 #tools-choosing {
@@ -483,12 +502,10 @@ td {
 #easel {
     width: 70%;
     height: 75%;
-    border: 1px solid #3e3e3e;
     position: relative;
     margin: 10px 100px 0 100px;
     z-index: 0;
     top: 70px;
-    background: white;
 }
 
 #workspace {
@@ -515,7 +532,9 @@ td {
     height: 80%;
     display: inline-block;
     position: absolute;
-    border: 1px solid #3e3e3e;
+    border-bottom: 1px solid #3e3e3e;
+    border-left: 1px solid #3e3e3e;
+    border-right: 1px solid #3e3e3e;
     transform: scale(0.01);
     right: 40px;
     top: 0;
@@ -573,13 +592,13 @@ td {
     background-position: center;
 }
 
-#create-layer-button {
+#createLayerButton {
     background-image: url("/static/svg_editor/icons/plus.svg");
     margin-left: 5px;
 }
 
-#delet-layer-button {
-    background-image: url("/static/svg_editor/icons/trash.svg");
+#deleteLayerButton {
+    background-image: url("/static/svg_editor/icons/x.svg");
 }
 
 .layer {
@@ -639,6 +658,8 @@ td {
     margin: 0 auto;
     margin-top: 5px;
     position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .page-node{
@@ -669,5 +690,6 @@ td {
 .is-invalid {
     border: 3px solid #ec081b!important;
 }
+
 
 

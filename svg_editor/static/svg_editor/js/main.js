@@ -5,7 +5,7 @@
 let currentFileName = null;
 
 $(document).ready(function () {
-    // Validate files collision
+    // Validate files collision in new file menu
     $('input[name="new-filename"], #new-file-type').on(
         "keyup change",
         function () {
@@ -29,9 +29,33 @@ $(document).ready(function () {
             );
         }
     );
+    // Validate files collision in save as menu
+    $('#save-as-name, #save-as-file-type').on(
+        "keyup change",
+        function () {
+            FileManager.collisionValidation(
+                $('#save-as-name').val() +
+                    "." +
+                    $("#save-as-file-type").val(),
+                function (response) {
+                    if (response.exists) {
+                        $('#save-as-name')
+                            .removeClass("is-valid")
+                            .addClass("is-invalid");
+                        $('#save-as-button').prop("disabled", true);
+                    } else {
+                        $('#save-as-name')
+                            .removeClass("is-invalid")
+                            .addClass("is-valid");
+                        $("#save-as-button").prop("disabled", false);
+                    }
+                }
+            );
+        }
+    );
 
     // Send svg to the server to save it
-    $("#save-button").click(function () {
+    $('div[name="save-file"]').click(function () {
         breakDrawing();
         easel.save();
     });
@@ -53,29 +77,23 @@ $(document).ready(function () {
         FileManager.upload(data);
     });
 
+    let $userFiles = $("#user-files");
+
     // Download file from server
-    $(".drop-moving-button[name='download-file']").click(function () {
+    $userFiles.on("click", "#download-button", function () {
         FileManager.download(currentFileName);
     });
 
-    // Get list of user files at server
-    $(".drop-moving-button[name='view-file']").click(function () {
-        $("#user-files").css({
-            display: "block",
-            "z-index": 20,
-        });
-        FileManager.view();
-    });
 
     // Delete users files from server
-    $("#delete-button").click(function () {
+    $userFiles.on("click", "#delete-button", function () {
         FileManager.delete(
             currentFileName,
             $("#delete-all-input")[0].checked
         );
     });
     // Edit file from server
-    $(".drop-moving-button[name='edit-file']").click(function () {
+    $userFiles.on("click", "#edit-button", function () {
         if (currentFileName) {
             easel.remove(currentFileName, false);
             easel.edit(currentFileName.slice(0, -4), currentFileName.slice(-3));

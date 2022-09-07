@@ -1,12 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 
 <head>
 	<meta charset="UTF-8" />
 	<title>СВГ-Редактор</title>
 	<!--    загружать статику нужно именно так-->
-	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}? 202207260805">
+	<link rel="stylesheet" href="{% static 'svg_editor/css/main.css' %}">
 </head>
 
 <body>
@@ -33,7 +33,6 @@
 		<div class="drop-list">
 			<div class="drop-button">Manage</div>
 			<div class="drop-content">
-				<div name="view-file" class="drop-moving-button">View</div>
 				<div name="edit-file" class="drop-moving-button">Edit</div>
 				<div name="download-file" class="drop-moving-button">Download</div>
 				<div name="delete-file" class="drop-moving-button">Delete</div>
@@ -63,7 +62,10 @@
 			<button class="close-menu-button"></button>
 		</div>
 		<div id="list-text"></div>
-		<ul id="list-svg"></ul>
+		<div id="list-svg"></div>
+		<input id="delete-all-input" type="checkbox">
+		<label for="delete-all-input">Delete All</label>
+		<button class="ok-button">Ok</button>
 	</div>
 	<div id="new-menu" class="file-menu-panel">
 		<div class="moveable-part-file-menu">
@@ -80,29 +82,6 @@
 		<button id="new-ok-button" class="ok-button" disabled="disabled">Ok</button>
 	</div>
 
-	<div id="delete-menu" class="file-menu-panel">
-		<div class="moveable-part-file-menu">
-			<button class="close-menu-button"></button>
-		</div>
-		<input id="delete-all-input" type="checkbox">Delete all
-		<button id="delete-button" class="ok-button">Delete</button>
-	</div>
-
-	<div id="save-menu" class="file-menu-panel">
-		<div class="moveable-part-file-menu">
-			<button class="close-menu-button"></button>
-		</div>
-		<div class="file-menu-form">
-			<label>Name your file:</label>
-			<input id="file_name" type="text" value="untitled">
-			<select id="save_file_type1" size=1>
-				<option value="svg">.svg</option>
-				<option value="yml">.yml</option>
-			</select>
-		</div>
-		<button id="save-button" class="ok-button">Save</button>
-	</div>
-
 	<div id="save-as-menu" class="file-menu-panel">
 		<div class="moveable-part-file-menu">
 			<button class="close-menu-button"></button>
@@ -115,7 +94,7 @@
 				<option value="yml">.yml</option>
 			</select>
 		</div>
-		<button id="save-as-button" class="ok-button">Save</button>
+		<button id="save-as-button" class="ok-button" disabled="disabled">Save</button>
 	</div>
 	<div id="open-menu" class="file-menu-panel">
 		<div class="moveable-part-file-menu">
@@ -200,7 +179,6 @@
 			<div id="pages-choosing"></div>
 		</div>
 	</footer>
-	{% block javascript %}
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.topath.js"></script>
@@ -235,11 +213,10 @@
 			opacitySlider = document.querySelector('#opacity_slider');
 		// Get csrf_token
 		$.ajaxSetup({
-			headers: {  "X-CSRFToken": token  }
+			headers: { "X-CSRFToken": token }
 		});
 		const easel = new Easel(file_name, type);
 	</script>
-	{% endblock javascript %}
 </body>
 
 </html>
