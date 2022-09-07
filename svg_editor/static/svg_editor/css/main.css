@@ -30,12 +30,13 @@ body {
     z-index: 100;
 }
 
-label[for=delete-all-input]  {
+label[for=delete-all-input] {
     display: none;
     left: 50px;
     top: 240px;
     position: absolute;
 }
+
 #delete-all-input {
     display: none;
     top: 243px;
@@ -56,10 +57,12 @@ label[for=delete-all-input]  {
     border-top-color: #1c87c9;
     animation: preloader 1.2s infinite linear;
 }
+
 @keyframes preloader {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
@@ -285,11 +288,11 @@ td {
     border: 1px solid;
 }
 
-.active{
+.active {
     border: 3px solid #0d93db !important;
 }
 
-.delete-page-button{
+.delete-page-button {
     position: absolute;
     width: 20px;
     height: 20px;
@@ -397,13 +400,13 @@ td {
     align-content: center;
     top: 23.5px;
     position: absolute;
-    z-index:10;
+    z-index: 10;
     border-right: 1px solid #3e3e3e;
 }
 
 #list-svg {
-    overflow-y: scroll; 
-    overflow-x: hidden; 
+    overflow-y: scroll;
+    overflow-x: hidden;
     height: 150px;
 }
 
@@ -471,7 +474,7 @@ td {
     margin-left: 0 auto;
     top: 10px;
     z-index: 1;
-    
+
 }
 
 #color-choosing-box-main {
@@ -512,6 +515,7 @@ td {
     width: 100%;
     height: 100%;
     background: white;
+    border: 1px solid #580a0a;
 }
 
 #addition-panel {
@@ -605,12 +609,12 @@ td {
     width: 100%;
     height: 20%;
     align-items: center;
-    display: flex; 
+    display: flex;
     border-bottom: 1px solid black;
 }
 
-#workspace .non_displayable{
-    display: none; 
+#workspace .non_displayable {
+    display: none;
 }
 
 .layer-button {
@@ -632,17 +636,18 @@ td {
     flex-direction: column;
 }
 
-.note_top, .note_bottom {
-    width: 100%; 
+.note_top,
+.note_bottom {
+    width: 100%;
     height: 20px;
 }
- 
+
 .active_note {
     background-color: #2f2f2f;
     background-position: left;
 }
 
-#pages-panel{
+#pages-panel {
     background: white;
     width: 100%;
     height: 80px;
@@ -652,7 +657,7 @@ td {
     z-index: 11;
 }
 
-#pages-choosing{
+#pages-choosing {
     width: 90%;
     height: 90%;
     margin: 0 auto;
@@ -662,7 +667,7 @@ td {
     overflow-x: hidden;
 }
 
-.page-node{
+.page-node {
     position: relative;
     width: 70px;
     height: 50px;
@@ -684,12 +689,9 @@ td {
 }
 
 .is-valid {
-    border: 3px solid #08ec17!important;
+    border: 3px solid #08ec17 !important;
 }
 
 .is-invalid {
-    border: 3px solid #ec081b!important;
+    border: 3px solid #ec081b !important;
 }
-
-
-
