@@ -18,18 +18,18 @@ $(document).ready(function (){
     });
     /* перезват нажания сочитаний клавиш ctrl-z и ctrl-shift-z
     для передвиженя по истории рисования */
-    $(document).bind('keypress', function (event) {
-        if (event.which === 26 && event.ctrlKey) {
-            if (event.shiftKey) {
-                historyUndo();
-            } else {
-                historyBack();
-            }
+    $(document).bind('keydown', function (event) {
+        if (String.fromCharCode(event.which).toLowerCase() === 'z' && event.ctrlKey) {
+            if (event.shiftKey) historyUndo();
+            else historyBack();
         }
     });
 
     // выход из режима рисования путём нажатия клавишы escape
     $(document).bind('keydown', function (event) {
-        if (event.key === 'Escape') breakDrawing();
+        if (event.key === "Escape") breakDrawing();
+        $('#control-panel').change(changeToolEvent);
+        $('#tools-panel').change(changeToolEvent);
     });
+
 })
