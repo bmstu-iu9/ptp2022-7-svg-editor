@@ -1,3 +1,8 @@
+/**
+ * @author Kabane-UN
+ * @author GarryNeKasparov
+ **/
+
 $(window).on("load", function () {
     $("#preloader").fadeOut("slow");
 });
@@ -52,13 +57,13 @@ $(document).ready(function () {
     }
 
     function clickTool(name) {
-        const $this = $(`#${name}Tool`);
+        const $this = $(`#${name}-tool`);
         const $lastPressed = $(".tool-button.tool-clicked")
             .not($this)
             .not($("#layers-panel-button"));
         $this.toggleClass("tool-clicked");
         if (!$this.hasClass("addition-open")) {
-            $(".hiddenTools").removeClass("open");
+            $(".hidden-tools").removeClass("open");
         }
         if ($lastPressed.length) {
             $lastPressed.css(
@@ -87,16 +92,16 @@ $(document).ready(function () {
         tmp.replaceWith(b);
     }
     // Инструменты
-    $("#cursorTool").on("click", function () {
+    $("#cursor-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("cursor");
     });
-    $("#moveTool").on("click", function () {
+    $("#move-tool").on("click", function () {
         clickTool("move");
     });
 
-    $("#pencilTool").on("click", function () {
+    $("#pencil-tool").on("click", function () {
         clickTool("pencil");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -107,7 +112,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#lineTool").on("click", function () {
+    $("#line-tool").on("click", function () {
         clickTool("line");
         $("#filling-type").css("display", "none");
         if ($(this).hasClass("tool-clicked")) {
@@ -139,7 +144,7 @@ $(document).ready(function () {
         swap($this, $curAdditionOpen);
     });
 
-    $("#polygonTool").on("click", function () {
+    $("#polygon-tool").on("click", function () {
         clickTool("polygon");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -150,7 +155,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#rectTool").on("click", function () {
+    $("#rect-tool").on("click", function () {
         clickTool("rect");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -161,7 +166,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#ellipseTool").on("click", function () {
+    $("#ellipse-tool").on("click", function () {
         clickTool("ellipse");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -172,7 +177,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#starTool").on("click", function () {
+    $("#star-tool").on("click", function () {
         clickTool("star");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -183,7 +188,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#pathTool").on("click", function () {
+    $("#path-tool").on("click", function () {
         clickTool("path");
         if ($(this).hasClass("tool-clicked")) {
             $("#width-parameter").css("display", "inline-block");
@@ -192,60 +197,68 @@ $(document).ready(function () {
         }
     });
 
-    $("#textTool").on("click", function () {
-        $("#width-parameter").css("display", "none");
-        $("#filling-type").css("display", "none");
+    $("#text-tool").on("click", function () {
         clickTool("text");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+        } else {
+            $("#width-parameter").css("display", "none");
+        }
     });
 
-    $("#fillTool").on("click", function () {
-        $("#width-parameter").css("display", "none");
-        $("#filling-type").css("display", "none");
+    $("#fill-tool").on("click", function () {
         clickTool("fill");
+        if ($(this).hasClass("tool-clicked")) {
+            $("#width-parameter").css("display", "inline-block");
+            $("#filling-type").css("display", "inline-block");
+        } else {
+            $("#width-parameter").css("display", "none");
+            $("#filling-type").css("display", "none");
+        }
     });
 
-    $("#eraserTool").on("click", function () {
+    $("#eraser-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("eraser");
     });
 
-    $("#rotateTool").on("click", function () {
+    $("#rotate-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("rotate");
     });
 
-    $("#deformTool").on("click", function () {
+    $("#deform-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("deform");
     });
 
-    $("#scaleTool").on("click", function () {
+    $("#scale-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("scale");
     });
 
-    $("#splitTool").on("click", function () {
+    $("#split-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("split");
     });
 
-    $("#skewTool").on("click", function () {
+    $("#skew-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("skew");
     });
 
-    $("#mirrorTool").on("click", function () {
+    $("#mirror-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("mirror");
     });
-    $("#compressTool").on("click", function () {
+    $("#compress-tool").on("click", function () {
         $("#width-parameter").css("display", "none");
         $("#filling-type").css("display", "none");
         clickTool("compress");
@@ -303,43 +316,64 @@ $(document).ready(function () {
         });
     });
 
+    $(".drop-moving-button[name='edit-file']").on("click", function () {
+        $("#user-files").css({
+            display: "block",
+            "z-index": "100",
+        });
+        $("#user-files").find(".ok-button").attr("id", "edit-button");
+        $("#delete-all-input").css({ display: "none" });
+        $("label[for='delete-all-input']").css({ display: "none" });
+        FileManager.view();
+    });
+
+    $(".drop-moving-button[name='delete-file']").on("click", function () {
+        $("#user-files").css({
+            display: "block",
+            "z-index": "100",
+        });
+        $("#user-files").find(".ok-button").attr("id", "delete-button");
+        $("#delete-all-input").css({ display: "block" });
+        $("label[for='delete-all-input']").css({ display: "block" });
+        FileManager.view();
+    });
+
+    $(".drop-moving-button[name='download-file']").on("click", function () {
+        $("#user-files").css({
+            display: "block",
+            "z-index": "100",
+        });
+        $("#user-files").find(".ok-button").attr("id", "download-button");
+        $("#delete-all-input").css({ display: "none" });
+        $("label[for='delete-all-input']").css({ display: "none" });
+        FileManager.view();
+    });
+
+    $(".drop-moving-button[name='save-as-file']").on("click", function () {
+        clearInputForm($("#new-menu"));
+        $("#save-as-menu").css({
+            display: "block",
+            "z-index": "100",
+        });
+    });
+
     $(".ok-button").on("click", function () {
         $(this).parent().css({
             display: "none",
             "z-index": "0",
         });
+    });
+
+    $("#new-ok-button").on("click", function () {
         let newPageName = document.getElementsByName("new-filename")[0].value,
-            newPageType = document.getElementById("save_file_type").value;
+            newPageType = document.getElementById("new-file-type").value;
+        easel.remove(`${newPageName}.${newPageType}`, false);
         easel.createPage(newPageName, newPageType);
-        workspace = easel.currentPage.getWorkplace();
-        clearInputForm();
+        easel.currentPage.pie.createNewLayer(undefined, "base");
     });
 
     $(".close-menu-button").on("click", function () {
         $(this).parent().parent().css({
-            display: "none",
-            "z-index": "0",
-        });
-    });
-
-    $(".drop-moving-button[name='save-file']").on("click", function () {
-        clearInputForm($("#save-menu"));
-        $("#save-menu").css({
-            display: "block",
-            "z-index": "100",
-        });
-    });
-
-    $(".drop-moving-button[name='download-file']").on("click", function () {
-        clearInputForm($("#download-menu"));
-        $("#download-menu").css({
-            display: "block",
-            "z-index": "100",
-        });
-    });
-
-    $("#download-button").on("click", function () {
-        $(this).parent().css({
             display: "none",
             "z-index": "0",
         });
@@ -353,19 +387,109 @@ $(document).ready(function () {
         });
     });
 
+    $(".drop-moving-button[name='undo']").on("click", function () {
+        historyBack();
+    });
+
+    $(".drop-moving-button[name='redo']").on("click", function () {
+        historyUndo();
+    });
+
     $("#file").on("input", function () {
         $(this).parent().parent().css({
             display: "none",
             "z-index": "0",
         });
     });
+
     let $pagesChoosing = $("#pages-choosing");
     $pagesChoosing.on("click", "label", function () {
         easel.turnTo($(this).text());
-        workspace = easel.currentPage.getWorkplace();
+        workspace = document.getElementById("workspace");
     });
     $pagesChoosing.on("click", ".delete-page-button", function () {
         easel.remove($(this).parent().find("label").text());
-        workspace = easel.currentPage.getWorkplace();
+        workspace = document.getElementById("workspace");
+    });
+
+    //////////Layers-controls
+    $("#createLayerButton").click(function () {
+        easel.currentPage.pie.createNewLayer();
+    })
+
+    // $("#createLayerButton").click();
+
+    $("#deleteLayerButton").click(function () {
+        easel.currentPage.pie.deleteCurrentLayer();
+    });
+
+    $("#opacity_slider").on("change", function () {
+        easel.currentPage.pie.changeCurrentLayerOpacity();
+    });
+
+    $('#layers-panel-content').on("click", "#layers-panel-choosing .layer_note", function () {
+        easel.currentPage.pie.selectLayer(this.layerRemote);
+    })
+
+    $('#layerUp').click(function () { easel.currentPage.pie.currentLayerUp() });
+
+    $('#layerDown').click(function () { easel.currentPage.pie.currentLayerDown() });
+
+    $('#copyLayer').click(function () { easel.currentPage.pie.currentLayerCopy() });
+
+    $('#layers-panel-content').on("dragstart", "#layers-panel-choosing .layer_note", function () {
+        easel.currentPage.pie.selectLayer(this.layerRemote)
+    });
+
+    $('#layers-panel-content').on("dragenter", "#layers-panel-choosing .note_top", function () {
+        this.parentElement.layerRemote.coverTop()
+    })
+
+    $('#layers-panel-content').on("dragenter", "#layers-panel-choosing .note_bottom", function () {
+        this.parentElement.layerRemote.coverBottom()
+    })
+
+    $('#layers-panel-content').on("dragleave", "#layers-panel-choosing .note_top", function () {
+        this.parentElement.layerRemote.uncoverTop()
+    })
+
+    $('#layers-panel-content').on("dragleave", "#layers-panel-choosing .note_bottom", function () {
+        this.parentElement.layerRemote.uncoverBottom()
+    })
+
+    $('#layers-panel-content').on("dragover", "#layers-panel-choosing .note_top, .note_bottom", function (e) {
+        e.preventDefault()
+    })
+
+    $('#layers-panel-content').on("drop", "#layers-panel-choosing .note_top", function () {
+        $(this).trigger("dragleave");
+        let thisRemote = this.parentElement.layerRemote;
+        let current = easel.currentPage.pie.getCurrentLayer()
+        thisRemote.after(current);
+    })
+
+    $('#layers-panel-content').on("drop", "#layers-panel-choosing .note_bottom", function () {
+        $(this).trigger("dragleave");
+        let thisRemote = this.parentElement.layerRemote;
+        let current = easel.currentPage.pie.getCurrentLayer()
+        thisRemote.before(current);
+    })
+
+    $('#layers-panel-content').on("click", "#layers-panel-choosing input", function (e) {
+        let clicked = this.parentElement.parentElement.layerRemote;
+        clicked.switchDisplay();
+        e.stopPropagation();
+    })
+
+    $("#mergeWithPrevious").click(function () {
+        easel.currentPage.pie.mergeCurrentWithPrevious();
+    });
+
+    $("#mergeVisible").click(function () {
+        easel.currentPage.pie.mergeVisible();
+    });
+
+    $('#createFromVisible').click(function () {
+        easel.currentPage.pie.createFromVisible();
     });
 });

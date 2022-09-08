@@ -3,7 +3,8 @@ The `urlpatterns` list routes URLs to views
 """
 from django.urls import path
 from django.contrib.auth import views
-from .views import signup, activate, account, validate_username, validate_email, validate_passwords
+from .views import signup, activate, account, validate_username, validate_email, validate_passwords,\
+    HtmlPasswordResetView
 
 urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'),
@@ -11,7 +12,7 @@ urlpatterns = [
     path('signup/', signup, name='signup'),
     path('activate/<uidb64>/<token>/',
          activate, name='activate'),
-    path('password-reset/', views.PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/', HtmlPasswordResetView.as_view(), name='password_reset'),
     path('password-reset/done/', views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/confirm/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(),
          name='password_reset_confirm'),
